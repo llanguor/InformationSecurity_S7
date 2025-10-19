@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InformationSecurity", "InformationSecurity\InformationSecurity.csproj", "{358B8C00-8D61-4894-8AF5-E5ED445D6D5F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InformationSecurity_Console", "InformationSecurity_Console\InformationSecurity_Console.csproj", "{635A1F51-A715-46A3-A459-4E4BADB72410}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InformationSecurity_Tests", "InformationSecurity_Tests\InformationSecurity_Tests.csproj", "{62326BBE-A8AC-4025-9517-F80D8EBB2BAC}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{358B8C00-8D61-4894-8AF5-E5ED445D6D5F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{358B8C00-8D61-4894-8AF5-E5ED445D6D5F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{358B8C00-8D61-4894-8AF5-E5ED445D6D5F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{358B8C00-8D61-4894-8AF5-E5ED445D6D5F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{635A1F51-A715-46A3-A459-4E4BADB72410}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{635A1F51-A715-46A3-A459-4E4BADB72410}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{635A1F51-A715-46A3-A459-4E4BADB72410}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{635A1F51-A715-46A3-A459-4E4BADB72410}.Release|Any CPU.Build.0 = Release|Any CPU
+		{62326BBE-A8AC-4025-9517-F80D8EBB2BAC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{62326BBE-A8AC-4025-9517-F80D8EBB2BAC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{62326BBE-A8AC-4025-9517-F80D8EBB2BAC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{62326BBE-A8AC-4025-9517-F80D8EBB2BAC}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
