@@ -4,7 +4,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InformationSecurity", "Info
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InformationSecurity_Console", "InformationSecurity_Console\InformationSecurity_Console.csproj", "{635A1F51-A715-46A3-A459-4E4BADB72410}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InformationSecurity_Tests", "InformationSecurity_Tests\InformationSecurity_Tests.csproj", "{62326BBE-A8AC-4025-9517-F80D8EBB2BAC}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InformationSecurity_Tests", "InformationSecurity_Tests\InformationSecurity_Tests.csproj", "{64019B0B-0540-4158-8660-2CE4B6FACC9B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -20,9 +20,9 @@ Global
 		{635A1F51-A715-46A3-A459-4E4BADB72410}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{635A1F51-A715-46A3-A459-4E4BADB72410}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{635A1F51-A715-46A3-A459-4E4BADB72410}.Release|Any CPU.Build.0 = Release|Any CPU
-		{62326BBE-A8AC-4025-9517-F80D8EBB2BAC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{62326BBE-A8AC-4025-9517-F80D8EBB2BAC}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{62326BBE-A8AC-4025-9517-F80D8EBB2BAC}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{62326BBE-A8AC-4025-9517-F80D8EBB2BAC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{64019B0B-0540-4158-8660-2CE4B6FACC9B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{64019B0B-0540-4158-8660-2CE4B6FACC9B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{64019B0B-0540-4158-8660-2CE4B6FACC9B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{64019B0B-0540-4158-8660-2CE4B6FACC9B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
