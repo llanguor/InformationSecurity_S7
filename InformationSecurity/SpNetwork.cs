@@ -1,6 +1,6 @@
 ﻿namespace InformationSecurity;
 
-public sealed class SpNet
+public sealed class SpNetwork
 {
     /// <summary>
     /// Specifies the order of bit numbering in bytes.
