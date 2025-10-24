@@ -1,6 +1,6 @@
-﻿namespace InformationSecurity;
+﻿namespace InformationSecurity.SymmetricEncryption;
 
-public sealed class SpNetwork
+public static class SpNetwork
 {
     /// <summary>
     /// Specifies the order of bit numbering in bytes.

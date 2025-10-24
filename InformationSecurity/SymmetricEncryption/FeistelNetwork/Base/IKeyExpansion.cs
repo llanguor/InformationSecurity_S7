@@ -1,4 +1,4 @@
-﻿namespace InformationSecurity;
+﻿namespace InformationSecurity.SymmetricEncryption.FeistelNetwork.Base;
 
 /// <summary>
 /// Interface that provides key expansion (generation) functionality.
@@ -13,5 +13,5 @@ public interface IKeyExpansion
     /// <returns>
     /// An array of round keys, where each element represents a single round key.
     /// </returns>
-    byte[][] ExpandKey(byte[] key);
+    byte[][] Expand(byte[] key);
 }

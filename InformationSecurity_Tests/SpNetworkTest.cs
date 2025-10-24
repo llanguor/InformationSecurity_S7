@@ -1,4 +1,5 @@
 using InformationSecurity;
+using InformationSecurity.SymmetricEncryption;
 
 namespace InformationSecurity_Tests;
 

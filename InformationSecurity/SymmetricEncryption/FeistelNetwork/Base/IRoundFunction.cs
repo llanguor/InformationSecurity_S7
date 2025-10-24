@@ -1,10 +1,10 @@
-﻿namespace InformationSecurity;
+﻿namespace InformationSecurity.SymmetricEncryption.FeistelNetwork.Base;
 
 /// <summary>
 /// Represents a single round transformation in a block cipher.
 /// Performs encryption on a single block using a specified round key.
 /// </summary>
-public interface IBlockCipherRound
+public interface IRoundFunction
 {
     /// <summary>
     /// Transforms the input block using the provided round key.

@@ -1,10 +1,10 @@
-﻿namespace InformationSecurity;
+﻿namespace InformationSecurity.SymmetricEncryption.Base;
 
 /// <summary>
 /// Represents a symmetric encryption algorithm.
 /// Provides functionality for encrypting and decrypting blocks of data.
 /// </summary>
-public interface IEncryptor
+public interface IEncryption
 {
     /// <summary>
     /// Sets the master key for the symmetric cipher.

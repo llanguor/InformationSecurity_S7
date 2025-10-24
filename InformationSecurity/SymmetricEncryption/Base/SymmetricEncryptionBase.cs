@@ -1,4 +1,4 @@
-﻿namespace InformationSecurity;
+﻿namespace InformationSecurity.SymmetricEncryption.Base;
 
 /// <summary>
 /// Represents the execution context for a symmetric encryption algorithm,
@@ -9,24 +9,24 @@
 /// <param name="padding">The padding scheme used to fill blocks to the required size.</param>
 /// <param name="initializationVector">Optional initialization vector (IV) for certain cipher modes.</param>
 /// <param name="parameters">Additional optional parameters for the selected encryption mode.</param>
-public abstract class SymmetricEncryptionContext(
+public abstract class SymmetricEncryptionBase(
     byte[] key,
-    SymmetricEncryptionContext.BlockCipherMode mode,
-    SymmetricEncryptionContext.BlockCipherPadding padding,
+    SymmetricEncryptionBase.BlockCipherMode mode,
+    SymmetricEncryptionBase.BlockCipherPadding padding,
     byte[]? initializationVector = null,
     params object[] parameters)
-    : IEncryptor
+    : IEncryption
 {
     #region Properties
     
-    /// <summary>The encryption key used for all operations.</summary>
-    protected byte[] Key { get; } = key;
-
     /// <summary>The block cipher mode applied during encryption and decryption.</summary>
     protected BlockCipherMode Mode { get; } = mode;
 
     /// <summary>The padding scheme used to fill blocks to the required size.</summary>
     protected BlockCipherPadding Padding { get; } = padding;
+    
+    /// <summary>The encryption key used for all operations.</summary>
+    protected byte[] Key { get; } = key;
 
     /// <summary>Optional initialization vector (IV) for certain cipher modes.</summary>
     protected byte[]? InitializationVector { get; } = initializationVector;
@@ -42,7 +42,7 @@ public abstract class SymmetricEncryptionContext(
     /// <summary>
     /// Defines the supported block cipher modes for symmetric encryption.
     /// </summary>
-    protected enum BlockCipherMode
+    public enum BlockCipherMode
     {
         Ecb, 
         Cbc, 
@@ -56,7 +56,7 @@ public abstract class SymmetricEncryptionContext(
     /// <summary>
     /// Defines the supported padding modes for symmetric encryption.
     /// </summary>
-    protected enum BlockCipherPadding
+    public enum BlockCipherPadding
     {
         Zeros, 
         AnsiX923, 
