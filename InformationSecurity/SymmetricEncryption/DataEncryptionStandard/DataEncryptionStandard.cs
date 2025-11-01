@@ -9,14 +9,14 @@ public sealed class DataEncryptionStandard(byte[] key)
 {
     #region Fields
     
-    private static readonly IKeyExpansion KeyExpansion =
-        new DesKeyExpansion();
+    private static readonly IKeySchedule KeySchedule =
+        new DesKeySchedule();
     
     private static readonly IRoundFunction RoundFunction =
         new DesRoundFunction();
     
     private readonly FeistelNetwork.FeistelNetwork _feistelNetwork = 
-        new (KeyExpansion, RoundFunction, key, 16);
+        new (KeySchedule, RoundFunction, key, 16);
     
     #endregion
     

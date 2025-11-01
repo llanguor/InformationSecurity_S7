@@ -1,6 +1,6 @@
 ﻿namespace InformationSecurity.SymmetricEncryption;
 
-public static class SpNetwork
+public static class Permutation
 {
     /// <summary>
     /// Specifies the order of bit numbering in bytes.
@@ -34,7 +34,7 @@ public static class SpNetwork
     /// <param name="lsbPosition">Specifies the order of bit numbering in bytes.</param>
     /// <param name="startingBitIndex">Specifies the index of the starting bit in the input bytes set.</param>
     /// <returns>Returns a set of bits with permuted values.</returns>
-    public static Span<byte> Permutation(
+    public static Span<byte> Permute(
         ReadOnlySpan<byte> bytes, 
         ReadOnlySpan<int> mask, 
         LeastSignificantBitPosition lsbPosition,
@@ -46,7 +46,7 @@ public static class SpNetwork
         {
             var targetIndex = mask[i] - (int)startingBitIndex;
             var bitValue = (bytes[targetIndex/8] >> (7 - targetIndex%8)) & 1;
-
+            
             var byteIndex = i / 8;
             var bitIndex =
                 lsbPosition == LeastSignificantBitPosition.Left ? 

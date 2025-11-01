@@ -32,11 +32,11 @@ public class Tests
         ];
 
         var result =
-            SpNetwork.Permutation(
+            Permutation.Permute(
                 values,
                 mask,
-                SpNetwork.LeastSignificantBitPosition.Left,
-                SpNetwork.StartingBitIndex.First);
+                Permutation.LeastSignificantBitPosition.Left,
+                Permutation.StartingBitIndex.First);
         
         Span<byte> expectedResult = 
         [

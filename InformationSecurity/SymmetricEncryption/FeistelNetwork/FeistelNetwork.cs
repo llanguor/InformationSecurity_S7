@@ -5,7 +5,7 @@ using InformationSecurity.SymmetricEncryption.FeistelNetwork.Base;
 namespace InformationSecurity.SymmetricEncryption.FeistelNetwork;
 
 public sealed class FeistelNetwork (
-    IKeyExpansion keyExpansion, 
+    IKeySchedule keySchedule, 
     IRoundFunction roundFunction,
     byte[] key,
     int roundsCount)
@@ -13,11 +13,11 @@ public sealed class FeistelNetwork (
 {
     #region Fields
     
-    private readonly IKeyExpansion _keyExpansion = keyExpansion;
+    private readonly IKeySchedule _keySchedule = keySchedule;
     
     private readonly IRoundFunction _roundFunction = roundFunction;
 
-    private byte[][] _roundKeys = keyExpansion.Expand(key);
+    private byte[][] _roundKeys = keySchedule.Expand(key);
 
     private int _roundsCount = roundsCount;
     
@@ -38,7 +38,7 @@ public sealed class FeistelNetwork (
 
     public void SetKey(byte[] key)
     {
-        _roundKeys = _keyExpansion.Expand(key);
+        _roundKeys = _keySchedule.Expand(key);
     }
 
     public byte[] Encrypt(byte[] data)

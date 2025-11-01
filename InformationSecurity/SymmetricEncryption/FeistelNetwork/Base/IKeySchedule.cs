@@ -4,7 +4,7 @@
 /// Interface that provides key expansion (generation) functionality.
 /// Used to generate round keys from an original key.
 /// </summary>
-public interface IKeyExpansion
+public interface IKeySchedule
 {
     /// <summary>
     /// Generates a set of round keys from the specified master key.
