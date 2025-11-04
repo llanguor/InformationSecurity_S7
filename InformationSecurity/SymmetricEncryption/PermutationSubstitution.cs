@@ -24,15 +24,15 @@ public static class PermutationSubstitution
     /// </summary>
     public enum StartingBitIndex
     {
-        /// <summary>Bit numbering starts from 0</summary>
+        /// <summary>A bit numbering starts from 0</summary>
         Zero = 0,
         
-        /// <summary>Bit numbering starts from 1</summary>
+        /// <summary>A bit numbering starts from 1</summary>
         First = 1
     }
     
     /// <summary>
-    /// Performs a bit permutation on the source set of bytes following the given mask.
+    /// Performs a permutation of bits in the source byte set according to the specified mask.
     /// </summary>
     /// <param name="bytes">A set of bytes.</param>
     /// <param name="mask">Mask for performing permutations.</param>

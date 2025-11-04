@@ -1,5 +1,4 @@
 ﻿using System.Text;
-using Serilog;
 
 namespace InformationSecurity_Tests.Infrastructure;
 

@@ -23,6 +23,5 @@ public static class Logger
 
         Log.Logger = _logger;
         return _logger;
-        
     }
 }

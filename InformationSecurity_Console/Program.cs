@@ -1,30 +1,30 @@
 ﻿namespace InformationSecurity_Console;
 
-sealed class Program
+internal static class Program
 {
-    private static void Main(string[] args)
+    private static void Main()
     {
         byte[] data1 = [0x11, 0x22, 0x33, 0x04];
-        Span<byte> data2 = data1.AsSpan();
+        var data2 = data1.AsSpan();
 
         PrintBinary(data1);
         ShiftLeft28Bit(data2, 1);
         PrintBinary(data1);
     }
-    
-    static void PrintBinary(byte[] data)
+
+    private static void PrintBinary(byte[] data)
     {
-        string binary = string.Join(" ", data.Select(b => Convert.ToString(b, 2).PadLeft(8, '0')));
+        var binary = string.Join(" ", data.Select(b => Convert.ToString(b, 2).PadLeft(8, '0')));
         Console.WriteLine(binary);
     }
-    
-     static void ShiftLeft28Bit(Span<byte> span, int k)
+
+    private static void ShiftLeft28Bit(Span<byte> span, int k)
     {
         if (span.Length < 4)
             throw new ArgumentException("Span должен содержать хотя бы 4 байта");
 
         // Читаем 4 байта как 32-битное целое (little-endian)
-        uint value = BitConverter.ToUInt32(span);
+        var value = BitConverter.ToUInt32(span);
 
         // Ограничиваем 28 бит (обнуляем старшие 4)
         value &= 0x0FFFFFFF;

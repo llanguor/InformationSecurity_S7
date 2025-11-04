@@ -52,12 +52,12 @@ public sealed class DesKeySchedule
         {
             var shift = Shifts[i];
             var mask = (1UL << shift) - 1;
-            var lmask = mask << (64 - shift);
-            var rmask = mask << (64 - 28 - shift);
+            var lMask = mask << (64 - shift);
+            var rMask = mask << (64 - 28 - shift);
             
-            ulongKey = ((ulongKey & ~rmask) << shift)
-                       | ((ulongKey & rmask) >> (28-shift))
-                       | ((ulongKey & lmask) >> (28-shift));
+            ulongKey = ((ulongKey & ~rMask) << shift)
+                       | ((ulongKey & rMask) >> (28-shift))
+                       | ((ulongKey & lMask) >> (28-shift));
             
             roundKeys[i] = PermutationSubstitution.Permute(
                     keySpan,
@@ -69,37 +69,5 @@ public sealed class DesKeySchedule
         }
         
         return roundKeys;
-    }
-    
-    static void PrintBinary(Span<byte> data)
-    {
-        for (int i = 0; i < data.Length; ++i)
-        {
-            byte b = data[i];
-            for (int bit = 7; bit >= 0; bit--)
-            {
-                Console.Write(((b >> bit) & 1) == 1 ? '1' : '0');
-            }
-            Console.Write(' ');
-        }
-        Console.WriteLine();
-    }
-    
-    static void PrintBinary(ulong value)
-    {
-        // Проходим по байтам от старшего к младшему
-        for (int byteIndex = 7; byteIndex >= 0; byteIndex--)
-        {
-            byte b = (byte)((value >> (byteIndex * 8)) & 0xFF);
-
-            // Проходим по битам байта от старшего к младшему
-            for (int bit = 7; bit >= 0; bit--)
-            {
-                Console.Write(((b >> bit) & 1) == 1 ? '1' : '0');
-            }
-            Console.Write(' ');
-        }
-
-        Console.WriteLine();
     }
 }
