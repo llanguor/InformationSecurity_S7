@@ -3,6 +3,32 @@
 	<s:String x:Key="/Default/CodeInspection/ExcludedFiles/FilesAndFoldersToSkip2/=7020124F_002D9FFC_002D4AC3_002D8F3D_002DAAB8E0240759_002Ff_003ARandomAccess_002EWindows_002Ecs_002Fl_003A_002E_002E_003F_002E_002E_003F_002E_002E_003F_002E_002E_003FUsers_003Flifem_003FAppData_003FRoaming_003FJetBrains_003FRider2024_002E3_003Fresharper_002Dhost_003FSourcesCache_003Fa878441279d47b13a152a6b138351d2dc0f9dfa2a1ee156ec83dc555e138eeea_003FRandomAccess_002EWindows_002Ecs/@EntryIndexedValue">ForceIncluded</s:String>
 	<s:String x:Key="/Default/CodeInspection/ExcludedFiles/FilesAndFoldersToSkip2/=7020124F_002D9FFC_002D4AC3_002D8F3D_002DAAB8E0240759_002Ff_003ASafeFileHandle_002Ecs_002Fl_003A_002E_002E_003F_002E_002E_003F_002E_002E_003F_002E_002E_003FUsers_003Flifem_003FAppData_003FRoaming_003FJetBrains_003FRider2024_002E3_003Fresharper_002Dhost_003FSourcesCache_003F954d4b3eb8f9636b0d9189f5a9236d5ab5520b5fe69bfd8b19ddb2b7c3049d4_003FSafeFileHandle_002Ecs/@EntryIndexedValue">ForceIncluded</s:String>
 	<s:String x:Key="/Default/CodeInspection/ExcludedFiles/FilesAndFoldersToSkip2/=7020124F_002D9FFC_002D4AC3_002D8F3D_002DAAB8E0240759_002Ff_003AVoid_002Ecs_002Fl_003A_002E_002E_003F_002E_002E_003F_002E_002E_003F_002E_002E_003FUsers_003Flifem_003FAppData_003FRoaming_003FJetBrains_003FRider2024_002E3_003Fresharper_002Dhost_003FDecompilerCache_003Fdecompiler_003Fde3edec1170e48a0a2478d8743508635c8e910_003F65_003F55cb848e_003FVoid_002Ecs/@EntryIndexedValue">ForceIncluded</s:String>
-	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=d3c2d4a1_002Dd234_002D4f2b_002Db66e_002D0ace4b381564/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="All tests from SpNetTest.cs" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
-  &lt;ProjectFile&gt;64019B0B-0540-4158-8660-2CE4B6FACC9B/f:SpNetTest.cs&lt;/ProjectFile&gt;&#xD;
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=5811c713_002D7fad_002D41fd_002D9db5_002D84caa589765c/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="Tests #2" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+  &lt;TestAncestor&gt;&#xD;
+    &lt;TestId&gt;NUnit3x::64019B0B-0540-4158-8660-2CE4B6FACC9B::net8.0::InformationSecurity_Tests.Tests&lt;/TestId&gt;&#xD;
+  &lt;/TestAncestor&gt;&#xD;
+&lt;/SessionState&gt;</s:String>
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=8d588ae9_002D4ec1_002D4188_002Dac98_002D624968b8c863/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="Tests #3" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+  &lt;TestAncestor&gt;&#xD;
+    &lt;TestId&gt;NUnit3x::64019B0B-0540-4158-8660-2CE4B6FACC9B::net8.0::InformationSecurity_Tests.Tests&lt;/TestId&gt;&#xD;
+  &lt;/TestAncestor&gt;&#xD;
+&lt;/SessionState&gt;</s:String>
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=d3c2d4a1_002Dd234_002D4f2b_002Db66e_002D0ace4b381564/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="All tests" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+  &lt;TestAncestor&gt;&#xD;
+    &lt;TestId&gt;NUnit3x::64019B0B-0540-4158-8660-2CE4B6FACC9B::net8.0::InformationSecurity_Tests.Tests&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;NUnit3x::64019B0B-0540-4158-8660-2CE4B6FACC9B::net8.0::InformationSecurity_Tests.DesKeyScheduleTest&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;NUnit3x::64019B0B-0540-4158-8660-2CE4B6FACC9B::net8.0::InformationSecurity_Tests.DesTest.DesKeyScheduleTest&lt;/TestId&gt;&#xD;
+  &lt;/TestAncestor&gt;&#xD;
+&lt;/SessionState&gt;</s:String>
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=e88d0c1c_002Dfdb2_002D4f06_002Da2f2_002D160eb3d0544b/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="Tests #4" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+  &lt;TestAncestor&gt;&#xD;
+    &lt;TestId&gt;NUnit3x::64019B0B-0540-4158-8660-2CE4B6FACC9B::net8.0::InformationSecurity_Tests.Tests&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;NUnit3x::64019B0B-0540-4158-8660-2CE4B6FACC9B::net8.0::InformationSecurity_Tests.DesKeyScheduleTest&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;NUnit3x::64019B0B-0540-4158-8660-2CE4B6FACC9B::net8.0::InformationSecurity_Tests.DesTest.DesKeyScheduleTest&lt;/TestId&gt;&#xD;
+  &lt;/TestAncestor&gt;&#xD;
+&lt;/SessionState&gt;</s:String>
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=f8ecc4e3_002Dc252_002D4d93_002D93f4_002Deea54394f51a/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="Tests" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+  &lt;TestAncestor&gt;&#xD;
+    &lt;TestId&gt;NUnit3x::64019B0B-0540-4158-8660-2CE4B6FACC9B::net8.0::InformationSecurity_Tests.Tests&lt;/TestId&gt;&#xD;
+  &lt;/TestAncestor&gt;&#xD;
 &lt;/SessionState&gt;</s:String></wpf:ResourceDictionary>

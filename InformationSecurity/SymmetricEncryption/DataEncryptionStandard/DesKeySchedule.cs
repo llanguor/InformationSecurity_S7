@@ -1,4 +1,5 @@
-﻿using InformationSecurity.SymmetricEncryption.FeistelNetwork.Base;
+﻿using System.Runtime.InteropServices;
+using InformationSecurity.SymmetricEncryption.FeistelNetwork.Base;
 namespace InformationSecurity.SymmetricEncryption.DataEncryptionStandard;
 
 /// <summary>
@@ -8,16 +9,6 @@ namespace InformationSecurity.SymmetricEncryption.DataEncryptionStandard;
 public sealed class DesKeySchedule 
     : IKeySchedule
 {
-    /*
-    private static readonly int[] InitialPermutation = 
-    [
-        58, 50, 42, 34, 26, 18, 10, 2, 60, 52, 44, 36, 28, 20, 12, 4,
-        62, 54, 46, 38, 30, 22, 14, 6, 64, 56, 48, 40, 32, 24, 16, 8,
-        57, 49, 41, 33, 25, 17, 9, 1, 59, 51, 43, 35, 27, 19, 11, 3,
-        61, 53, 45, 37, 29, 21, 13, 5, 63, 55, 47, 39, 31, 23, 15, 7
-    ]; 
-    */
-    
     private static readonly int[] PermutedChoice1 = 
     [
         57, 49, 41, 33, 25, 17, 9, 1, 58, 50, 42, 34, 26, 18,
@@ -33,7 +24,7 @@ public sealed class DesKeySchedule
         41, 52, 31, 37, 47, 55, 30, 40, 51, 45, 33, 48,
         44, 49, 39, 56, 34, 53, 46, 42, 50, 36, 29, 32
     ];
-
+    
     private static readonly int[] Shifts =
     [
         1, 1, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 1
@@ -44,37 +35,71 @@ public sealed class DesKeySchedule
     /// <inheritdoc/>
     public byte[][] Expand(byte[] key)
     {
-        //на вход 64 бита
-        //1. Отбросить каждый 8 (перестановкой). Остается 54 бит
-        //2. Делится на две половинки по 28 бит.
-        //3. Сдвигаем половинки циклически - на каждом раунде сдвиг разный (см табл)
-        //4. Половинки "объединяются" друг за другом
-        //4. Из них перестановкой выбираем 48 битов
+        var roundKeys = 
+            new byte[RoundsCount][];
         
-        var keySpan = key.AsSpan();
-        keySpan = Permutation.Permute(
-            keySpan, 
-            PermutedChoice1, 
-            Permutation.LeastSignificantBitPosition.Left,
-            Permutation.StartingBitIndex.First);
+        var keySpan = PermutationSubstitution.Permute(
+            key,
+            PermutedChoice1,
+            PermutationSubstitution.StartingBitIndex.First,
+            PermutationSubstitution.LeastSignificantBitPosition.Left,
+            PermutationSubstitution.LeastSignificantBitPosition.Right);
+        
+        ref var ulongKey =
+            ref MemoryMarshal.AsRef<ulong>(keySpan);
 
-        var result = new byte[RoundsCount][];
-        var left = keySpan.Slice(0, keySpan.Length/2);
-        var right = keySpan.Slice(keySpan.Length/2);
-        
         for (var i = 0; i < RoundsCount; ++i)
         {
             var shift = Shifts[i];
-            //left shift
+            var mask = (1UL << shift) - 1;
+            var lmask = mask << (64 - shift);
+            var rmask = mask << (64 - 28 - shift);
             
-            result[i] = Permutation.Permute(
-                keySpan, 
-                PermutedChoice2, 
-                Permutation.LeastSignificantBitPosition.Left,
-                Permutation.StartingBitIndex.First)
-                .ToArray();
+            ulongKey = ((ulongKey & ~rmask) << shift)
+                       | ((ulongKey & rmask) >> (28-shift))
+                       | ((ulongKey & lmask) >> (28-shift));
+            
+            roundKeys[i] = PermutationSubstitution.Permute(
+                    keySpan,
+                    PermutedChoice2,
+                    PermutationSubstitution.StartingBitIndex.First,
+                    PermutationSubstitution.LeastSignificantBitPosition.Right,
+                    PermutationSubstitution.LeastSignificantBitPosition.Left)
+                    .ToArray();
         }
         
-        return result;
+        return roundKeys;
+    }
+    
+    static void PrintBinary(Span<byte> data)
+    {
+        for (int i = 0; i < data.Length; ++i)
+        {
+            byte b = data[i];
+            for (int bit = 7; bit >= 0; bit--)
+            {
+                Console.Write(((b >> bit) & 1) == 1 ? '1' : '0');
+            }
+            Console.Write(' ');
+        }
+        Console.WriteLine();
+    }
+    
+    static void PrintBinary(ulong value)
+    {
+        // Проходим по байтам от старшего к младшему
+        for (int byteIndex = 7; byteIndex >= 0; byteIndex--)
+        {
+            byte b = (byte)((value >> (byteIndex * 8)) & 0xFF);
+
+            // Проходим по битам байта от старшего к младшему
+            for (int bit = 7; bit >= 0; bit--)
+            {
+                Console.Write(((b >> bit) & 1) == 1 ? '1' : '0');
+            }
+            Console.Write(' ');
+        }
+
+        Console.WriteLine();
     }
 }
