@@ -7,11 +7,14 @@
 public interface IRoundFunction
 {
     /// <summary>
-    /// Transforms the input block using the provided round key.
-    /// This method represents one round of a block cipher.
+    /// Transforms input block using the specified 48-bit round key.
+    /// Represents one round of the Feistel network (F-function).
+    /// The <paramref name="block"/> parameter is modified <c>in-place</c>.
     /// </summary>
-    /// <param name="block">The input block to be transformed.</param>
+    /// <param name="block">
+    /// The input block to be transformed.
+    /// the block is modified in-place.
+    /// </param>
     /// <param name="key">The round key to use for transformation.</param>
-    /// <returns>The transformed output block as a byte array.</returns>
-    byte[] TransformBlock(byte[] block, byte[] key);
+    void TransformBlock(Span<byte> block, ReadOnlySpan<byte> key);
 }

@@ -1,17 +1,20 @@
 ﻿namespace InformationSecurity.SymmetricEncryption.FeistelNetwork.Base;
 
 /// <summary>
-/// Interface that provides key expansion (generation) functionality.
-/// Used to generate round keys from an original key.
+/// Provides key expansion (generation) functionality for a Feistel network.
+/// Used to generate round keys from a master key.
 /// </summary>
 public interface IKeySchedule
 {
     /// <summary>
-    /// Generates a set of round keys from the specified master key.
+    /// Expands the specified master key into a set of round keys.
     /// </summary>
-    /// <param name="key">The master key as a byte array. For DES, it must be exactly 8 bytes long.</param>
+    /// <param name="key">
+    /// The master key as a read-only span of bytes. 
+    /// For DES, it must be exactly 8 bytes long.
+    /// </param>
     /// <returns>
     /// An array of round keys, where each element represents a single round key.
     /// </returns>
-    byte[][] Expand(byte[] key);
+    byte[][] Expand(ReadOnlySpan<byte> key);
 }

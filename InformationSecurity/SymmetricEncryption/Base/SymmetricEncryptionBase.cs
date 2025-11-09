@@ -19,19 +19,29 @@ public abstract class SymmetricEncryptionBase(
 {
     #region Properties
     
-    /// <summary>The block cipher mode applied during encryption and decryption.</summary>
+    /// <summary>
+    /// The block cipher mode applied during encryption and decryption.
+    /// </summary>
     protected BlockCipherMode Mode { get; } = mode;
 
-    /// <summary>The padding scheme used to fill blocks to the required size.</summary>
+    /// <summary>
+    /// The padding scheme used to fill blocks to the required size.
+    /// </summary>
     protected BlockCipherPadding Padding { get; } = padding;
     
-    /// <summary>The encryption key used for all operations.</summary>
+    /// <summary>
+    /// The encryption key used for all operations.
+    /// </summary>
     protected byte[] Key { get; } = key;
 
-    /// <summary>Optional initialization vector (IV) for certain cipher modes.</summary>
+    /// <summary>
+    /// Optional initialization vector (IV) for certain cipher modes.
+    /// </summary>
     protected byte[]? InitializationVector { get; } = initializationVector;
 
-    /// <summary>Additional optional parameters for the selected encryption mode.</summary>
+    /// <summary>
+    /// Additional optional parameters for the selected encryption mode.
+    /// </summary>
     protected object[] Parameters { get; } = parameters;
 
     #endregion
@@ -69,25 +79,14 @@ public abstract class SymmetricEncryptionBase(
     
     #region Overrides Methods
     
-    /// <summary>
-    /// Sets the encryption key to be used for all encryption and decryption operations.
-    /// </summary>
-    /// <param name="key">The symmetric encryption key.</param>
-    public abstract void SetKey(byte[] key);
+    /// <inheritdoc />
+    public abstract void SetKey(ReadOnlySpan<byte> key);
 
-    /// <summary>
-    /// Encrypts the provided byte array using the current key, mode, and padding.
-    /// </summary>
-    /// <param name="data">The data to encrypt.</param>
-    /// <returns>The encrypted byte array.</returns>
-    public abstract byte[] Encrypt(byte[] data);
+    /// <inheritdoc />
+    public abstract void Encrypt(Span<byte> data);
     
-    /// <summary>
-    /// Decrypts the provided byte array using the current key, mode, and padding.
-    /// </summary>
-    /// <param name="data">The data to decrypt.</param>
-    /// <returns>The decrypted byte array.</returns>
-    public abstract byte[] Decrypt(byte[] data);
+    /// <inheritdoc />
+    public abstract void Decrypt(Span<byte> data);
     
     #endregion
     

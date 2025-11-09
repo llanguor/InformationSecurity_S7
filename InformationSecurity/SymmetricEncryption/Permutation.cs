@@ -5,7 +5,7 @@
 /// including permutation and substitution operations. These operations allow reordering or replacing bits
 /// according to defined masks or substitution rules.
 /// </summary>
-public static class PermutationSubstitution
+public static class Permutation
 {
     /// <summary>
     /// Specifies the order of bit numbering in bytes.
@@ -36,19 +36,21 @@ public static class PermutationSubstitution
     /// </summary>
     /// <param name="bytes">A set of bytes.</param>
     /// <param name="mask">Mask for performing permutations.</param>
+    /// <param name="output">
+    /// The buffer that receives the permuted bits.
+    /// The size must be equal to or larger than the mask
+    /// </param>
     /// <param name="startingBitIndex">Specifies the index of the starting bit in the input bytes set.=</param>
     /// <param name="inputLsbPosition">Specifies the order of bit numbering in bytes in the input value.</param>
     /// <param name="outputLsbPosition">Specifies the order of bit numbering in bytes in the output value.</param>
-    /// <returns>Returns a set of bits with permuted values.</returns>
-    public static Span<byte> Permute(
-        Span<byte> bytes, 
+    public static void Permute(
+        ReadOnlySpan<byte> bytes, 
         ReadOnlySpan<int> mask,
+        Span<byte> output,
         StartingBitIndex startingBitIndex,
         LeastSignificantBitPosition inputLsbPosition,
         LeastSignificantBitPosition outputLsbPosition)
     {
-        Span<byte> result = new byte[bytes.Length];
-        
         for (var i = 0; i < mask.Length; i++)
         {
             var targetIndex = mask[i] - (int)startingBitIndex;
@@ -61,20 +63,10 @@ public static class PermutationSubstitution
             var byteIndex =
                 outputLsbPosition == LeastSignificantBitPosition.Left ? 
                     i / 8 : 
-                    result.Length - 1 - i / 8;
+                    output.Length - 1 - i / 8;
             
-            result[byteIndex] &= (byte) ~(1 << bitIndex);
-            result[byteIndex] |= (byte)(bitValue << bitIndex);
+            output[byteIndex] &= (byte) ~(1 << bitIndex);
+            output[byteIndex] |= (byte)(bitValue << bitIndex);
         }
-        
-        return result;
-    }
-
-    public static void Substitute(
-        Span<byte> bytes, 
-        ReadOnlySpan<int> mask,
-        StartingBitIndex startingBitIndex)
-    {
-        
     }
 }

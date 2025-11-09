@@ -4,11 +4,12 @@ using Serilog;
 
 namespace InformationSecurity_Tests;
 
-public class Tests
+public class PermutationTests
 {
     [SetUp]
     public void Setup()
     {
+        Logger.GetInstance();
     }
     
     [Test]
@@ -16,8 +17,8 @@ public class Tests
     {
         Span<byte> values = 
         [
-            0b01101101,0b1111111,0b10101010,0b01101110,
-            0b10101111,0b1000011,0b01101010,0b10011110
+            0b01101101, 0b11111110, 0b10101010, 0b01101110,
+            0b10101111, 0b10000110, 0b01101010, 0b10011110
         ];
         
         Span<int> mask = 
@@ -30,17 +31,18 @@ public class Tests
         
         Span<byte> expectedResult = 
         [
-            0b10010100,0b01101011,0b01011111,0b10001111,
-            0b11101001,0b10111101,0b11110010,0b00000000
+            0b10110110, 0b01001011, 0b01011111, 0b10001111, 
+            0b11101011, 0b10111101, 0b11110010
         ];
 
-        var result =
-            PermutationSubstitution.Permute(
-                values,
-                mask,
-                PermutationSubstitution.StartingBitIndex.First,
-                PermutationSubstitution.LeastSignificantBitPosition.Left,
-                PermutationSubstitution.LeastSignificantBitPosition.Left);
+        var result = new byte[mask.Length/8];
+        Permutation.Permute(
+            values,
+            mask,
+            result,
+            Permutation.StartingBitIndex.First,
+            Permutation.LeastSignificantBitPosition.Left,
+            Permutation.LeastSignificantBitPosition.Left);
         
         Log.Information(
             $"Permutation Test Completed.\nResult:\n{Utils.BinaryToString(result)}Expected result:\n{Utils.BinaryToString(expectedResult)}");

@@ -59,4 +59,24 @@ public static class Utils
         builder.Append('\n');
         return builder.ToString();
     }
+    
+    public static string BinaryToStringUlong(ulong value)
+    {
+        var builder = new StringBuilder(6);
+        for (int i = 63; i >= 0; i--)
+        {
+            builder.Append(((value >> i) & 1UL) == 1UL ? '1' : '0');
+        }
+        return builder.ToString();
+    }
+    
+    public static string BinaryToStringInt(int value)
+    {
+        var builder = new StringBuilder(32);
+        for (int i = 5; i >= 0; i--)
+        {
+            builder.Append(((value >> i) & 1) == 1 ? '1' : '0');
+        }
+        return builder.ToString();
+    }
 }

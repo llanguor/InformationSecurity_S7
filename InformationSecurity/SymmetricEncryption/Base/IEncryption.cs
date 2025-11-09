@@ -10,20 +10,18 @@ public interface IEncryption
     /// Sets the master key for the symmetric cipher.
     /// This method must be called before encrypting or decrypting data.
     /// </summary>
-    /// <param name="key">The master key as a byte array used to configure the cipher.</param>
-    void SetKey(byte[] key);
+    /// <param name="key">The master key as a read-only span of bytes used to configure the cipher.</param>
+    void SetKey(ReadOnlySpan<byte> key);
     
     /// <summary>
-    /// Encrypts the specified block of data.
+    /// Encrypts the specified block of data in-place.
     /// </summary>
-    /// <param name="data">The input block to encrypt as a byte array.</param>
-    /// <returns>The encrypted output block as a byte array.</returns>
-    byte[] Encrypt(byte[] data);
+    /// <param name="data">The input block to encrypt. It will be modified in-place.</param>
+    void Encrypt(Span<byte> data);
 
     /// <summary>
-    /// Decrypts the specified block of data.
+    /// Decrypts the specified block of data in-place.
     /// </summary>
-    /// <param name="data">The input block to decrypt as a byte array.</param>
-    /// <returns>The decrypted output block as a byte array.</returns>
-    byte[] Decrypt(byte[] data);
+    /// <param name="data">The input block to decrypt. It will be modified in-place.</param>
+    void Decrypt(Span<byte> data);
 }
