@@ -2,24 +2,27 @@
 using InformationSecurity.SymmetricEncryption.CipherPadding.Paddings;
 namespace InformationSecurity.SymmetricEncryption.CipherPadding.Context;
 
-public class CipherPaddingContext(Enum.CipherPadding padding) : ICipherPadding
+public class CipherPaddingContext(
+    Enum.CipherPadding padding,
+    int blockSize) 
+    : CipherPaddingBase(blockSize)
 {
     private readonly ICipherPadding _cipherPadding = padding switch
     {
-        Enum.CipherPadding.Iso10126 => new Iso10126(),
-        Enum.CipherPadding.Pkcs7 => new Pkcs7(),
-        Enum.CipherPadding.Zeros => new Zeros(),
-        Enum.CipherPadding.AnsiX923 => new AnsiX923(),
+        Enum.CipherPadding.Iso10126 => new Iso10126Padding(blockSize),
+        Enum.CipherPadding.Pkcs7 => new Pkcs7Padding(blockSize),
+        Enum.CipherPadding.Zeros => new ZerosPadding(blockSize),
+        Enum.CipherPadding.AnsiX923 => new AnsiX923Padding(blockSize),
         _ => throw new ArgumentOutOfRangeException(nameof(padding), padding, null)
     };
 
-    public void ApplyPadding(Span<byte> data, int blockSize)
+    public override byte[] Apply(byte[] data)
     {
-        _cipherPadding.ApplyPadding(data, blockSize);
+        return _cipherPadding.Apply(data);
     }
 
-    public void RemovePadding(Span<byte> data, int blockSize)
+    public override byte[] Remove(byte[] data)
     {
-        _cipherPadding.RemovePadding(data, blockSize);
+        return _cipherPadding.Remove(data);
     }
 }

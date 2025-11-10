@@ -1,14 +1,16 @@
 ﻿using InformationSecurity.SymmetricEncryption.CipherPadding.Base;
 namespace InformationSecurity.SymmetricEncryption.CipherPadding.Paddings;
 
-public class Pkcs7 : ICipherPadding
+public class Iso10126Padding(
+    int blockSize) 
+    : CipherPaddingBase(blockSize)
 {
-    public void ApplyPadding(Span<byte> data, int blockSize)
+    public override byte[] Apply(byte[] data)
     {
         throw new NotImplementedException();
     }
 
-    public void RemovePadding(Span<byte> data, int blockSize)
+    public override byte[] Remove(byte[] data)
     {
         throw new NotImplementedException();
     }

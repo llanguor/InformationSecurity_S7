@@ -41,16 +41,42 @@ public sealed class FeistelNetwork (
     
     
     #region Methods
-
+    
     /// <summary>
     /// Sets the master key for the Feistel network and regenerates round keys.
     /// </summary>
     /// <param name="key">
-    /// The master key as a <see cref="ReadOnlySpan{Byte}"/>. 
+    ///     The master key as a <see cref="ReadOnlySpan{Byte}"/>. 
     /// </param>
-    public void SetKey(ReadOnlySpan<byte> key)
+    public void SetKey(byte[] key)
     {
         _roundKeys = _keySchedule.Expand(key);
+    }
+    
+    /// <summary>
+    /// Encrypts the specified data block using the Feistel network.
+    /// The input <paramref name="data"/> is modified <c>in-place</c>.
+    /// </summary>
+    /// <param name="data">
+    ///     The input block to encrypt.
+    ///     Its length must be divisible by 2, as the block is split into left and right halves.
+    /// </param>
+    public void Encrypt(byte[] data)
+    {
+        Encrypt(data.AsSpan());
+    }
+
+    /// <summary>
+    /// Decrypts the specified data block using the Feistel network.
+    /// The input <paramref name="data"/> is modified <c>in-place</c>.
+    /// </summary>
+    /// <param name="data">
+    ///     The input block to decrypt.
+    ///     Its length must be divisible by 2, as the block is split into left and right halves.
+    /// </param>
+    public void Decrypt(byte[] data)
+    {
+        Decrypt(data.AsSpan());
     }
 
     /// <summary>
@@ -58,8 +84,8 @@ public sealed class FeistelNetwork (
     /// The input <paramref name="data"/> is modified <c>in-place</c>.
     /// </summary>
     /// <param name="data">
-    /// The input block to encrypt as a <see cref="Span{Byte}"/>.
-    /// Its length must be divisible by 2, as the block is split into left and right halves.
+    ///     The input block to encrypt as a <see cref="Span{Byte}"/>.
+    ///     Its length must be divisible by 2, as the block is split into left and right halves.
     /// </param>
     public void Encrypt(Span<byte> data)
     {
@@ -93,8 +119,8 @@ public sealed class FeistelNetwork (
     /// The input <paramref name="data"/> is modified <c>in-place</c>.
     /// </summary>
     /// <param name="data">
-    /// The input block to decrypt as a <see cref="Span{Byte}"/>.
-    /// Its length must be divisible by 2, as the block is split into left and right halves.
+    ///     The input block to decrypt as a <see cref="Span{Byte}"/>.
+    ///     Its length must be divisible by 2, as the block is split into left and right halves.
     /// </param>
     public void Decrypt(Span<byte> data)
     {

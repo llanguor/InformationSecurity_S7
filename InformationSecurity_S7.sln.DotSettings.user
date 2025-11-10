@@ -1,6 +1,8 @@
 ﻿<wpf:ResourceDictionary xml:space="preserve" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:s="clr-namespace:System;assembly=mscorlib" xmlns:ss="urn:shemas-jetbrains-com:settings-storage-xaml" xmlns:wpf="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
+	<s:String x:Key="/Default/CodeInspection/ExcludedFiles/FilesAndFoldersToSkip2/=7020124F_002D9FFC_002D4AC3_002D8F3D_002DAAB8E0240759_002Ff_003AContainer_002Ecs_002Fl_003A_002E_002E_003F_002E_002E_003F_002E_002E_003F_002E_002E_003FUsers_003Flifem_003FAppData_003FRoaming_003FJetBrains_003FRider2024_002E3_003Fresharper_002Dhost_003FSourcesCache_003Fae17d143747f60cb54bbbb7c3323781cb538e8062ed8a991afce467b21c2fe9_003FContainer_002Ecs/@EntryIndexedValue">ForceIncluded</s:String>
 	<s:String x:Key="/Default/CodeInspection/ExcludedFiles/FilesAndFoldersToSkip2/=7020124F_002D9FFC_002D4AC3_002D8F3D_002DAAB8E0240759_002Ff_003AFile_002Ecs_002Fl_003A_002E_002E_003F_002E_002E_003F_002E_002E_003F_002E_002E_003FUsers_003Flifem_003FAppData_003FRoaming_003FJetBrains_003FRider2024_002E3_003Fresharper_002Dhost_003FSourcesCache_003Fb2e2ff5e4f118b6e4ad5f910e9fde1fd6a338b5716cff790e934a2014dc8379_003FFile_002Ecs/@EntryIndexedValue">ForceIncluded</s:String>
 	<s:String x:Key="/Default/CodeInspection/ExcludedFiles/FilesAndFoldersToSkip2/=7020124F_002D9FFC_002D4AC3_002D8F3D_002DAAB8E0240759_002Ff_003AIndexOutOfRangeException_002Ecs_002Fl_003A_002E_002E_003F_002E_002E_003F_002E_002E_003F_002E_002E_003FUsers_003Flifem_003FAppData_003FRoaming_003FJetBrains_003FRider2024_002E3_003Fresharper_002Dhost_003FSourcesCache_003F5dd018d01da58229289a61ee6df34c4fc07ffef0f019f8e224b98a493de72ecb_003FIndexOutOfRangeException_002Ecs/@EntryIndexedValue">ForceIncluded</s:String>
+	<s:String x:Key="/Default/CodeInspection/ExcludedFiles/FilesAndFoldersToSkip2/=7020124F_002D9FFC_002D4AC3_002D8F3D_002DAAB8E0240759_002Ff_003AMemory_002Ecs_002Fl_003A_002E_002E_003F_002E_002E_003F_002E_002E_003F_002E_002E_003FUsers_003Flifem_003FAppData_003FRoaming_003FJetBrains_003FRider2024_002E3_003Fresharper_002Dhost_003FSourcesCache_003F61969401fa9fe302e7a8dc920fae583d47ca45cf06557a6d37a2127af7833f_003FMemory_002Ecs/@EntryIndexedValue">ForceIncluded</s:String>
 	<s:String x:Key="/Default/CodeInspection/ExcludedFiles/FilesAndFoldersToSkip2/=7020124F_002D9FFC_002D4AC3_002D8F3D_002DAAB8E0240759_002Ff_003ARandomAccess_002EWindows_002Ecs_002Fl_003A_002E_002E_003F_002E_002E_003F_002E_002E_003F_002E_002E_003FUsers_003Flifem_003FAppData_003FRoaming_003FJetBrains_003FRider2024_002E3_003Fresharper_002Dhost_003FSourcesCache_003Fa878441279d47b13a152a6b138351d2dc0f9dfa2a1ee156ec83dc555e138eeea_003FRandomAccess_002EWindows_002Ecs/@EntryIndexedValue">ForceIncluded</s:String>
 	<s:String x:Key="/Default/CodeInspection/ExcludedFiles/FilesAndFoldersToSkip2/=7020124F_002D9FFC_002D4AC3_002D8F3D_002DAAB8E0240759_002Ff_003AReadOnlySpan_002Ecs_002Fl_003A_002E_002E_003F_002E_002E_003F_002E_002E_003F_002E_002E_003FUsers_003Flifem_003FAppData_003FRoaming_003FJetBrains_003FRider2024_002E3_003Fresharper_002Dhost_003FSourcesCache_003Fd791c3eb25297f33ebfc088aa821fe66a8a3a295b63fbd1a1d8f4b2e77e1017_003FReadOnlySpan_002Ecs/@EntryIndexedValue">ForceIncluded</s:String>
 	<s:String x:Key="/Default/CodeInspection/ExcludedFiles/FilesAndFoldersToSkip2/=7020124F_002D9FFC_002D4AC3_002D8F3D_002DAAB8E0240759_002Ff_003ASafeFileHandle_002Ecs_002Fl_003A_002E_002E_003F_002E_002E_003F_002E_002E_003F_002E_002E_003FUsers_003Flifem_003FAppData_003FRoaming_003FJetBrains_003FRider2024_002E3_003Fresharper_002Dhost_003FSourcesCache_003F954d4b3eb8f9636b0d9189f5a9236d5ab5520b5fe69bfd8b19ddb2b7c3049d4_003FSafeFileHandle_002Ecs/@EntryIndexedValue">ForceIncluded</s:String>
@@ -9,6 +11,11 @@
 	<s:String x:Key="/Default/Environment/AssemblyExplorer/XmlDocument/@EntryValue">&lt;AssemblyExplorer&gt;&#xD;
   &lt;Assembly Path="C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\8.0.4\ref\net8.0\System.Security.Cryptography.dll" /&gt;&#xD;
 &lt;/AssemblyExplorer&gt;</s:String>
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=c0366cf3_002D6293_002D4dbf_002Da7ed_002Db0fa6ccfb431/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="ZerosPaddingApplyTest" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+  &lt;TestAncestor&gt;&#xD;
+    &lt;TestId&gt;NUnit3x::64019B0B-0540-4158-8660-2CE4B6FACC9B::net8.0::InformationSecurity_Tests.PaddingUnitTest.ZerosPaddingApplyTest&lt;/TestId&gt;&#xD;
+  &lt;/TestAncestor&gt;&#xD;
+&lt;/SessionState&gt;</s:String>
 	
 	
 	
@@ -22,6 +29,13 @@
     &lt;TestId&gt;NUnit3x::64019B0B-0540-4158-8660-2CE4B6FACC9B::net8.0::InformationSecurity_Tests.DesTests.DesRoundFunctionTest&lt;/TestId&gt;&#xD;
     &lt;TestId&gt;NUnit3x::64019B0B-0540-4158-8660-2CE4B6FACC9B::net8.0::InformationSecurity_Tests.DesTests.DesEncryptTest&lt;/TestId&gt;&#xD;
     &lt;TestId&gt;NUnit3x::64019B0B-0540-4158-8660-2CE4B6FACC9B::net8.0::InformationSecurity_Tests.FeistelNetworkTests.EncryptDecryptTest&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;NUnit3x::64019B0B-0540-4158-8660-2CE4B6FACC9B::net8.0::InformationSecurity_Tests.DesTests&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;NUnit3x::64019B0B-0540-4158-8660-2CE4B6FACC9B::net8.0::InformationSecurity_Tests.PaddingUnitTest.ZerosPaddingTest&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;NUnit3x::64019B0B-0540-4158-8660-2CE4B6FACC9B::net8.0::InformationSecurity_Tests.PaddingUnitTest.ZerosPaddingRemoveTest&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;NUnit3x::64019B0B-0540-4158-8660-2CE4B6FACC9B::net8.0::InformationSecurity_Tests.PaddingUnitTest.ZerosPaddingApplyTest&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;NUnit3x::64019B0B-0540-4158-8660-2CE4B6FACC9B::net8.0::InformationSecurity_Tests.PaddingUnitTest.Pkcs7PaddingApplyTest&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;NUnit3x::64019B0B-0540-4158-8660-2CE4B6FACC9B::net8.0::InformationSecurity_Tests.PaddingUnitTest.Pkcs7PaddingRemoveTest&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;NUnit3x::64019B0B-0540-4158-8660-2CE4B6FACC9B::net8.0::InformationSecurity_Tests.PaddingUnitTest.Pkcs7PaddingApplyFullBlockTest&lt;/TestId&gt;&#xD;
   &lt;/TestAncestor&gt;&#xD;
 &lt;/SessionState&gt;</s:String>
 	

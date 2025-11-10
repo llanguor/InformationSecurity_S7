@@ -10,110 +10,93 @@ namespace InformationSecurity.SymmetricEncryption.Base;
 public abstract class SymmetricEncryptionBase : IEncryption
 {
     #region Properties
-
+    
     protected CipherModeContext CipherModeContext { get; }
     
-    
     protected CipherPaddingContext CipherPaddingContext { get; }
-
     
-    protected IEncryption Encryption { get; }
-    
-    
-    protected int BlockSize { get; }
+    /// <summary>
+    /// Size of a single encryption block, in bytes.
+    /// All input data is processed in chunks of this size.
+    /// </summary>
+    public int BlockSize { get; }
     
     /// <summary>
     /// The block cipher mode applied during encryption and decryption.
     /// </summary>
-    protected CipherMode.Enum.CipherMode Mode { get; }
+    public CipherMode.Enum.CipherMode Mode { get; }
 
     /// <summary>
     /// The padding scheme used to fill blocks to the required size.
     /// </summary>
-    protected CipherPadding.Enum.CipherPadding Padding { get; }
+    public CipherPadding.Enum.CipherPadding Padding { get; }
     
     /// <summary>
     /// The encryption key used for all operations.
     /// </summary>
     protected byte[] Key { get; }
-
-    /// <summary>
-    /// Optional initialization vector (IV) for certain cipher modes.
-    /// </summary>
-    protected byte[]? InitializationVector { get; }
-
-    /// <summary>
-    /// Additional optional parameters for the selected encryption mode.
-    /// </summary>
-    protected object[] Parameters { get; }
-
+    
     #endregion
     
     
     #region Constructors
-    
+
     /// <summary>
     /// Represents the execution context for a symmetric encryption algorithm,
     /// providing encryption and decryption operations with a specified key.
     /// </summary>
-    /// /// <param name="encryptionAlgorithm">
-    /// The specific symmetric encryption algorithm to be used for encrypting and decrypting blocks.
-    /// This can be any implementation of the <see cref="IEncryption"/> interface.
-    /// </param>
+    /// <param name="blockSize">Size of data block processed at a time in symmetric block cipher.</param>
     /// <param name="key">The encryption key used for all operations.</param>
     /// <param name="mode">The block cipher mode applied during encryption and decryption.</param>
     /// <param name="padding">The padding scheme used to fill blocks to the required size.</param>
     /// <param name="initializationVector">Optional initialization vector (IV) for certain cipher modes.</param>
     /// <param name="parameters">Additional optional parameters for the selected encryption mode.</param>
     protected SymmetricEncryptionBase(
-        IEncryption encryptionAlgorithm,
         int blockSize,
         byte[] key,
-        CipherMode.Enum.CipherMode mode,
         CipherPadding.Enum.CipherPadding padding,
+        CipherMode.Enum.CipherMode mode,
         byte[]? initializationVector = null,
         params object[] parameters)
     {
-        Encryption = encryptionAlgorithm;
         BlockSize = blockSize;
         Mode = mode;
         Padding = padding;
         Key = key;
-        InitializationVector = initializationVector;
-        Parameters = parameters;
-
+        
         CipherPaddingContext =
-            new CipherPaddingContext(padding);
+            new CipherPaddingContext(
+                Padding,
+                BlockSize);
         
         CipherModeContext = 
             new CipherModeContext(
-                mode,
+                Mode,
+                EncryptBlock,
+                BlockSize,
                 initializationVector, 
                 parameters);
     }
     
     #endregion
-
-
-
-    #region Methods
-
-    /// <inheritdoc />
-    public void SetKey(ReadOnlySpan<byte> key)
-    {
-        Encryption.SetKey(key);
-    }
-
-    #endregion
     
     
     #region Abstract Methods
     
-    /// <inheritdoc />
-    public abstract void Encrypt(Span<byte> data);
+    internal abstract void EncryptBlock(Memory<byte> data);
+
+    internal abstract void DecryptBlock(Memory<byte> data);
+    
     
     /// <inheritdoc />
-    public abstract void Decrypt(Span<byte> data);
+    public abstract void SetKey(byte[] key);
+    
+    /// <inheritdoc />
+    public abstract void Encrypt(byte[] data);
+    
+    /// <inheritdoc />
+    public abstract void Decrypt(byte[] data);
+    
     
     /// <summary>
     /// Encrypts the provided byte array and outputs the result via an out parameter.

@@ -11,17 +11,17 @@ public interface IEncryption
     /// This method must be called before encrypting or decrypting data.
     /// </summary>
     /// <param name="key">The master key as a read-only span of bytes used to configure the cipher.</param>
-    void SetKey(ReadOnlySpan<byte> key);
-    
+    void SetKey(byte[] key);
+
     /// <summary>
     /// Encrypts the specified block of data in-place.
     /// </summary>
     /// <param name="data">The input block to encrypt. It will be modified in-place.</param>
-    void Encrypt(Span<byte> data);
+    void Encrypt(byte[] data);
 
     /// <summary>
     /// Decrypts the specified block of data in-place.
     /// </summary>
     /// <param name="data">The input block to decrypt. It will be modified in-place.</param>
-    void Decrypt(Span<byte> data);
+    void Decrypt(byte[] data);
 }

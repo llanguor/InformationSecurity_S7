@@ -1,6 +1,7 @@
 ﻿using System.Runtime.InteropServices;
 using InformationSecurity.SymmetricEncryption.FeistelNetwork.Base;
-namespace InformationSecurity.SymmetricEncryption.DataEncryptionStandard;
+
+namespace InformationSecurity.SymmetricEncryption.Des;
 
 /// <summary>
 /// Implementation of the <see cref="IRoundFunction"/> interface for the DES algorithm.

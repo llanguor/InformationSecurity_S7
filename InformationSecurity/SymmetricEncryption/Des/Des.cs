@@ -1,14 +1,17 @@
-﻿using InformationSecurity.SymmetricEncryption.Base;
-using InformationSecurity.SymmetricEncryption.FeistelNetwork.Base;
-
-namespace InformationSecurity.SymmetricEncryption.DataEncryptionStandard;
+﻿using InformationSecurity.SymmetricEncryption.FeistelNetwork.Base;
+namespace InformationSecurity.SymmetricEncryption.Des;
 
 /// <summary>
 /// Implements the Data Encryption Standard (DES) symmetric encryption algorithm.
 /// This class provides functionality for encrypting and decrypting 64-bit blocks of data.
 /// </summary>
-public sealed class DataEncryptionStandard(byte[] key)
-    : IEncryption
+public sealed class Des(
+    byte[] key, 
+    CipherPadding.Enum.CipherPadding padding, 
+    CipherMode.Enum.CipherMode mode, 
+    byte[]? initializationVector = null, 
+    params object[] parameters)
+    : SymmetricEncryption(8, key, padding, mode, initializationVector, parameters)
 {
     #region Fields
     
@@ -70,33 +73,32 @@ public sealed class DataEncryptionStandard(byte[] key)
     
     
     #region Methods
-    
+
     /// <summary>
     /// Sets the master key for the DES cipher.
     /// The key is stored internally and used for subsequent encryption and decryption operations.
     /// </summary>
     /// <param name="key">
-    /// The master key as a read-only span of bytes. 
-    /// The key must be exactly 8 bytes (64 bits) long.
+    ///     The master key as a read-only span of bytes. 
+    ///     The key must be exactly 8 bytes (64 bits) long.
     /// </param>
-    public void SetKey(ReadOnlySpan<byte> key)
+    public override void SetKey(byte[] key)
     {
         _feistelNetwork.SetKey(key);
     }
 
-    
     /// <summary>
     /// Encrypts a 64-bit block of data in-place using DES.
     /// </summary>
     /// <param name="data">
-    /// The input block to encrypt. Must be exactly 8 bytes long.
-    /// The block is modified in-place with the encrypted result.
+    ///     The input block to encrypt. Must be exactly 8 bytes long.
+    ///     The block is modified in-place with the encrypted result.
     /// </param>
-    public void Encrypt(Span<byte> data)
+    internal override void EncryptBlock(Memory<byte> data)
     {
         Span<byte> buffer = stackalloc byte[8];
         Permutation.Permute(
-            data,
+            data.Span,
             InitialPermutation,
             buffer,
             Permutation.StartingBitIndex.First,
@@ -108,7 +110,7 @@ public sealed class DataEncryptionStandard(byte[] key)
         Permutation.Permute(
             buffer,
             InverseInitialPermutation,
-            data,
+            data.Span,
             Permutation.StartingBitIndex.First,
             Permutation.LeastSignificantBitPosition.Left,
             Permutation.LeastSignificantBitPosition.Left);
@@ -118,14 +120,14 @@ public sealed class DataEncryptionStandard(byte[] key)
     /// Decrypts a 64-bit block of data in-place using DES.
     /// </summary>
     /// <param name="data">
-    /// The input block to decrypt. Must be exactly 8 bytes long.
-    /// The block is modified in-place with the decrypted result.
+    ///     The input block to decrypt. Must be exactly 8 bytes long.
+    ///     The block is modified in-place with the decrypted result.
     /// </param>
-    public void Decrypt(Span<byte> data)
+    internal override void DecryptBlock(Memory<byte> data)
     {
         Span<byte> buffer = stackalloc byte[data.Length];
         Permutation.Permute(
-            data,
+            data.Span,
             InitialPermutation,
             buffer,
             Permutation.StartingBitIndex.First,
@@ -137,7 +139,7 @@ public sealed class DataEncryptionStandard(byte[] key)
         Permutation.Permute(
             buffer,
             InverseInitialPermutation,
-            data,
+            data.Span,
             Permutation.StartingBitIndex.First,
             Permutation.LeastSignificantBitPosition.Left,
             Permutation.LeastSignificantBitPosition.Left);

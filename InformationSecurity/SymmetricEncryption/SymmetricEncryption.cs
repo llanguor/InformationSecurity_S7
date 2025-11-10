@@ -1,21 +1,26 @@
 ﻿namespace InformationSecurity.SymmetricEncryption;
 using Base;
 
-public sealed class SymmetricEncryption(
-    IEncryption encryptionAlgorithm,
+public abstract class SymmetricEncryption(
     int blockSize,
     byte[] key, 
-    CipherMode.Enum.CipherMode mode, 
     CipherPadding.Enum.CipherPadding padding, 
+    CipherMode.Enum.CipherMode mode, 
     byte[]? initializationVector = null, 
     params object[] parameters) 
-    : SymmetricEncryptionBase(encryptionAlgorithm, blockSize, key, mode, padding, initializationVector, parameters)
+    : SymmetricEncryptionBase(blockSize, key, padding, mode, initializationVector, parameters)
 {
+    #region Methods
+    
     /// <inheritdoc/>
-    public override void Encrypt(Span<byte> data)
+    public override void Encrypt(byte[] data)
     {
-        CipherPaddingContext.ApplyPadding(data, BlockSize);
-        CipherModeContext.Encrypt(data, Encryption, BlockSize);
+        CipherModeContext.Encrypt(data);
+           /*
+        CipherPaddingContext.Apply(data, BlockSize);
+        CipherModeContext.Encrypt(data, EncryptBlock, BlockSize);
+        */
+        
         //ИЛИ МБ ЛУЧШЕ ЗАСУНУТЬ В КОНСТРУКТОР BlockSize у этой фигни
         //ВОЗМОЖНО: поменять всё на наследование?
         
@@ -37,10 +42,8 @@ public sealed class SymmetricEncryption(
         
         //Предполагаем, что к этому моменту во входных данных
         //имеются биты контроля четности и всё это кратно 8
- 
-
     }
-
+    
     /// <inheritdoc/>
     public override void Encrypt(byte[] data, out byte[] result)
     {
@@ -54,7 +57,7 @@ public sealed class SymmetricEncryption(
     }
     
     /// <inheritdoc/>
-    public override void Decrypt(Span<byte> data)
+    public override void Decrypt(byte[] data)
     {
         throw new NotImplementedException();
     }
@@ -70,6 +73,11 @@ public sealed class SymmetricEncryption(
     {
         throw new NotImplementedException();
     }
+    
+    #endregion
+
+
+    #region Async Methods
 
     /// <inheritdoc/>
     public override async Task<byte[]> EncryptAsync(byte[] data)
@@ -94,4 +102,6 @@ public sealed class SymmetricEncryption(
     {
         throw new NotImplementedException();
     }
+
+    #endregion
 }

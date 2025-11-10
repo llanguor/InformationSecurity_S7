@@ -1,6 +1,6 @@
 using DryIoc;
 using InformationSecurity_Tests.Infrastructure;
-using InformationSecurity.SymmetricEncryption.DataEncryptionStandard;
+using InformationSecurity.SymmetricEncryption.Des;
 using InformationSecurity.SymmetricEncryption.FeistelNetwork;
 using Serilog;
 

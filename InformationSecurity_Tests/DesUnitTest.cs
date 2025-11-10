@@ -1,6 +1,9 @@
+using System.Reflection;
 using DryIoc;
 using InformationSecurity_Tests.Infrastructure;
-using InformationSecurity.SymmetricEncryption.DataEncryptionStandard;
+using InformationSecurity.SymmetricEncryption.CipherMode.Enum;
+using InformationSecurity.SymmetricEncryption.CipherPadding.Enum;
+using InformationSecurity.SymmetricEncryption.Des;
 using InformationSecurity.SymmetricEncryption.FeistelNetwork.Base;
 using Serilog;
 
@@ -9,6 +12,12 @@ namespace InformationSecurity_Tests;
 public class DesTests
 {
     private readonly byte [] _key = 
+    [
+        0b01101101,0b1111111,0b10101010,0b01101110,
+        0b10101111,0b1000011,0b01101010,0b10011110
+    ];
+    
+    private readonly byte [] _initVector = 
     [
         0b01101101,0b1111111,0b10101010,0b01101110,
         0b10101111,0b1000011,0b01101010,0b10011110
@@ -23,7 +32,13 @@ public class DesTests
         _container = new Container();
         _container.Register<IKeySchedule, DesKeySchedule>();
         _container.Register<IRoundFunction, DesRoundFunction>();
-        _container.RegisterInstance(new DataEncryptionStandard(_key));
+        _container.RegisterInstance(
+            new Des(
+                _key,
+                CipherPadding.Iso10126,
+                CipherMode.Cbc,
+                _initVector
+            ));
     }
     
     [TearDown]
@@ -111,9 +126,9 @@ public class DesTests
             0b01111110, 0b01111010, 0b11111100, 0b00001101,
             0b00011100, 0b11001100, 0b01010101, 0b01011101
         ];
-        
-        _container.Resolve<DataEncryptionStandard>()
-            .Encrypt(block);
+
+        _container.Resolve<Des>()
+            .EncryptBlock(block);
         
         Log.Information(
             $"DesRoundFunctionTest Completed.\nResult:\n{Utils.BinaryToString(block)}Expected result:\n{Utils.BinaryToString(expectedResult)}");
@@ -138,8 +153,11 @@ public class DesTests
             0b01101101,0b11111111,0b10101010,0b01101110
         ];
        
-        _container.Resolve<DataEncryptionStandard>()
-            .Decrypt(block);
+        var des = _container.Resolve<Des>();
+        var method = typeof(Des).GetMethod(
+                    "DecryptBlock", 
+                    BindingFlags.NonPublic | BindingFlags.Instance);
+        method?.Invoke(des, [block.AsMemory()]);
         
         Log.Information(
             $"DesRoundFunctionTest Completed.\nResult:\n{Utils.BinaryToString(block)}Expected result:\n{Utils.BinaryToString(expectedResult)}");
