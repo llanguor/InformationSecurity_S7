@@ -41,25 +41,12 @@ public sealed class CfbMode(
 
     public override void Decrypt(Memory<byte> data)
     {
-        var ciphers = 
-            data.ToArray().AsMemory();
-        var iv = InitializationVector!.Value.ToArray();
-        EncryptionFunc(iv);
+        var ciphers = data.ToArray().AsMemory();
+        var iv = ComputeEncryptIv();
 
         Parallel.For(0, data.Length / BlockSize, i =>
         {
-            var lastBlock =
-                i==0?
-                    iv:
-                    ciphers.Slice((i-1) * BlockSize, BlockSize);
-            
-            var block = 
-                data.Slice(i * BlockSize, BlockSize);
-            
-            for (var j = 0; j < BlockSize; ++j)
-            {
-                block.Span[j] ^= lastBlock.Span[j];
-            }
+            ProcessDecryptBlock(data, ciphers, iv, i);
         });
     }
 
@@ -74,10 +61,8 @@ public sealed class CfbMode(
         Memory<byte> data, 
         CancellationToken cancellationToken = default)
     {
-        var ciphers = 
-            data.ToArray().AsMemory();
-        var iv = InitializationVector!.Value.ToArray();
-        EncryptionFunc(iv);
+        var ciphers = data.ToArray().AsMemory();
+        var iv = ComputeEncryptIv();
         
         await Parallel.ForAsync(
             0,
@@ -86,21 +71,35 @@ public sealed class CfbMode(
             (i, token) =>
             {
                 token.ThrowIfCancellationRequested();
-                
-                var lastBlock =
-                    i==0?
-                        iv:
-                        ciphers.Slice((i-1) * BlockSize, BlockSize);
-            
-                var block = 
-                    data.Slice(i * BlockSize, BlockSize);
-            
-                for (var j = 0; j < BlockSize; ++j)
-                {
-                    block.Span[j] ^= lastBlock.Span[j];
-                }
-                
+                ProcessDecryptBlock(data, ciphers, iv, i);
                 return ValueTask.CompletedTask;
             });
+    }
+
+    private byte[] ComputeEncryptIv()
+    {
+        var iv = InitializationVector!.Value.ToArray();
+        EncryptionFunc(iv);
+        return iv;
+    }
+
+    private void ProcessDecryptBlock(
+        Memory<byte> data, 
+        Memory<byte> ciphers,
+        byte[] iv, 
+        int i)
+    {
+        var lastBlock =
+            i==0?
+                iv:
+                ciphers.Slice((i-1) * BlockSize, BlockSize);
+            
+        var block = 
+            data.Slice(i * BlockSize, BlockSize);
+            
+        for (var j = 0; j < BlockSize; ++j)
+        {
+            block.Span[j] ^= lastBlock.Span[j];
+        }
     }
 }

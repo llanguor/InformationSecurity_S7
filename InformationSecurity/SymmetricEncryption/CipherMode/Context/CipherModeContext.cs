@@ -41,7 +41,7 @@ public sealed class CipherModeContext : CipherModeBase
                 new CtrMode(encryptionFunc, decryptionFunc, blockSize, initializationVector!),
             
             Enum.CipherMode.RandomDelta => 
-                new RandomDeltaMode(encryptionFunc, decryptionFunc, blockSize, initializationVector!),
+                new RdMode(encryptionFunc, decryptionFunc, blockSize, initializationVector!),
             
             _ => throw new ArgumentOutOfRangeException(nameof(mode), mode, null)
         };

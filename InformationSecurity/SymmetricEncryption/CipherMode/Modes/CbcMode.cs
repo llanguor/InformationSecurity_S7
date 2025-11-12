@@ -40,20 +40,7 @@ public sealed class CbcMode (
         
         Parallel.For(0, data.Length / BlockSize, i =>
         {
-            var lastBlock =
-                i==0?
-                    InitializationVector!.Value:
-                    ciphers.Slice((i-1) * BlockSize, BlockSize);
-            
-            var block = 
-                data.Slice(i * BlockSize, BlockSize);
-            
-            DecryptionFunc(block);
-            
-            for (var j = 0; j < BlockSize; ++j)
-            {
-                block.Span[j] ^= lastBlock.Span[j];
-            }
+            ProcessDecryptBlock(data, ciphers, i);
         });
     }
 
@@ -78,23 +65,29 @@ public sealed class CbcMode (
             (i, token) =>
             {
                 token.ThrowIfCancellationRequested();
-                
-                var lastBlock =
-                    i==0?
-                        InitializationVector!.Value:
-                        ciphers.Slice((i-1) * BlockSize, BlockSize);
-            
-                var block = 
-                    data.Slice(i * BlockSize, BlockSize);
-            
-                DecryptionFunc(block);
-            
-                for (var j = 0; j < BlockSize; ++j)
-                {
-                    block.Span[j] ^= lastBlock.Span[j];
-                }
-                
+                ProcessDecryptBlock(data, ciphers, i);
                 return ValueTask.CompletedTask;
             });
     }
+
+    private void ProcessDecryptBlock(Memory<byte> data, Memory<byte> ciphers, int i)
+    {
+        var lastBlock =
+            i==0?
+                InitializationVector!.Value:
+                ciphers.Slice((i-1) * BlockSize, BlockSize);
+            
+        var block = 
+            data.Slice(i * BlockSize, BlockSize);
+            
+        DecryptionFunc(block);
+            
+        for (var j = 0; j < BlockSize; ++j)
+        {
+            block.Span[j] ^= lastBlock.Span[j];
+        }
+    }
+    
+
+
 }

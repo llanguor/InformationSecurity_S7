@@ -19,14 +19,13 @@ public sealed class PcbcMode(
             InitializationVector!.Value;
         
         byte[]? lastPlainText = null;
-        byte[] currentPlainText;
-        
+
         for (var i = 0; i < data.Length; i+=BlockSize)
         {
             var block = 
                 data.Slice(i, BlockSize);
             
-            currentPlainText = block.ToArray();
+            var currentPlainText = block.ToArray();
             
             for (var j = 0; j < BlockSize; ++j)
             {
@@ -52,14 +51,13 @@ public sealed class PcbcMode(
         var lastBlock =
             InitializationVector!.Value.ToArray().AsSpan();
         Span<byte> lastPlainText = null;
-        byte[] currentCipherText;
-        
+
         for (var i = 0; i < data.Length ; i+=BlockSize)
         {
             var block = 
                 data.Slice(i, BlockSize);
            
-            currentCipherText = block.ToArray();
+            var currentCipherText = block.ToArray();
             DecryptionFunc(block);
             
             for (var j = 0; j < BlockSize; ++j)

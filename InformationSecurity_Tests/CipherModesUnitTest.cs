@@ -1,7 +1,5 @@
 ﻿using DryIoc;
-using DryIoc.ImTools;
 using InformationSecurity_Tests.Infrastructure;
-using InformationSecurity.SymmetricEncryption.CipherMode.Base;
 using InformationSecurity.SymmetricEncryption.CipherMode.Modes;
 using Serilog;
 
@@ -55,7 +53,7 @@ public class CipherModesUnitTest
         _container.Register<EcbMode>();
         _container.Register<OfbMode>();
         _container.Register<PcbcMode>();
-        _container.Register<RandomDeltaMode>();
+        _container.Register<RdMode>();
     }
     
     [TearDown]
@@ -278,6 +276,79 @@ public class CipherModesUnitTest
     { 
         var result = _data.ToArray();
         var mode = _container.Resolve<PcbcMode>();
+        await mode.EncryptAsync(result);
+        await mode.DecryptAsync(result);
+        
+        Log.Information(
+            $"Test Completed.\nResult:\n{Utils.BinaryToString(result)}Expected result:\n{Utils.BinaryToString(_data)}");
+        
+        CollectionAssert.AreEqual(
+            _data, 
+            result);
+    }
+    
+    #endregion
+    
+    
+    #region PcbcMode
+    
+    [Test]
+    public void RdModeDecryptionTest()
+    { 
+        var result = _data.ToArray();
+        var mode = _container.Resolve<RdMode>();
+        mode.Encrypt(result);
+        mode.Decrypt(result);
+        
+        Log.Information(
+            $"Test Completed.\nResult:\n{Utils.BinaryToString(result)}Expected result:\n{Utils.BinaryToString(_data)}");
+        
+        CollectionAssert.AreEqual(
+            _data, 
+            result);
+    }
+    
+    [Test]
+    public async Task RdModeDecryptionAsyncTest()
+    { 
+        var result = _data.ToArray();
+        var mode = _container.Resolve<RdMode>();
+        await mode.EncryptAsync(result);
+        await mode.DecryptAsync(result);
+        
+        Log.Information(
+            $"Test Completed.\nResult:\n{Utils.BinaryToString(result)}Expected result:\n{Utils.BinaryToString(_data)}");
+        
+        CollectionAssert.AreEqual(
+            _data, 
+            result);
+    }
+    
+    #endregion
+    
+    #region PcbcMode
+    
+    [Test]
+    public void CtrModeDecryptionTest()
+    { 
+        var result = _data.ToArray();
+        var mode = _container.Resolve<CtrMode>();
+        mode.Encrypt(result);
+        mode.Decrypt(result);
+        
+        Log.Information(
+            $"Test Completed.\nResult:\n{Utils.BinaryToString(result)}Expected result:\n{Utils.BinaryToString(_data)}");
+        
+        CollectionAssert.AreEqual(
+            _data, 
+            result);
+    }
+    
+    [Test]
+    public async Task CtrModeDecryptionAsyncTest()
+    { 
+        var result = _data.ToArray();
+        var mode = _container.Resolve<CtrMode>();
         await mode.EncryptAsync(result);
         await mode.DecryptAsync(result);
         

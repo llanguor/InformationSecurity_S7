@@ -3,7 +3,7 @@ using InformationSecurity.SymmetricEncryption.Base;
 using InformationSecurity.SymmetricEncryption.CipherMode.Base;
 namespace InformationSecurity.SymmetricEncryption.CipherMode.Modes;
 
-public sealed class CtrMode(
+public sealed class RdMode(
     Action<Memory<byte>> encryptionFunc,
     Action<Memory<byte>> decryptionFunc,
     int blockSize,
@@ -16,9 +16,12 @@ public sealed class CtrMode(
 {
     public override void Encrypt(Memory<byte> data)
     {
+        var delta
+            = ComputeDelta();
+        
         Parallel.For(0, data.Length / BlockSize, i =>
         {
-            ProcessEncryptBlock(data, i);
+            ProcessBlock(data, i, delta);
         });
     }
 
@@ -31,6 +34,9 @@ public sealed class CtrMode(
         Memory<byte> data, 
         CancellationToken cancellationToken = default)
     {
+        var delta = 
+            ComputeDelta();
+        
         await Parallel.ForAsync(
             0,
             data.Length / BlockSize, 
@@ -38,7 +44,7 @@ public sealed class CtrMode(
             (i, token) =>
             {
                 token.ThrowIfCancellationRequested();
-                ProcessEncryptBlock(data, i);
+                ProcessBlock(data, i, delta);
                 return ValueTask.CompletedTask;
             });
     }
@@ -49,15 +55,34 @@ public sealed class CtrMode(
     {
         await EncryptAsync(data, cancellationToken);
     }
-    
-    private void ProcessEncryptBlock(Memory<byte> data, int i)
+
+    private BigInteger ComputeDelta()
+    {
+        var span = 
+            InitializationVector!
+                .Value
+                .Span[BlockSize..];
+        
+        var delta =
+            new BigInteger(
+                span, 
+                isUnsigned: true, 
+                isBigEndian: true) ;
+
+        if ((delta & 1)==0)
+            delta += 1;
+
+        return delta;
+    }
+
+    private void ProcessBlock(Memory<byte> data, int i, BigInteger delta)
     {
         var value =
             new BigInteger(
                 InitializationVector!.Value.Span,
                 isUnsigned: true,
-                isBigEndian: false)
-            + i;
+                isBigEndian: false);
+        value += i*delta;
         
         var valueByte = new byte[BlockSize];
         if (!value.TryWriteBytes(valueByte, out int _, isUnsigned: true, isBigEndian: false))

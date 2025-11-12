@@ -11,6 +11,11 @@
 	<s:String x:Key="/Default/Environment/AssemblyExplorer/XmlDocument/@EntryValue">&lt;AssemblyExplorer&gt;&#xD;
   &lt;Assembly Path="C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\8.0.4\ref\net8.0\System.Security.Cryptography.dll" /&gt;&#xD;
 &lt;/AssemblyExplorer&gt;</s:String>
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=873c1a76_002De69a_002D47f8_002Dbcc7_002Dedc96d900191/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="CipherModesUnitTest" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+  &lt;TestAncestor&gt;&#xD;
+    &lt;TestId&gt;NUnit3x::64019B0B-0540-4158-8660-2CE4B6FACC9B::net8.0::InformationSecurity_Tests.CipherModesUnitTest&lt;/TestId&gt;&#xD;
+  &lt;/TestAncestor&gt;&#xD;
+&lt;/SessionState&gt;</s:String>
 	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=c0366cf3_002D6293_002D4dbf_002Da7ed_002Db0fa6ccfb431/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="ZerosPaddingApplyTest" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
   &lt;TestAncestor&gt;&#xD;
     &lt;TestId&gt;NUnit3x::64019B0B-0540-4158-8660-2CE4B6FACC9B::net8.0::InformationSecurity_Tests.PaddingUnitTest.ZerosPaddingApplyTest&lt;/TestId&gt;&#xD;
@@ -31,7 +36,7 @@
 	
 	
 	
-	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=d3c2d4a1_002Dd234_002D4f2b_002Db66e_002D0ace4b381564/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="All tests" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=d3c2d4a1_002Dd234_002D4f2b_002Db66e_002D0ace4b381564/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="All tests" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
   &lt;TestAncestor&gt;&#xD;
     &lt;TestId&gt;NUnit3x::64019B0B-0540-4158-8660-2CE4B6FACC9B::net8.0::InformationSecurity_Tests.DesTests.DesKeyScheduleTest&lt;/TestId&gt;&#xD;
     &lt;TestId&gt;NUnit3x::64019B0B-0540-4158-8660-2CE4B6FACC9B::net8.0::InformationSecurity_Tests.DesTests.DesRoundFunctionTest&lt;/TestId&gt;&#xD;
