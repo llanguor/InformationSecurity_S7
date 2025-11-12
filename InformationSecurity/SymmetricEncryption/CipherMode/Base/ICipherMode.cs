@@ -8,7 +8,11 @@ public interface ICipherMode
     
     public void Decrypt(Memory<byte> data);
     
-    public Task EncryptAsync(Memory<byte> data);
+    public Task EncryptAsync(
+        Memory<byte> data, 
+        CancellationToken cancellationToken = default);
     
-    public Task DecryptAsync(Memory<byte> data);
+    public Task DecryptAsync(
+        Memory<byte> data, 
+        CancellationToken cancellationToken = default);
 }

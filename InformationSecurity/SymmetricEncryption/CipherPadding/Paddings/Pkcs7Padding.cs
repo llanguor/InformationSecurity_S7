@@ -9,7 +9,7 @@ public class Pkcs7Padding(
     {
         var padding = BlockSize - data.Length % BlockSize;
         var oldSize = data.Length;
-        var newSize = BlockSize * (data.Length / BlockSize + 1);
+        var newSize = data.Length + padding;
         
         var padded = new byte[newSize];
         data.CopyTo(padded, 0);

@@ -11,6 +11,8 @@ namespace InformationSecurity_Tests;
 
 public class DesTests
 {
+    #region Initialization
+    
     private readonly byte [] _key = 
     [
         0b01101101,0b1111111,0b10101010,0b01101110,
@@ -47,6 +49,10 @@ public class DesTests
         _container?.Dispose();
     }
     
+    #endregion
+    
+    #region KeySchedule
+    
     [Test]
     public void DesKeyScheduleTest()
     {
@@ -75,12 +81,16 @@ public class DesTests
                 .Expand(_key);
         
         Log.Information(
-            $"DesKeySchedule Test Completed.\nResult:\n{Utils.BinaryToString(keys)}Expected result:\n{Utils.BinaryToString(expectedResult)}");
+            $"Test Completed.\nResult:\n{Utils.BinaryToString(keys)}Expected result:\n{Utils.BinaryToString(expectedResult)}");
         
         CollectionAssert.AreEqual(
             expectedResult, 
             keys);
     }
+    
+    #endregion
+    
+    #region RoundFunction
 
     [Test]
     public void DesRoundFunctionTest()
@@ -104,13 +114,16 @@ public class DesTests
             .TransformBlock(block, roundKey);
         
         Log.Information(
-            $"DesRoundFunctionTest Completed.\nResult:\n{Utils.BinaryToString(block)}Expected result:\n{Utils.BinaryToString(expectedResult)}");
+            $"Test Completed.\nResult:\n{Utils.BinaryToString(block)}Expected result:\n{Utils.BinaryToString(expectedResult)}");
 
         CollectionAssert.AreEqual(
             expectedResult, 
             block);
     }
     
+    #endregion
+    
+    #region Des BlockTransformation
     
     [Test]
     public void DesEncryptTest()
@@ -131,7 +144,7 @@ public class DesTests
             .EncryptBlock(block);
         
         Log.Information(
-            $"DesRoundFunctionTest Completed.\nResult:\n{Utils.BinaryToString(block)}Expected result:\n{Utils.BinaryToString(expectedResult)}");
+            $"Test Completed.\nResult:\n{Utils.BinaryToString(block)}Expected result:\n{Utils.BinaryToString(expectedResult)}");
 
         CollectionAssert.AreEqual(
             expectedResult, 
@@ -160,10 +173,12 @@ public class DesTests
         method?.Invoke(des, [block.AsMemory()]);
         
         Log.Information(
-            $"DesRoundFunctionTest Completed.\nResult:\n{Utils.BinaryToString(block)}Expected result:\n{Utils.BinaryToString(expectedResult)}");
+            $"Test Completed.\nResult:\n{Utils.BinaryToString(block)}Expected result:\n{Utils.BinaryToString(expectedResult)}");
 
         CollectionAssert.AreEqual(
             expectedResult, 
             block);
     }
+    
+    #endregion
 }

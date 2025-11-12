@@ -9,13 +9,14 @@ public class ZerosPadding(
     //Если длина данных не кратна размеру блока, последний блок надо дополнить до нужной длины.
     public override byte[] Apply(byte[] data)
     {
-        if (data.Length % BlockSize == 0) 
+        var rem = data.Length % BlockSize;
+        if (rem == 0) 
             return data;
+        
+        var padding = BlockSize - rem;
+        var newSize = data.Length + padding;
    
-        var padded = new byte
-        [
-            BlockSize * (data.Length / BlockSize + 1)
-        ];
+        var padded = new byte[newSize];
         data.CopyTo(padded, 0);
         
         return padded;

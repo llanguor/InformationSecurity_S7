@@ -52,7 +52,7 @@ public sealed class FeistelNetwork (
     {
         _roundKeys = _keySchedule.Expand(key);
     }
-    
+
     /// <summary>
     /// Encrypts the specified data block using the Feistel network.
     /// The input <paramref name="data"/> is modified <c>in-place</c>.
@@ -61,9 +61,10 @@ public sealed class FeistelNetwork (
     ///     The input block to encrypt.
     ///     Its length must be divisible by 2, as the block is split into left and right halves.
     /// </param>
-    public void Encrypt(byte[] data)
+    public byte[] Encrypt(byte[] data)
     {
         Encrypt(data.AsSpan());
+        return data;
     }
 
     /// <summary>
@@ -74,9 +75,10 @@ public sealed class FeistelNetwork (
     ///     The input block to decrypt.
     ///     Its length must be divisible by 2, as the block is split into left and right halves.
     /// </param>
-    public void Decrypt(byte[] data)
+    public byte[] Decrypt(byte[] data)
     {
         Decrypt(data.AsSpan());
+        return data;
     }
 
     /// <summary>

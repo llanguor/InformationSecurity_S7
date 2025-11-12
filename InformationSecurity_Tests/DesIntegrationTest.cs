@@ -5,6 +5,8 @@ namespace InformationSecurity_Tests;
 
 public class DesIntegrationTest
 {
+    #region Initialization
+    
     private Container? _container;
     
     [SetUp]
@@ -20,4 +22,5 @@ public class DesIntegrationTest
         _container?.Dispose();
     }
 
+    #endregion
 }

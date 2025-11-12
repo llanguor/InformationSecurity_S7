@@ -8,6 +8,8 @@ namespace InformationSecurity_Tests;
 
 public class FeistelNetworkTests
 {
+    #region Initialization
+    
     private readonly byte[] _key = 
     [
         0b01101101, 0b11111111, 0b10101010, 0b01101110,
@@ -41,6 +43,10 @@ public class FeistelNetworkTests
         _container?.Dispose();
     }
     
+    #endregion
+    
+    #region Tests
+    
     [Test]
     public void EncryptTest()
     {
@@ -60,7 +66,7 @@ public class FeistelNetworkTests
             .Encrypt(data);
         
         Log.Information(
-            $"EncryptTest Completed.\nResult:\n{Utils.BinaryToString(data)}Expected result:\n{Utils.BinaryToString(expectedResult)}");
+            $"Test Completed.\nResult:\n{Utils.BinaryToString(data)}Expected result:\n{Utils.BinaryToString(expectedResult)}");
         
         CollectionAssert.AreEqual(
             expectedResult, 
@@ -86,7 +92,7 @@ public class FeistelNetworkTests
             .Decrypt(data);
         
         Log.Information(
-            $"DecryptTest Completed.\nResult:\n{Utils.BinaryToString(data)}Expected result:\n{Utils.BinaryToString(expectedResult)}");
+            $"Test Completed.\nResult:\n{Utils.BinaryToString(data)}Expected result:\n{Utils.BinaryToString(expectedResult)}");
         
         CollectionAssert.AreEqual(
             expectedResult, 
@@ -113,10 +119,12 @@ public class FeistelNetworkTests
         feistel.Decrypt(data);
         
         Log.Information(
-            $"EncryptDecryptTest Completed.\nResult:\n{Utils.BinaryToString(data)}Expected result:\n{Utils.BinaryToString(expectedResult)}");
+            $"Test Completed.\nResult:\n{Utils.BinaryToString(data)}Expected result:\n{Utils.BinaryToString(expectedResult)}");
         
         CollectionAssert.AreEqual(
             expectedResult, 
             data);
     }
+    
+    #endregion
 }

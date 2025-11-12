@@ -45,7 +45,7 @@ public class PermutationTests
             Permutation.LeastSignificantBitPosition.Left);
         
         Log.Information(
-            $"Permutation Test Completed.\nResult:\n{Utils.BinaryToString(result)}Expected result:\n{Utils.BinaryToString(expectedResult)}");
+            $"Test Completed.\nResult:\n{Utils.BinaryToString(result)}Expected result:\n{Utils.BinaryToString(expectedResult)}");
         
         CollectionAssert.AreEqual(
             result.ToArray(), 

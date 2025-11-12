@@ -2,6 +2,7 @@
 
 public abstract class CipherModeBase (
     Action<Memory<byte>> encryptionFunc,
+    Action<Memory<byte>> decryptionFunc,
     int blockSize,
     byte[]? initializationVector = null,
     params object[] parameters) 
@@ -12,7 +13,7 @@ public abstract class CipherModeBase (
     /// <summary>
     /// Optional initialization vector (IV) for certain cipher modes.
     /// </summary>
-    protected byte[]? InitializationVector { get; } = initializationVector;
+    protected Memory<byte>? InitializationVector { get; } = initializationVector;
 
     /// <summary>
     /// Additional optional parameters for the selected encryption mode.
@@ -24,6 +25,13 @@ public abstract class CipherModeBase (
     /// This allows the encryption logic to be passed and executed dynamically.
     /// </summary>
     protected Action<Memory<byte>> EncryptionFunc { get; } = encryptionFunc;
+    
+    /// <summary>
+    /// Delegate representing the decryption function applied to each data block.
+    /// This allows the decryption logic to be passed and executed dynamically on a block of memory,
+    /// typically reversing the operation performed by <see cref="EncryptionFunc"/>.
+    /// </summary>
+    protected Action<Memory<byte>> DecryptionFunc { get; } = decryptionFunc;
     
     /// <summary>
     /// Size of a single encryption block, in bytes.
@@ -43,10 +51,12 @@ public abstract class CipherModeBase (
         Memory<byte> data);
     
     public abstract Task EncryptAsync(
-        Memory<byte> data);
+        Memory<byte> data,
+        CancellationToken cancellationToken = default);
     
     public abstract Task DecryptAsync(
-        Memory<byte> data);
+        Memory<byte> data,
+        CancellationToken cancellationToken = default);
     
     #endregion
 }

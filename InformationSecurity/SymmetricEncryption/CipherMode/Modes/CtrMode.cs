@@ -4,10 +4,12 @@ namespace InformationSecurity.SymmetricEncryption.CipherMode.Modes;
 
 public sealed class CtrMode(
     Action<Memory<byte>> encryptionFunc,
+    Action<Memory<byte>> decryptionFunc,
     int blockSize,
     byte[] initializationVector)
     : CipherModeBase(
         encryptionFunc,
+        decryptionFunc,
         blockSize,
         initializationVector)
 {
@@ -21,12 +23,16 @@ public sealed class CtrMode(
         throw new NotImplementedException();
     }
 
-    public override async Task EncryptAsync(Memory<byte> data)
+    public override async Task EncryptAsync(
+        Memory<byte> data, 
+        CancellationToken cancellationToken = default)
     {
         throw new NotImplementedException();
     }
 
-    public override async Task DecryptAsync(Memory<byte> data)
+    public override async Task DecryptAsync(
+        Memory<byte> data, 
+        CancellationToken cancellationToken = default)
     {
         throw new NotImplementedException();
     }

@@ -17,11 +17,11 @@ public interface IEncryption
     /// Encrypts the specified block of data in-place.
     /// </summary>
     /// <param name="data">The input block to encrypt. It will be modified in-place.</param>
-    void Encrypt(byte[] data);
+    byte[] Encrypt(byte[] data);
 
     /// <summary>
     /// Decrypts the specified block of data in-place.
     /// </summary>
     /// <param name="data">The input block to decrypt. It will be modified in-place.</param>
-    void Decrypt(byte[] data);
+    byte[] Decrypt(byte[] data);
 }

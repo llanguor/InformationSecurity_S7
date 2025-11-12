@@ -14,6 +14,14 @@
 	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=c0366cf3_002D6293_002D4dbf_002Da7ed_002Db0fa6ccfb431/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="ZerosPaddingApplyTest" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
   &lt;TestAncestor&gt;&#xD;
     &lt;TestId&gt;NUnit3x::64019B0B-0540-4158-8660-2CE4B6FACC9B::net8.0::InformationSecurity_Tests.PaddingUnitTest.ZerosPaddingApplyTest&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;NUnit3x::64019B0B-0540-4158-8660-2CE4B6FACC9B::net8.0::InformationSecurity_Tests.PaddingUnitTest.AnsiX923PaddingApplyFullBlockTest&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;NUnit3x::64019B0B-0540-4158-8660-2CE4B6FACC9B::net8.0::InformationSecurity_Tests.PaddingUnitTest.ZerosPaddingRemoveTest&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;NUnit3x::64019B0B-0540-4158-8660-2CE4B6FACC9B::net8.0::InformationSecurity_Tests.PaddingUnitTest.Pkcs7PaddingApplyTest&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;NUnit3x::64019B0B-0540-4158-8660-2CE4B6FACC9B::net8.0::InformationSecurity_Tests.PaddingUnitTest.Pkcs7PaddingApplyFullBlockTest&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;NUnit3x::64019B0B-0540-4158-8660-2CE4B6FACC9B::net8.0::InformationSecurity_Tests.PaddingUnitTest.Pkcs7PaddingRemoveTest&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;NUnit3x::64019B0B-0540-4158-8660-2CE4B6FACC9B::net8.0::InformationSecurity_Tests.PaddingUnitTest.AnsiX923PaddingApplyTest&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;NUnit3x::64019B0B-0540-4158-8660-2CE4B6FACC9B::net8.0::InformationSecurity_Tests.PaddingUnitTest.AnsiX923PaddingRemoveTest&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;NUnit3x::64019B0B-0540-4158-8660-2CE4B6FACC9B::net8.0::InformationSecurity_Tests.PaddingUnitTest.Iso10126PaddingApplyTest&lt;/TestId&gt;&#xD;
   &lt;/TestAncestor&gt;&#xD;
 &lt;/SessionState&gt;</s:String>
 	
@@ -36,6 +44,17 @@
     &lt;TestId&gt;NUnit3x::64019B0B-0540-4158-8660-2CE4B6FACC9B::net8.0::InformationSecurity_Tests.PaddingUnitTest.Pkcs7PaddingApplyTest&lt;/TestId&gt;&#xD;
     &lt;TestId&gt;NUnit3x::64019B0B-0540-4158-8660-2CE4B6FACC9B::net8.0::InformationSecurity_Tests.PaddingUnitTest.Pkcs7PaddingRemoveTest&lt;/TestId&gt;&#xD;
     &lt;TestId&gt;NUnit3x::64019B0B-0540-4158-8660-2CE4B6FACC9B::net8.0::InformationSecurity_Tests.PaddingUnitTest.Pkcs7PaddingApplyFullBlockTest&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;NUnit3x::64019B0B-0540-4158-8660-2CE4B6FACC9B::net8.0::InformationSecurity_Tests.PaddingUnitTest.AnsiX923PaddingApplyTest&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;NUnit3x::64019B0B-0540-4158-8660-2CE4B6FACC9B::net8.0::InformationSecurity_Tests.PaddingUnitTest.Iso10126PaddingApplyTest&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;NUnit3x::64019B0B-0540-4158-8660-2CE4B6FACC9B::net8.0::InformationSecurity_Tests.PaddingUnitTest.Iso10126PaddingApplyFullBlockTest&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;NUnit3x::64019B0B-0540-4158-8660-2CE4B6FACC9B::net8.0::InformationSecurity_Tests.PaddingUnitTest.Iso10126PaddingRemoveTest&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;NUnit3x::64019B0B-0540-4158-8660-2CE4B6FACC9B::net8.0::InformationSecurity_Tests.CipherModesUnitTest.EcbModeTest&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;NUnit3x::64019B0B-0540-4158-8660-2CE4B6FACC9B::net8.0::InformationSecurity_Tests.CipherModesUnitTest.EcbModeDecryptionTest&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;NUnit3x::64019B0B-0540-4158-8660-2CE4B6FACC9B::net8.0::InformationSecurity_Tests.CipherModesUnitTest.EcbModeEncryptionTest&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;NUnit3x::64019B0B-0540-4158-8660-2CE4B6FACC9B::net8.0::InformationSecurity_Tests.CipherModesUnitTest.EcbModeEncryptionAsyncTest&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;NUnit3x::64019B0B-0540-4158-8660-2CE4B6FACC9B::net8.0::InformationSecurity_Tests.CipherModesUnitTest.EcbModeDecryptionAsyncTest&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;NUnit3x::64019B0B-0540-4158-8660-2CE4B6FACC9B::net8.0::InformationSecurity_Tests.FeistelNetworkTests.DecryptTest&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;NUnit3x::64019B0B-0540-4158-8660-2CE4B6FACC9B::net8.0::InformationSecurity_Tests.CipherModesUnitTest&lt;/TestId&gt;&#xD;
   &lt;/TestAncestor&gt;&#xD;
 &lt;/SessionState&gt;</s:String>
 	

@@ -1,7 +1,9 @@
-﻿using InformationSecurity.SymmetricEncryption.CipherMode.Context;
+﻿using InformationSecurity.SymmetricEncryption.CipherMode.Base;
+using InformationSecurity.SymmetricEncryption.CipherMode.Context;
+using InformationSecurity.SymmetricEncryption.CipherPadding.Base;
 using InformationSecurity.SymmetricEncryption.CipherPadding.Context;
-namespace InformationSecurity.SymmetricEncryption.Base;
 
+namespace InformationSecurity.SymmetricEncryption.Base;
 
 /// <summary>
 /// Represents the execution context for a symmetric encryption algorithm,
@@ -11,9 +13,15 @@ public abstract class SymmetricEncryptionBase : IEncryption
 {
     #region Properties
     
-    protected CipherModeContext CipherModeContext { get; }
-    
-    protected CipherPaddingContext CipherPaddingContext { get; }
+    /// <summary>
+    /// The cipher mode used for block encryption and decryption operations.
+    /// </summary>
+    protected ICipherMode CipherMode { get; }
+
+    /// <summary>
+    /// The padding strategy applied to ensure blocks match the required block size.
+    /// </summary>
+    protected ICipherPadding CipherPadding { get; }
     
     /// <summary>
     /// Size of a single encryption block, in bytes.
@@ -37,7 +45,6 @@ public abstract class SymmetricEncryptionBase : IEncryption
     protected byte[] Key { get; }
     
     #endregion
-    
     
     #region Constructors
 
@@ -64,15 +71,16 @@ public abstract class SymmetricEncryptionBase : IEncryption
         Padding = padding;
         Key = key;
         
-        CipherPaddingContext =
+        CipherPadding =
             new CipherPaddingContext(
                 Padding,
                 BlockSize);
         
-        CipherModeContext = 
+        CipherMode = 
             new CipherModeContext(
                 Mode,
                 EncryptBlock,
+                DecryptBlock,
                 BlockSize,
                 initializationVector, 
                 parameters);
@@ -80,28 +88,34 @@ public abstract class SymmetricEncryptionBase : IEncryption
     
     #endregion
     
-    
     #region Abstract Methods
     
+    /// <summary>
+    /// Encrypts a single block in-place.
+    /// </summary>
+    /// <param name="data">The data block to encrypt. Modified in-place.</param>
     internal abstract void EncryptBlock(Memory<byte> data);
 
+    /// <summary>
+    /// Decrypts a single block in-place.
+    /// </summary>
+    /// <param name="data">The data block to decrypt. Modified in-place.</param>
     internal abstract void DecryptBlock(Memory<byte> data);
-    
     
     /// <inheritdoc />
     public abstract void SetKey(byte[] key);
     
     /// <inheritdoc />
-    public abstract void Encrypt(byte[] data);
+    public abstract byte[] Encrypt(byte[] data);
     
     /// <inheritdoc />
-    public abstract void Decrypt(byte[] data);
-    
+    public abstract byte[] Decrypt(byte[] data);
     
     /// <summary>
     /// Encrypts the provided byte array and outputs the result via an out parameter.
+    /// The <paramref name="data"/> array is modified in-place during encryption.
     /// </summary>
-    /// <param name="data">The data to encrypt.</param>
+    /// <param name="data">The data to encrypt. Modified in-place.</param>
     /// <param name="result">The resulting encrypted data.</param>
     public abstract void Encrypt(byte[] data, out byte[] result);
 
@@ -114,8 +128,9 @@ public abstract class SymmetricEncryptionBase : IEncryption
 
     /// <summary>
     /// Decrypts the provided byte array and outputs the result via an out parameter.
+    /// The <paramref name="data"/> array is modified in-place during decryption.
     /// </summary>
-    /// <param name="data">The data to decrypt.</param>
+    /// <param name="data">The data to decrypt. Modified in-place.</param>
     /// <param name="result">The resulting decrypted data.</param>
     public abstract void Decrypt(byte[] data, out byte[] result);
 
@@ -128,13 +143,13 @@ public abstract class SymmetricEncryptionBase : IEncryption
     
     #endregion
     
-    
     #region Abstract Async Methods
     
     /// <summary>
     /// Asynchronously encrypts the provided byte array using the current key, mode, and padding.
+    /// The <paramref name="data"/> array is modified in-place during encryption.
     /// </summary>
-    /// <param name="data">The data to encrypt.</param>
+    /// <param name="data">The data to encrypt. Modified in-place.</param>
     /// <returns>A task that represents the asynchronous operation. The task result contains the encrypted byte array.</returns>
     public abstract Task<byte[]> EncryptAsync(byte[] data);
     
@@ -148,8 +163,9 @@ public abstract class SymmetricEncryptionBase : IEncryption
     
     /// <summary>
     /// Asynchronously decrypts the provided byte array using the current key, mode, and padding.
+    /// The <paramref name="data"/> array is modified in-place during decryption.
     /// </summary>
-    /// <param name="data">The data to decrypt.</param>
+    /// <param name="data">The data to decrypt. Modified in-place.</param>
     /// <returns>A task that represents the asynchronous operation. The task result contains the decrypted byte array.</returns>
     public abstract Task<byte[]> DecryptAsync(byte[] data);
 

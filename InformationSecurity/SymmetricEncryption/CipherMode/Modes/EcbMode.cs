@@ -1,39 +1,64 @@
-﻿using InformationSecurity.SymmetricEncryption.Base;
+﻿using System.Reflection;
+using InformationSecurity.SymmetricEncryption.Base;
 using InformationSecurity.SymmetricEncryption.CipherMode.Base;
 namespace InformationSecurity.SymmetricEncryption.CipherMode.Modes;
 
 public sealed class EcbMode(
     Action<Memory<byte>> encryptionFunc,
+    Action<Memory<byte>> decryptionFunc,
     int blockSize)
     : CipherModeBase(
         encryptionFunc,
+        decryptionFunc,
         blockSize)
 {
     public override void Encrypt(Memory<byte> data)
     {
-        for (var i = 0; i < data.Length; i += BlockSize)
+        Parallel.For(0, data.Length / BlockSize, i =>
         {
             EncryptionFunc(
-                data.Slice(i, BlockSize));
-        }
+                data.Slice(i * BlockSize, BlockSize));
+        });
     }
 
     public override void Decrypt(Memory<byte> data)
     {
-        for (var i = 0; i < data.Length; i += BlockSize)
+        Parallel.For(0, data.Length / BlockSize, i =>
         {
-            EncryptionFunc(
-                data.Slice(i, BlockSize));
-        }
+            DecryptionFunc(
+                data.Slice(i * BlockSize, BlockSize));
+        });
     }
 
-    public override async Task EncryptAsync(Memory<byte> data)
+    public override async Task EncryptAsync(
+        Memory<byte> data, 
+        CancellationToken cancellationToken = default)
     {
-        throw new NotImplementedException();
+        await Parallel.ForAsync(
+            0,
+            data.Length / BlockSize, 
+            cancellationToken,
+            (i, token) =>
+            {
+                token.ThrowIfCancellationRequested();
+                EncryptionFunc(data.Slice(i * BlockSize, BlockSize));
+                return ValueTask.CompletedTask;
+            });
     }
-
-    public override async Task DecryptAsync(Memory<byte> data)
+    
+    public override async Task DecryptAsync(
+        Memory<byte> data, 
+        CancellationToken cancellationToken = default)
     {
-        throw new NotImplementedException();
+        await Parallel.ForAsync(
+            0,
+            data.Length / BlockSize, 
+            cancellationToken,
+            (i, token) =>
+            {
+                token.ThrowIfCancellationRequested();
+                DecryptionFunc(data.Slice(i * BlockSize, BlockSize));
+                return ValueTask.CompletedTask;
+            });
     }
 }

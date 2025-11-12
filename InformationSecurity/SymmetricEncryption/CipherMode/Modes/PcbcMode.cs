@@ -4,30 +4,93 @@ namespace InformationSecurity.SymmetricEncryption.CipherMode.Modes;
 
 public sealed class PcbcMode(
     Action<Memory<byte>> encryptionFunc,
+    Action<Memory<byte>> decryptionFunc,
     int blockSize,
     byte[] initializationVector)
     : CipherModeBase(
         encryptionFunc,
+        decryptionFunc,
         blockSize,
         initializationVector)
 {
     public override void Encrypt(Memory<byte> data)
     {
-        throw new NotImplementedException();
+        var lastBlock =
+            InitializationVector!.Value;
+        
+        byte[]? lastPlainText = null;
+        byte[] currentPlainText;
+        
+        for (var i = 0; i < data.Length; i+=BlockSize)
+        {
+            var block = 
+                data.Slice(i, BlockSize);
+            
+            currentPlainText = block.ToArray();
+            
+            for (var j = 0; j < BlockSize; ++j)
+            {
+                block.Span[j] ^= lastBlock.Span[j];
+            }
+
+            if (i >= BlockSize)
+            {
+                for (var j = 0; j < BlockSize; ++j)
+                {
+                    block.Span[j] ^= lastPlainText![j];
+                }
+            }
+            
+            EncryptionFunc(block);
+            lastBlock = block;
+            lastPlainText = currentPlainText.ToArray();
+        }
     }
 
     public override void Decrypt(Memory<byte> data)
     {
-        throw new NotImplementedException();
+        var lastBlock =
+            InitializationVector!.Value.ToArray().AsSpan();
+        Span<byte> lastPlainText = null;
+        byte[] currentCipherText;
+        
+        for (var i = 0; i < data.Length ; i+=BlockSize)
+        {
+            var block = 
+                data.Slice(i, BlockSize);
+           
+            currentCipherText = block.ToArray();
+            DecryptionFunc(block);
+            
+            for (var j = 0; j < BlockSize; ++j)
+            {
+                block.Span[j] ^= lastBlock[j];
+            }
+
+            if (i >= BlockSize)
+            {
+                for (var j = 0; j < BlockSize; ++j)
+                {
+                    block.Span[j] ^= lastPlainText[j];
+                }
+            }
+            
+            lastBlock = currentCipherText.ToArray();
+            lastPlainText = block.Span;
+        }
     }
 
-    public override async Task EncryptAsync(Memory<byte> data)
+    public override async Task EncryptAsync(
+        Memory<byte> data, 
+        CancellationToken cancellationToken = default)
     {
-        throw new NotImplementedException();
+        await Task.Run(() => Encrypt(data), cancellationToken);
     }
 
-    public override async Task DecryptAsync(Memory<byte> data)
+    public override async Task DecryptAsync(
+        Memory<byte> data, 
+        CancellationToken cancellationToken = default)
     {
-        throw new NotImplementedException();
+        await Task.Run(() => Decrypt(data), cancellationToken);
     }
 }

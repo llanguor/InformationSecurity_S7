@@ -13,63 +13,51 @@ public abstract class SymmetricEncryption(
     #region Methods
     
     /// <inheritdoc/>
-    public override void Encrypt(byte[] data)
+    public override byte[] Encrypt(byte[] data)
     {
-        CipherModeContext.Encrypt(data);
-           /*
-        CipherPaddingContext.Apply(data, BlockSize);
-        CipherModeContext.Encrypt(data, EncryptBlock, BlockSize);
-        */
-        
-        //ИЛИ МБ ЛУЧШЕ ЗАСУНУТЬ В КОНСТРУКТОР BlockSize у этой фигни
-        //ВОЗМОЖНО: поменять всё на наследование?
-        
-        //Биты контроля четности делаются ДО входа в алгоритм. В самом тесте
-        
-        //1. На вход получаем большой блок произвольного размера.
-        //   Если он не кратен 64, то делаем набивки
-        //2. Делаем из него много Span-ов по 64 бита
-        //3. Обрабатываем эти Span-ы в цикле
-        //4. В зависимости от режима, по-разному xor
-        //5. Возвращаем ответ
-        
-        // Как делать:
-        // 1. Делаем набивки
-        //    Где делать? В отдельном методе?
-        // 2. Обрабатываем все по режимам.
-        //    Где делать? В отдельном классе? Паттерн "стратегия"?
-        // 3. 
-        
-        //Предполагаем, что к этому моменту во входных данных
-        //имеются биты контроля четности и всё это кратно 8
+        data = CipherPadding.Apply(data);
+        CipherMode.Encrypt(data);
+        return data;
     }
     
     /// <inheritdoc/>
-    public override void Encrypt(byte[] data, out byte[] result)
+    public override void Encrypt(
+        byte[] data, 
+        out byte[] result)
     {
-        throw new NotImplementedException();
+        result = CipherPadding.Apply(data);
+        CipherMode.Encrypt(result);
     }
 
     /// <inheritdoc/>
-    public override void Encrypt(string inputFilePath, string outputFilePath)
+    public override void Encrypt(
+        string inputFilePath,
+        string outputFilePath)
     {
         throw new NotImplementedException();
     }
     
     /// <inheritdoc/>
-    public override void Decrypt(byte[] data)
+    public override byte[] Decrypt(byte[] data)
     {
-        throw new NotImplementedException();
+        CipherMode.Decrypt(data);
+        data = CipherPadding.Remove(data);
+        return data;
     }
 
     /// <inheritdoc/>
-    public override void Decrypt(byte[] data, out byte[] result)
+    public override void Decrypt(
+        byte[] data,
+        out byte[] result)
     {
-        throw new NotImplementedException();
+        CipherMode.Decrypt(data);
+        result = CipherPadding.Apply(data);
     }
 
     /// <inheritdoc/>
-    public override void Decrypt(string inputFilePath, string outputFilePath)
+    public override void Decrypt(
+        string inputFilePath, 
+        string outputFilePath)
     {
         throw new NotImplementedException();
     }
@@ -80,25 +68,35 @@ public abstract class SymmetricEncryption(
     #region Async Methods
 
     /// <inheritdoc/>
-    public override async Task<byte[]> EncryptAsync(byte[] data)
+    public override async Task<byte[]> EncryptAsync(
+        byte[] data)
     {
-        throw new NotImplementedException();
+        data = CipherPadding.Apply(data);
+        await CipherMode.EncryptAsync(data);
+        return data;
     }
 
     /// <inheritdoc/>
-    public override async Task EncryptAsync(string inputFilePath, string outputFilePath)
+    public override async Task EncryptAsync(
+        string inputFilePath,
+        string outputFilePath)
     {
         throw new NotImplementedException();
     }
     
     /// <inheritdoc/>
-    public override async Task<byte[]> DecryptAsync(byte[] data)
+    public override async Task<byte[]> DecryptAsync(
+        byte[] data)
     {
-        throw new NotImplementedException();
+        await CipherMode.DecryptAsync(data);
+        data = CipherPadding.Remove(data);
+        return data;
     }
 
     /// <inheritdoc/>
-    public override async Task DecryptAsync(string inputFilePath, string outputFilePath)
+    public override async Task DecryptAsync(
+        string inputFilePath,
+        string outputFilePath)
     {
         throw new NotImplementedException();
     }
