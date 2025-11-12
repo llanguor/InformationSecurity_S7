@@ -32,4 +32,17 @@
       </Reference>
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Resources\Des\" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Update="Resources\Des\encrypted.txt">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+      <None Update="Resources\Des\input.txt">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+    </ItemGroup>
+
 </Project>

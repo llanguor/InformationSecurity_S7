@@ -10,6 +10,12 @@ public abstract class SymmetricEncryption(
     params object[] parameters) 
     : SymmetricEncryptionBase(blockSize, key, padding, mode, initializationVector, parameters)
 {
+    #region Fields
+
+    private const int BufferSize = 8 * 1024;
+    
+    #endregion
+    
     #region Methods
     
     /// <inheritdoc/>
@@ -34,7 +40,39 @@ public abstract class SymmetricEncryption(
         string inputFilePath,
         string outputFilePath)
     {
-        throw new NotImplementedException();
+        var buffer = new byte[BufferSize];
+
+        using var inputStream = 
+            new FileStream(inputFilePath, FileMode.Open, FileAccess.Read);
+        using var outputStream = 
+            new FileStream(outputFilePath, FileMode.Create, FileAccess.Write);
+        
+        int bytesRead;
+    
+        while ((bytesRead = inputStream.Read(buffer)) > 0)
+        {
+            Memory<byte> dataToEncrypt;
+            if (bytesRead == buffer.Length)
+            {
+                dataToEncrypt =
+                    buffer.AsMemory()[..bytesRead];
+            }
+            else
+            {
+                var padded = CipherPadding.Apply(
+                    buffer[..bytesRead]);
+                padded.CopyTo(buffer, 0);
+                dataToEncrypt =
+                    buffer.AsMemory()[..padded.Length];
+            }
+            
+            CipherMode.Encrypt(dataToEncrypt);
+            
+            outputStream.Write(
+                buffer, 
+                0, 
+                dataToEncrypt.Length);
+        }
     }
     
     /// <inheritdoc/>
@@ -51,7 +89,7 @@ public abstract class SymmetricEncryption(
         out byte[] result)
     {
         CipherMode.Decrypt(data);
-        result = CipherPadding.Apply(data);
+        result = CipherPadding.Remove(data);
     }
 
     /// <inheritdoc/>
@@ -59,7 +97,36 @@ public abstract class SymmetricEncryption(
         string inputFilePath, 
         string outputFilePath)
     {
-        throw new NotImplementedException();
+        var buffer = new byte[BufferSize];
+
+        using var inputStream = 
+            new FileStream(inputFilePath, FileMode.Open, FileAccess.Read);
+        using var outputStream = 
+            new FileStream(outputFilePath, FileMode.Create, FileAccess.Write);
+        
+        int bytesRead;
+    
+        while ((bytesRead = inputStream.Read(buffer)) > 0)
+        {
+            var dataToDecrypt =
+                buffer.AsMemory()[..bytesRead];
+            
+            CipherMode.Decrypt(dataToDecrypt);
+            
+            if (bytesRead != buffer.Length)
+            {
+                var padded = CipherPadding.Remove(
+                    buffer[..bytesRead]);
+                padded.CopyTo(buffer, 0);
+                dataToDecrypt =
+                    buffer.AsMemory()[..padded.Length];
+            }
+            
+            outputStream.Write(
+                buffer, 
+                0, 
+                dataToDecrypt.Length);
+        }
     }
     
     #endregion
@@ -81,7 +148,34 @@ public abstract class SymmetricEncryption(
         string inputFilePath,
         string outputFilePath)
     {
-        throw new NotImplementedException();
+        var buffer = new byte[BufferSize];
+
+        await using var inputStream = 
+            new FileStream(inputFilePath, FileMode.Open, FileAccess.Read);
+        await using var outputStream = 
+            new FileStream(outputFilePath, FileMode.Create, FileAccess.Write);
+        
+        int bytesRead;
+    
+        while ((bytesRead = await inputStream.ReadAsync(buffer)) > 0)
+        {
+            var dataToEncrypt =
+                buffer.AsMemory()[..bytesRead];
+            
+            await CipherMode.EncryptAsync(dataToEncrypt);
+            
+            if (bytesRead != buffer.Length)
+            {
+                var padded = CipherPadding.Apply(
+                    buffer[..bytesRead]);
+                padded.CopyTo(buffer, 0);
+                dataToEncrypt =
+                    buffer.AsMemory()[..padded.Length];
+            }
+            
+            await outputStream.WriteAsync(
+                buffer.AsMemory(0, dataToEncrypt.Length));
+        }
     }
     
     /// <inheritdoc/>
@@ -98,7 +192,34 @@ public abstract class SymmetricEncryption(
         string inputFilePath,
         string outputFilePath)
     {
-        throw new NotImplementedException();
+        var buffer = new byte[BufferSize];
+
+        await using var inputStream = 
+            new FileStream(inputFilePath, FileMode.Open, FileAccess.Read);
+        await using var outputStream = 
+            new FileStream(outputFilePath, FileMode.Create, FileAccess.Write);
+        
+        int bytesRead;
+    
+        while ((bytesRead = await inputStream.ReadAsync(buffer)) > 0)
+        {
+            var dataToDecrypt =
+                buffer.AsMemory()[..bytesRead];
+            
+            await CipherMode.DecryptAsync(dataToDecrypt);
+            
+            if (bytesRead != buffer.Length)
+            {
+                var padded = CipherPadding.Remove(
+                    buffer[..bytesRead]);
+                padded.CopyTo(buffer, 0);
+                dataToDecrypt =
+                    buffer.AsMemory()[..padded.Length];
+            }
+            
+            await outputStream.WriteAsync(
+                buffer.AsMemory(0, dataToDecrypt.Length));
+        }
     }
 
     #endregion
