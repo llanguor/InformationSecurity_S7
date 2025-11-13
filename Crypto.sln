@@ -1,0 +1,60 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Crypto.SymmetricEncryption", "Crypto.SymmetricEncryption\Crypto.SymmetricEncryption.csproj", "{358B8C00-8D61-4894-8AF5-E5ED445D6D5F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Crypto.Console", "Crypto.Console\Crypto.Console.csproj", "{635A1F51-A715-46A3-A459-4E4BADB72410}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Crypto.Tests", "Crypto.Tests\Crypto.Tests.csproj", "{64019B0B-0540-4158-8660-2CE4B6FACC9B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Crypto.SymmetricEncryption.DES", "Crypto.SymmetricEncryption.DES\Crypto.SymmetricEncryption.DES.csproj", "{15FD19CA-9608-4427-A874-B1C0B0B39419}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Crypto.SymmetricEncryption.DEAL", "Crypto.SymmetricEncryption.DEAL\Crypto.SymmetricEncryption.DEAL.csproj", "{AC15929C-D3F6-4608-A4CD-58317AA98679}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Crypto.Core", "Crypto.Core\Crypto.Core.csproj", "{3055AE62-0CFE-437B-8B1F-C32FD34F3137}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{8458E490-6E7C-4245-8732-F1E2D4837EF8}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{0C51D91C-D6EB-4D0F-A0A6-F307A4BA1295}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SymmetricEncryption", "SymmetricEncryption", "{6D6A9081-6989-4F92-BBF7-CAD875963B04}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{358B8C00-8D61-4894-8AF5-E5ED445D6D5F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{358B8C00-8D61-4894-8AF5-E5ED445D6D5F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{358B8C00-8D61-4894-8AF5-E5ED445D6D5F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{358B8C00-8D61-4894-8AF5-E5ED445D6D5F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{635A1F51-A715-46A3-A459-4E4BADB72410}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{635A1F51-A715-46A3-A459-4E4BADB72410}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{635A1F51-A715-46A3-A459-4E4BADB72410}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{635A1F51-A715-46A3-A459-4E4BADB72410}.Release|Any CPU.Build.0 = Release|Any CPU
+		{64019B0B-0540-4158-8660-2CE4B6FACC9B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{64019B0B-0540-4158-8660-2CE4B6FACC9B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{64019B0B-0540-4158-8660-2CE4B6FACC9B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{64019B0B-0540-4158-8660-2CE4B6FACC9B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{15FD19CA-9608-4427-A874-B1C0B0B39419}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{15FD19CA-9608-4427-A874-B1C0B0B39419}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{15FD19CA-9608-4427-A874-B1C0B0B39419}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{15FD19CA-9608-4427-A874-B1C0B0B39419}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AC15929C-D3F6-4608-A4CD-58317AA98679}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AC15929C-D3F6-4608-A4CD-58317AA98679}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AC15929C-D3F6-4608-A4CD-58317AA98679}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AC15929C-D3F6-4608-A4CD-58317AA98679}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3055AE62-0CFE-437B-8B1F-C32FD34F3137}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3055AE62-0CFE-437B-8B1F-C32FD34F3137}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3055AE62-0CFE-437B-8B1F-C32FD34F3137}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3055AE62-0CFE-437B-8B1F-C32FD34F3137}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{3055AE62-0CFE-437B-8B1F-C32FD34F3137} = {8458E490-6E7C-4245-8732-F1E2D4837EF8}
+		{64019B0B-0540-4158-8660-2CE4B6FACC9B} = {0C51D91C-D6EB-4D0F-A0A6-F307A4BA1295}
+		{635A1F51-A715-46A3-A459-4E4BADB72410} = {0C51D91C-D6EB-4D0F-A0A6-F307A4BA1295}
+		{358B8C00-8D61-4894-8AF5-E5ED445D6D5F} = {6D6A9081-6989-4F92-BBF7-CAD875963B04}
+		{AC15929C-D3F6-4608-A4CD-58317AA98679} = {6D6A9081-6989-4F92-BBF7-CAD875963B04}
+		{15FD19CA-9608-4427-A874-B1C0B0B39419} = {6D6A9081-6989-4F92-BBF7-CAD875963B04}
+	EndGlobalSection
+EndGlobal
