@@ -42,11 +42,10 @@ public sealed class CFBMode(
     public override void Decrypt(Memory<byte> data)
     {
         var ciphers = data.ToArray().AsMemory();
-        var iv = ComputeEncryptIv();
-
+        
         Parallel.For(0, data.Length / BlockSize, i =>
         {
-            ProcessDecryptBlock(data, ciphers, iv, i);
+            ProcessDecryptBlock(data, ciphers, i);
         });
     }
 
@@ -62,7 +61,6 @@ public sealed class CFBMode(
         CancellationToken cancellationToken = default)
     {
         var ciphers = data.ToArray().AsMemory();
-        var iv = ComputeEncryptIv();
         
         await Parallel.ForAsync(
             0,
@@ -71,28 +69,24 @@ public sealed class CFBMode(
             (i, token) =>
             {
                 token.ThrowIfCancellationRequested();
-                ProcessDecryptBlock(data, ciphers, iv, i);
+                
+                ProcessDecryptBlock(data, ciphers, i);
+                
                 return ValueTask.CompletedTask;
             });
-    }
-
-    private byte[] ComputeEncryptIv()
-    {
-        var iv = InitializationVector!.Value.ToArray();
-        EncryptionFunc(iv);
-        return iv;
     }
 
     private void ProcessDecryptBlock(
         Memory<byte> data, 
         Memory<byte> ciphers,
-        byte[] iv, 
         int i)
     {
         var lastBlock =
             i==0?
-                iv:
+                InitializationVector!.Value.ToArray():
                 ciphers.Slice((i-1) * BlockSize, BlockSize);
+            
+        EncryptionFunc(lastBlock);
             
         var block = 
             data.Slice(i * BlockSize, BlockSize);
