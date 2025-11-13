@@ -5,7 +5,7 @@ namespace InformationSecurity.SymmetricEncryption.Des;
 /// Implements the Data Encryption Standard (DES) symmetric encryption algorithm.
 /// This class provides functionality for encrypting and decrypting 64-bit blocks of data.
 /// </summary>
-public sealed class Des(
+public sealed class DES(
     byte[] key, 
     CipherPadding.Enum.CipherPadding padding, 
     CipherMode.Enum.CipherMode mode, 
@@ -19,13 +19,13 @@ public sealed class Des(
     /// The DES key schedule used to generate round keys.
     /// </summary>
     private static readonly IKeySchedule KeySchedule =
-        new DesKeySchedule();
+        new DESKeySchedule();
     
     /// <summary>
     /// The DES round function used in the Feistel network.
     /// </summary>
     private static readonly IRoundFunction RoundFunction =
-        new DesRoundFunction();
+        new DESRoundFunction();
     
     /// <summary>
     /// The internal Feistel network used for DES encryption and decryption.

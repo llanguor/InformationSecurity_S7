@@ -9,10 +9,10 @@ public class CipherPaddingContext(
 {
     private readonly ICipherPadding _cipherPadding = padding switch
     {
-        Enum.CipherPadding.Iso10126 => new Iso10126Padding(blockSize),
-        Enum.CipherPadding.Pkcs7 => new Pkcs7Padding(blockSize),
+        Enum.CipherPadding.Iso10126 => new ISO10126Padding(blockSize),
+        Enum.CipherPadding.Pkcs7 => new PKCS7Padding(blockSize),
         Enum.CipherPadding.Zeros => new ZerosPadding(blockSize),
-        Enum.CipherPadding.AnsiX923 => new AnsiX923Padding(blockSize),
+        Enum.CipherPadding.AnsiX923 => new ANSIX923Padding(blockSize),
         _ => throw new ArgumentOutOfRangeException(nameof(padding), padding, null)
     };
 

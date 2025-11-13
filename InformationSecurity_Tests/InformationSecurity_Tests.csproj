@@ -33,7 +33,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Resources\Des\" />
+      <Folder Include="Resources\DES\" />
     </ItemGroup>
 
     <ItemGroup>

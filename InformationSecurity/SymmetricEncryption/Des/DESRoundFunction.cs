@@ -7,7 +7,7 @@ namespace InformationSecurity.SymmetricEncryption.Des;
 /// Implementation of the <see cref="IRoundFunction"/> interface for the DES algorithm.
 /// Represents the F-function (round function) used in the DES Feistel network.
 /// </summary>
-public sealed class DesRoundFunction 
+public sealed class DESRoundFunction 
     : IRoundFunction
 {
 	#region Fields

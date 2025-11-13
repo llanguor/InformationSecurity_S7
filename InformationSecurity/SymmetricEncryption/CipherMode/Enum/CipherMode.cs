@@ -5,11 +5,11 @@
 /// </summary>
 public enum CipherMode
 {
-    Ecb = 0, 
-    Cbc = 1, 
-    Pcbc = 2, 
-    Cfb = 3, 
-    Ofb = 4, 
-    Ctr = 5, 
+    ECB = 0, 
+    CBC = 1, 
+    PCBC = 2, 
+    CFB = 3, 
+    OFB = 4, 
+    CTR = 5, 
     RandomDelta = 6
 }

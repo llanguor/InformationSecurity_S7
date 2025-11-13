@@ -34,9 +34,9 @@ public class CipherPaddingUnitTest
         _container = new Container();
         _container.RegisterInstance(8);
         _container.Register<ZerosPadding>();
-        _container.Register<Iso10126Padding>();
-        _container.Register<Pkcs7Padding>();
-        _container.Register<AnsiX923Padding>();
+        _container.Register<ISO10126Padding>();
+        _container.Register<PKCS7Padding>();
+        _container.Register<ANSIX923Padding>();
     }
     
     [TearDown]
@@ -89,13 +89,13 @@ public class CipherPaddingUnitTest
     
     #endregion
     
-    #region Pkcs7Padding
+    #region PKCS7Padding
     
     [Test]
     public void Pkcs7PaddingApplyTest()
     {
         var result = 
-            _container.Resolve<Pkcs7Padding>().Apply(_data);
+            _container.Resolve<PKCS7Padding>().Apply(_data);
         
         byte [] expectedResult = 
         [
@@ -125,7 +125,7 @@ public class CipherPaddingUnitTest
         ];
         
         var result = 
-            _container.Resolve<Pkcs7Padding>().Apply(_dataFullBlock);
+            _container.Resolve<PKCS7Padding>().Apply(_dataFullBlock);
 
         
         Log.Information(
@@ -139,7 +139,7 @@ public class CipherPaddingUnitTest
     [Test]
     public void Pkcs7PaddingRemoveTest()
     {
-        var padding = _container.Resolve<Pkcs7Padding>();
+        var padding = _container.Resolve<PKCS7Padding>();
         var result = 
             padding.Remove(
                 padding.Apply(_data));
@@ -154,13 +154,13 @@ public class CipherPaddingUnitTest
     
     #endregion
     
-    #region AnsiX923Padding
+    #region ANSIX923Padding
     
     [Test]
     public void AnsiX923PaddingApplyTest()
     {
         var result = 
-            _container.Resolve<AnsiX923Padding>().Apply(_data);
+            _container.Resolve<ANSIX923Padding>().Apply(_data);
         
         byte [] expectedResult = 
         [
@@ -190,7 +190,7 @@ public class CipherPaddingUnitTest
         ];
         
         var result = 
-            _container.Resolve<AnsiX923Padding>().Apply(_dataFullBlock);
+            _container.Resolve<ANSIX923Padding>().Apply(_dataFullBlock);
 
         
         Log.Information(
@@ -204,7 +204,7 @@ public class CipherPaddingUnitTest
     [Test]
     public void AnsiX923PaddingRemoveTest()
     {
-        var padding = _container.Resolve<AnsiX923Padding>();
+        var padding = _container.Resolve<ANSIX923Padding>();
         var result = 
             padding.Remove(
                 padding.Apply(_data));
@@ -219,13 +219,13 @@ public class CipherPaddingUnitTest
     
     #endregion
     
-    #region Iso10126Padding
+    #region ISO10126Padding
     
     [Test]
     public void Iso10126PaddingApplyTest()
     {
         var result = 
-            _container.Resolve<Iso10126Padding>().Apply(_data);
+            _container.Resolve<ISO10126Padding>().Apply(_data);
         
         var inputBlockSpan = _data.AsSpan();
         var outputBlockSpan = result.AsSpan(0, inputBlockSpan.Length);
@@ -257,7 +257,7 @@ public class CipherPaddingUnitTest
     public void Iso10126PaddingApplyFullBlockTest()
     {
         var result = 
-            _container.Resolve<Iso10126Padding>().Apply(_dataFullBlock);
+            _container.Resolve<ISO10126Padding>().Apply(_dataFullBlock);
         
         var inputBlockSpan = _dataFullBlock.AsSpan();
         var outputBlockSpan = result.AsSpan(0, inputBlockSpan.Length);
@@ -290,7 +290,7 @@ public class CipherPaddingUnitTest
     [Test]
     public void Iso10126PaddingRemoveTest()
     {
-        var padding = _container.Resolve<Iso10126Padding>();
+        var padding = _container.Resolve<ISO10126Padding>();
         var result = 
             padding.Remove(
                 padding.Apply(_data));

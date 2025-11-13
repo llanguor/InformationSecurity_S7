@@ -2,7 +2,7 @@
 using InformationSecurity.SymmetricEncryption.CipherMode.Base;
 namespace InformationSecurity.SymmetricEncryption.CipherMode.Modes;
 
-public class OfbMode(
+public class OFBMode(
     Action<Memory<byte>> encryptionFunc,
     Action<Memory<byte>> decryptionFunc,
     int blockSize,

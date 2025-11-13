@@ -16,32 +16,32 @@ public sealed class CipherModeContext : CipherModeBase
         params object[] parameters):
         base(encryptionFunc, decryptionFunc, blockSize, initializationVector, parameters)
     {
-        if(mode != Enum.CipherMode.Ecb &&
+        if(mode != Enum.CipherMode.ECB &&
            initializationVector == null)
             throw new ArgumentException(null, nameof(initializationVector));
 
         _cipherMode = mode switch
         {
-            Enum.CipherMode.Ecb => 
-                new EcbMode(encryptionFunc, decryptionFunc, blockSize),
+            Enum.CipherMode.ECB => 
+                new ECBMode(encryptionFunc, decryptionFunc, blockSize),
             
-            Enum.CipherMode.Cbc => 
-                new CbcMode(encryptionFunc, decryptionFunc, blockSize, initializationVector!),
+            Enum.CipherMode.CBC => 
+                new CBCMode(encryptionFunc, decryptionFunc, blockSize, initializationVector!),
             
-            Enum.CipherMode.Pcbc => 
-                new PcbcMode(encryptionFunc,decryptionFunc,  blockSize, initializationVector!),
+            Enum.CipherMode.PCBC => 
+                new PCBCMode(encryptionFunc,decryptionFunc,  blockSize, initializationVector!),
             
-            Enum.CipherMode.Cfb => 
-                new CfbMode(encryptionFunc, decryptionFunc, blockSize, initializationVector!),
+            Enum.CipherMode.CFB => 
+                new CFBMode(encryptionFunc, decryptionFunc, blockSize, initializationVector!),
             
-            Enum.CipherMode.Ofb => 
-                new OfbMode(encryptionFunc, decryptionFunc, blockSize, initializationVector!),
+            Enum.CipherMode.OFB => 
+                new OFBMode(encryptionFunc, decryptionFunc, blockSize, initializationVector!),
             
-            Enum.CipherMode.Ctr => 
-                new CtrMode(encryptionFunc, decryptionFunc, blockSize, initializationVector!),
+            Enum.CipherMode.CTR => 
+                new CTRMode(encryptionFunc, decryptionFunc, blockSize, initializationVector!),
             
             Enum.CipherMode.RandomDelta => 
-                new RdMode(encryptionFunc, decryptionFunc, blockSize, initializationVector!),
+                new RandomDeltaMode(encryptionFunc, decryptionFunc, blockSize, initializationVector!),
             
             _ => throw new ArgumentOutOfRangeException(nameof(mode), mode, null)
         };

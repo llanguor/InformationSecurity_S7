@@ -3,7 +3,7 @@ using InformationSecurity.SymmetricEncryption.Base;
 using InformationSecurity.SymmetricEncryption.CipherMode.Base;
 namespace InformationSecurity.SymmetricEncryption.CipherMode.Modes;
 
-public sealed class RdMode(
+public sealed class RandomDeltaMode(
     Action<Memory<byte>> encryptionFunc,
     Action<Memory<byte>> decryptionFunc,
     int blockSize,

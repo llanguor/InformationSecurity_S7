@@ -7,7 +7,7 @@ namespace InformationSecurity.SymmetricEncryption.Des;
 /// Implementation of the <see cref="IKeySchedule"/> interface for the DES algorithm.
 /// Responsible for generating 16 round keys from a 64-bit master key.
 /// </summary>
-public sealed class DesKeySchedule 
+public sealed class DESKeySchedule 
     : IKeySchedule
 {
     #region Fields

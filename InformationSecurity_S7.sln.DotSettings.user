@@ -16,6 +16,10 @@
     &lt;TestId&gt;NUnit3x::64019B0B-0540-4158-8660-2CE4B6FACC9B::net8.0::InformationSecurity_Tests.CipherModesUnitTest&lt;/TestId&gt;&#xD;
     &lt;TestId&gt;NUnit3x::64019B0B-0540-4158-8660-2CE4B6FACC9B::net8.0::InformationSecurity_Tests.DesIntegrationTest.EncryptFileTest&lt;/TestId&gt;&#xD;
     &lt;TestId&gt;NUnit3x::64019B0B-0540-4158-8660-2CE4B6FACC9B::net8.0::InformationSecurity_Tests.DesIntegrationTest.DecryptFileTest&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;NUnit3x::64019B0B-0540-4158-8660-2CE4B6FACC9B::net8.0::InformationSecurity_Tests.DesIntegrationTest.EncryptImageFileTest&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;NUnit3x::64019B0B-0540-4158-8660-2CE4B6FACC9B::net8.0::InformationSecurity_Tests.DesIntegrationTest.DecryptImageFileTest&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;NUnit3x::64019B0B-0540-4158-8660-2CE4B6FACC9B::net8.0::InformationSecurity_Tests.DesIntegrationTest.EncryptTextFileTest&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;NUnit3x::64019B0B-0540-4158-8660-2CE4B6FACC9B::net8.0::InformationSecurity_Tests.DesIntegrationTest.DecryptTextFileTest&lt;/TestId&gt;&#xD;
   &lt;/TestAncestor&gt;&#xD;
 &lt;/SessionState&gt;</s:String>
 	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=c0366cf3_002D6293_002D4dbf_002Da7ed_002Db0fa6ccfb431/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="ZerosPaddingApplyTest" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;

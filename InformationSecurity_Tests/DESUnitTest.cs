@@ -32,13 +32,13 @@ public class DesTests
     {
         Logger.GetInstance();
         _container = new Container();
-        _container.Register<IKeySchedule, DesKeySchedule>();
-        _container.Register<IRoundFunction, DesRoundFunction>();
+        _container.Register<IKeySchedule, DESKeySchedule>();
+        _container.Register<IRoundFunction, DESRoundFunction>();
         _container.RegisterInstance(
-            new Des(
+            new DES(
                 _key,
                 CipherPadding.Iso10126,
-                CipherMode.Cbc,
+                CipherMode.CBC,
                 _initVector
             ));
     }
@@ -123,7 +123,7 @@ public class DesTests
     
     #endregion
     
-    #region Des BlockTransformation
+    #region DES BlockTransformation
     
     [Test]
     public void DesEncryptTest()
@@ -140,7 +140,7 @@ public class DesTests
             0b00011100, 0b11001100, 0b01010101, 0b01011101
         ];
 
-        _container.Resolve<Des>()
+        _container.Resolve<DES>()
             .EncryptBlock(block);
         
         Log.Information(
@@ -166,8 +166,8 @@ public class DesTests
             0b01101101,0b11111111,0b10101010,0b01101110
         ];
        
-        var des = _container.Resolve<Des>();
-        var method = typeof(Des).GetMethod(
+        var des = _container.Resolve<DES>();
+        var method = typeof(DES).GetMethod(
                     "DecryptBlock", 
                     BindingFlags.NonPublic | BindingFlags.Instance);
         method?.Invoke(des, [block.AsMemory()]);

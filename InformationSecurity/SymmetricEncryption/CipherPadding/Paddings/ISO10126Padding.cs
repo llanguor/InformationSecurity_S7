@@ -1,7 +1,7 @@
 ﻿using InformationSecurity.SymmetricEncryption.CipherPadding.Base;
 namespace InformationSecurity.SymmetricEncryption.CipherPadding.Paddings;
 
-public class Pkcs7Padding(
+public class ISO10126Padding(
     int blockSize) 
     : CipherPaddingBase(blockSize)
 {
@@ -13,29 +13,25 @@ public class Pkcs7Padding(
         
         var padded = new byte[newSize];
         data.CopyTo(padded, 0);
+        padded[newSize - 1] = (byte)padding;
 
-        for (var i = oldSize; i < newSize; ++i)
+        var random = new Random(Environment.TickCount);
+        for (var i = oldSize; i < newSize - 1; i++)
         {
-            padded[i] = (byte)padding;
+            padded[i] = (byte)random.Next(0, 256);
         }
-        
+
         return padded;
     }
 
     public override byte[] Remove(byte[] data)
     {
         if (data.Length == 0 || data.Length % BlockSize != 0)
-            throw new InvalidOperationException("Invalid data length for PKCS7 remove.");
+            throw new InvalidOperationException("Invalid data length for ISO10126 remove.");
 
         var padding = data[^1];
         if (padding <= 0 || padding > BlockSize)
-            throw new InvalidOperationException("Invalid PKCS7 padding value.");
-        
-        for (var i = data.Length - padding; i < data.Length; i++)
-        {
-            if (data[i] != padding)
-                throw new InvalidOperationException("Invalid PKCS7 padding bytes.");
-        }
+            throw new InvalidOperationException("Invalid ISO10126 padding value.");
         
         var newSize = data.Length - padding;
         var unPadded = new byte[newSize];

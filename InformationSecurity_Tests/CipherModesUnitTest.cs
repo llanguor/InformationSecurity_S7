@@ -47,13 +47,13 @@ public class CipherModesUnitTest
         _container.RegisterInstance(BlockSize);
         _container.RegisterInstance(_initializationVector);
 
-        _container.Register<CbcMode>();
-        _container.Register<CfbMode>();
-        _container.Register<CtrMode>();
-        _container.Register<EcbMode>();
-        _container.Register<OfbMode>();
-        _container.Register<PcbcMode>();
-        _container.Register<RdMode>();
+        _container.Register<CBCMode>();
+        _container.Register<CFBMode>();
+        _container.Register<CTRMode>();
+        _container.Register<ECBMode>();
+        _container.Register<OFBMode>();
+        _container.Register<PCBCMode>();
+        _container.Register<RandomDeltaMode>();
     }
     
     [TearDown]
@@ -64,7 +64,7 @@ public class CipherModesUnitTest
     
     #endregion
     
-    #region EcbMode
+    #region ECBMode
 
     [Test]
     public void EcbModeEncryptionTest()
@@ -76,7 +76,7 @@ public class CipherModesUnitTest
         ];
         
         var result = _data.ToArray();
-        _container.Resolve<EcbMode>()
+        _container.Resolve<ECBMode>()
             .Encrypt(result);
         
         Log.Information(
@@ -92,7 +92,7 @@ public class CipherModesUnitTest
     public void EcbModeDecryptionTest()
     { 
         var result = _data.ToArray();
-        var mode = _container.Resolve<EcbMode>();
+        var mode = _container.Resolve<ECBMode>();
         mode.Encrypt(result);
         mode.Decrypt(result);
         
@@ -115,7 +115,7 @@ public class CipherModesUnitTest
         ];
         
         var result = _data.ToArray();
-        await _container.Resolve<EcbMode>()
+        await _container.Resolve<ECBMode>()
             .EncryptAsync(result);
 
         Log.Information(
@@ -130,7 +130,7 @@ public class CipherModesUnitTest
     public async Task EcbModeDecryptionAsyncTest()
     {
         var result = _data.ToArray();
-        var mode = _container.Resolve<EcbMode>();
+        var mode = _container.Resolve<ECBMode>();
         await mode.DecryptAsync(result);
         await mode.DecryptAsync(result);
         
@@ -144,14 +144,14 @@ public class CipherModesUnitTest
     
     #endregion
     
-    #region CbcMode
+    #region CBCMode
     
     
     [Test]
     public void CbcModeDecryptionTest()
     { 
         var result = _data.ToArray();
-        var mode = _container.Resolve<CbcMode>();
+        var mode = _container.Resolve<CBCMode>();
         mode.Encrypt(result);
         mode.Decrypt(result);
         
@@ -167,7 +167,7 @@ public class CipherModesUnitTest
     public async Task CbcModeDecryptionAsyncTest()
     { 
         var result = _data.ToArray();
-        var mode = _container.Resolve<CbcMode>();
+        var mode = _container.Resolve<CBCMode>();
         await mode.EncryptAsync(result);
         await mode.DecryptAsync(result);
         
@@ -181,13 +181,13 @@ public class CipherModesUnitTest
     
     #endregion
     
-    #region CfbMode
+    #region CFBMode
     
     [Test]
     public void CfbModeDecryptionTest()
     { 
         var result = _data.ToArray();
-        var mode = _container.Resolve<CfbMode>();
+        var mode = _container.Resolve<CFBMode>();
         mode.Encrypt(result);
         mode.Decrypt(result);
         
@@ -203,7 +203,7 @@ public class CipherModesUnitTest
     public async Task CfbModeDecryptionAsyncTest()
     { 
         var result = _data.ToArray();
-        var mode = _container.Resolve<CfbMode>();
+        var mode = _container.Resolve<CFBMode>();
         await mode.EncryptAsync(result);
         await mode.DecryptAsync(result);
         
@@ -217,13 +217,13 @@ public class CipherModesUnitTest
     
     #endregion
     
-    #region OfbMode
+    #region OFBMode
     
     [Test]
     public void OfbModeDecryptionTest()
     { 
         var result = _data.ToArray();
-        var mode = _container.Resolve<OfbMode>();
+        var mode = _container.Resolve<OFBMode>();
         mode.Encrypt(result);
         mode.Decrypt(result);
         
@@ -239,7 +239,7 @@ public class CipherModesUnitTest
     public async Task OfbModeDecryptionAsyncTest()
     { 
         var result = _data.ToArray();
-        var mode = _container.Resolve<OfbMode>();
+        var mode = _container.Resolve<OFBMode>();
         await mode.EncryptAsync(result);
         await mode.DecryptAsync(result);
         
@@ -253,13 +253,13 @@ public class CipherModesUnitTest
     
     #endregion
     
-    #region PcbcMode
+    #region PCBCMode
     
     [Test]
     public void PcbcModeDecryptionTest()
     { 
         var result = _data.ToArray();
-        var mode = _container.Resolve<PcbcMode>();
+        var mode = _container.Resolve<PCBCMode>();
         mode.Encrypt(result);
         mode.Decrypt(result);
         
@@ -275,7 +275,7 @@ public class CipherModesUnitTest
     public async Task PcbcModeDecryptionAsyncTest()
     { 
         var result = _data.ToArray();
-        var mode = _container.Resolve<PcbcMode>();
+        var mode = _container.Resolve<PCBCMode>();
         await mode.EncryptAsync(result);
         await mode.DecryptAsync(result);
         
@@ -290,13 +290,13 @@ public class CipherModesUnitTest
     #endregion
     
     
-    #region PcbcMode
+    #region PCBCMode
     
     [Test]
     public void RdModeDecryptionTest()
     { 
         var result = _data.ToArray();
-        var mode = _container.Resolve<RdMode>();
+        var mode = _container.Resolve<RandomDeltaMode>();
         mode.Encrypt(result);
         mode.Decrypt(result);
         
@@ -312,7 +312,7 @@ public class CipherModesUnitTest
     public async Task RdModeDecryptionAsyncTest()
     { 
         var result = _data.ToArray();
-        var mode = _container.Resolve<RdMode>();
+        var mode = _container.Resolve<RandomDeltaMode>();
         await mode.EncryptAsync(result);
         await mode.DecryptAsync(result);
         
@@ -326,13 +326,13 @@ public class CipherModesUnitTest
     
     #endregion
     
-    #region PcbcMode
+    #region PCBCMode
     
     [Test]
     public void CtrModeDecryptionTest()
     { 
         var result = _data.ToArray();
-        var mode = _container.Resolve<CtrMode>();
+        var mode = _container.Resolve<CTRMode>();
         mode.Encrypt(result);
         mode.Decrypt(result);
         
@@ -348,7 +348,7 @@ public class CipherModesUnitTest
     public async Task CtrModeDecryptionAsyncTest()
     { 
         var result = _data.ToArray();
-        var mode = _container.Resolve<CtrMode>();
+        var mode = _container.Resolve<CTRMode>();
         await mode.EncryptAsync(result);
         await mode.DecryptAsync(result);
         
