@@ -44,8 +44,9 @@ public class DESIntegrationTest
             new DES(
                 _key,
                 CipherPadding.Zeros,
-                CipherMode.ECB,
+                CipherMode.CFB,
                 _initializationVector));
+        // error: CFB (image)
     }
     
     [TearDown]
@@ -53,7 +54,7 @@ public class DESIntegrationTest
     {
         _container?.Dispose();
     }
-
+    
     #endregion
     
     
@@ -80,6 +81,19 @@ public class DESIntegrationTest
     }
     
     [Test]
+    public void EncryptDecryptTextFileTest()
+    {
+        const string input = $"{ResourcesDirectoryPath}\\input.txt";
+        const string encrypted = $"{ResourcesDirectoryPath}\\encrypted.txt";
+        const string decrypted = $"{ResourcesDirectoryPath}\\decrypted.txt";
+        var des = _container.Resolve<SymmetricEncryption>();
+        des.Encrypt(input, encrypted);
+        des.Decrypt(encrypted, decrypted);
+        Assert.True(true);
+    }
+
+    
+    [Test]
     public void EncryptImageFileTest()
     {
         const string input = $"{ResourcesDirectoryPath}\\input.jpeg";
@@ -99,5 +113,17 @@ public class DESIntegrationTest
         Assert.True(true);
     }
     
+    [Test]
+    public void EncryptDecryptImageFileTest()
+    {
+        const string input = $"{ResourcesDirectoryPath}\\input.jpeg";
+        const string encrypted = $"{ResourcesDirectoryPath}\\encrypted.jpeg";
+        const string decrypted = $"{ResourcesDirectoryPath}\\decrypted.jpeg";
+        var des = _container.Resolve<SymmetricEncryption>();
+        des.Encrypt(input, encrypted);
+        des.Decrypt(encrypted,decrypted);
+        Assert.True(true);
+    }
+
     #endregion
 }
