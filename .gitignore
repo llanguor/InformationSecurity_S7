@@ -7,3 +7,4 @@ riderModule.iml
 /Resources/
 /Tests/Resources
 /Crypto.Tests/DES/Resources
+*.user
