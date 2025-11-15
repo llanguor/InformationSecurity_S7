@@ -1,4 +1,4 @@
-﻿namespace Crypto.SymmetricEncryption.FeistelNetwork.Base;
+﻿namespace Crypto.SymmetricEncryption.Base.Interfaces;
 
 /// <summary>
 /// Represents a single round transformation in a block cipher.
@@ -16,5 +16,10 @@ public interface IRoundFunction
     /// the block is modified in-place.
     /// </param>
     /// <param name="key">The round key to use for transformation.</param>
-    void TransformBlock(Span<byte> block, ReadOnlySpan<byte> key);
+    /// /// <returns>
+    /// The same <paramref name="block"/> after transformation.
+    /// Although the block is modified in-place, the method also returns
+    /// it for convenience, allowing inline usage or method chaining.
+    /// </returns>
+    byte[] TransformBlock(byte[] block, byte[] key);
 }

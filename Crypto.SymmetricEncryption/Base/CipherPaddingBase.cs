@@ -1,4 +1,6 @@
-﻿namespace Crypto.SymmetricEncryption.CipherPaddings.Base;
+﻿using Crypto.SymmetricEncryption.Base.Interfaces;
+
+namespace Crypto.SymmetricEncryption.Base;
 
 public abstract class CipherPaddingBase (
     int blockSize)

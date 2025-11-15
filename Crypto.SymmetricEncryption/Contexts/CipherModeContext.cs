@@ -1,7 +1,8 @@
-﻿using Crypto.SymmetricEncryption.CipherModes.Base;
-using Crypto.SymmetricEncryption.CipherModes.Modes;
+﻿using Crypto.SymmetricEncryption.Base;
+using Crypto.SymmetricEncryption.Base.Interfaces;
+using Crypto.SymmetricEncryption.Modes;
 
-namespace Crypto.SymmetricEncryption.CipherModes;
+namespace Crypto.SymmetricEncryption.Contexts;
 
 public sealed class CipherModeContext : CipherModeBase
 {
@@ -14,7 +15,7 @@ public sealed class CipherModeContext : CipherModeBase
     #region Constructors
     
     public CipherModeContext(
-        CipherModes modes,
+        CipherMode mode,
         Action<Memory<byte>> encryptionFunc,
         Action<Memory<byte>> decryptionFunc,
         int blockSize,
@@ -22,34 +23,34 @@ public sealed class CipherModeContext : CipherModeBase
         params object[] parameters):
         base(encryptionFunc, decryptionFunc, blockSize, initializationVector, parameters)
     {
-        if(modes != CipherModes.ECB &&
+        if(mode != CipherMode.ECB &&
            initializationVector == null)
             throw new ArgumentException(null, nameof(initializationVector));
 
-        _cipherMode = modes switch
+        _cipherMode = mode switch
         {
-            CipherModes.ECB => 
+            CipherMode.ECB => 
                 new ECBMode(encryptionFunc, decryptionFunc, blockSize),
             
-            CipherModes.CBC => 
+            CipherMode.CBC => 
                 new CBCMode(encryptionFunc, decryptionFunc, blockSize, initializationVector!),
             
-            CipherModes.PCBC => 
+            CipherMode.PCBC => 
                 new PCBCMode(encryptionFunc,decryptionFunc,  blockSize, initializationVector!),
             
-            CipherModes.CFB => 
+            CipherMode.CFB => 
                 new CFBMode(encryptionFunc, decryptionFunc, blockSize, initializationVector!),
             
-            CipherModes.OFB => 
+            CipherMode.OFB => 
                 new OFBMode(encryptionFunc, decryptionFunc, blockSize, initializationVector!),
             
-            CipherModes.CTR => 
+            CipherMode.CTR => 
                 new CTRMode(encryptionFunc, decryptionFunc, blockSize, initializationVector!),
             
-            CipherModes.RandomDelta => 
+            CipherMode.RandomDelta => 
                 new RandomDeltaMode(encryptionFunc, decryptionFunc, blockSize, initializationVector!),
             
-            _ => throw new ArgumentOutOfRangeException(nameof(modes), modes, null)
+            _ => throw new ArgumentOutOfRangeException(nameof(mode), mode, null)
         };
     }
     

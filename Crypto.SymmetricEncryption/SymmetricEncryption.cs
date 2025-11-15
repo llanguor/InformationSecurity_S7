@@ -2,50 +2,33 @@
 
 namespace Crypto.SymmetricEncryption;
 
-public abstract class SymmetricEncryption : 
-    SymmetricEncryptionBase
+public abstract class SymmetricEncryption(
+    int blockSize,
+    byte[] key,
+    CipherPadding padding,
+    CipherMode mode,
+    byte[]? initializationVector = null,
+    params object[] parameters) : 
+    SymmetricEncryptionBase(blockSize, key, padding, mode, initializationVector, parameters)
 {
     #region Fields
 
     private readonly int _bufferSize = 8 * 1024;
-    
+
     #endregion
     
     
     #region Constructors
-    
+
     protected SymmetricEncryption(
         int blockSize,
         byte[] key, 
-        CipherPaddings.CipherPaddings paddings, 
-        CipherModes.CipherModes modes, 
-        byte[]? initializationVector = null, 
-        params object[] parameters)
-        : base(
-            blockSize, 
-            key, 
-            paddings, 
-            modes, 
-            initializationVector, 
-            parameters)
-    {
-    }
-    
-    protected SymmetricEncryption(
-        int blockSize,
-        byte[] key, 
-        CipherPaddings.CipherPaddings paddings, 
-        CipherModes.CipherModes modes, 
+        CipherPadding padding, 
+        CipherMode mode, 
         int bufferSize,
         byte[]? initializationVector = null, 
         params object[] parameters)
-        : base(
-            blockSize, 
-            key, 
-            paddings, 
-            modes, 
-            initializationVector, 
-            parameters)
+        : this(blockSize, key, padding, mode, initializationVector, parameters)
     {
         _bufferSize = bufferSize;
     }
@@ -58,8 +41,8 @@ public abstract class SymmetricEncryption :
     /// <inheritdoc/>
     public override byte[] Encrypt(byte[] data)
     {
-        data = CipherPadding.Apply(data);
-        CipherMode.Encrypt(data);
+        data = CipherPaddingContext.Apply(data);
+        CipherModeContext.Encrypt(data);
         return data;
     }
     
@@ -68,8 +51,8 @@ public abstract class SymmetricEncryption :
         byte[] data, 
         out byte[] result)
     {
-        result = CipherPadding.Apply(data);
-        CipherMode.Encrypt(result);
+        result = CipherPaddingContext.Apply(data);
+        CipherModeContext.Encrypt(result);
     }
 
     /// <inheritdoc/>
@@ -96,14 +79,14 @@ public abstract class SymmetricEncryption :
             }
             else
             {
-                var padded = CipherPadding.Apply(
+                var padded = CipherPaddingContext.Apply(
                     buffer[..bytesRead]);
                 padded.CopyTo(buffer, 0);
                 dataToEncrypt =
                     buffer.AsMemory()[..padded.Length];
             }
             
-            CipherMode.Encrypt(dataToEncrypt);
+            CipherModeContext.Encrypt(dataToEncrypt);
             
             outputStream.Write(
                 buffer, 
@@ -115,8 +98,8 @@ public abstract class SymmetricEncryption :
     /// <inheritdoc/>
     public override byte[] Decrypt(byte[] data)
     {
-        CipherMode.Decrypt(data);
-        data = CipherPadding.Remove(data);
+        CipherModeContext.Decrypt(data);
+        data = CipherPaddingContext.Remove(data);
         return data;
     }
 
@@ -125,8 +108,8 @@ public abstract class SymmetricEncryption :
         byte[] data,
         out byte[] result)
     {
-        CipherMode.Decrypt(data);
-        result = CipherPadding.Remove(data);
+        CipherModeContext.Decrypt(data);
+        result = CipherPaddingContext.Remove(data);
     }
 
     /// <inheritdoc/>
@@ -148,11 +131,11 @@ public abstract class SymmetricEncryption :
             var dataToDecrypt =
                 buffer.AsMemory()[..bytesRead];
             
-            CipherMode.Decrypt(dataToDecrypt);
+            CipherModeContext.Decrypt(dataToDecrypt);
             
             if (bytesRead != buffer.Length)
             {
-                var padded = CipherPadding.Remove(
+                var padded = CipherPaddingContext.Remove(
                     buffer[..bytesRead]);
                 padded.CopyTo(buffer, 0);
                 dataToDecrypt =
@@ -174,8 +157,8 @@ public abstract class SymmetricEncryption :
     public override async Task<byte[]> EncryptAsync(
         byte[] data)
     {
-        data = CipherPadding.Apply(data);
-        await CipherMode.EncryptAsync(data);
+        data = CipherPaddingContext.Apply(data);
+        await CipherModeContext.EncryptAsync(data);
         return data;
     }
 
@@ -198,11 +181,11 @@ public abstract class SymmetricEncryption :
             var dataToEncrypt =
                 buffer.AsMemory()[..bytesRead];
             
-            await CipherMode.EncryptAsync(dataToEncrypt);
+            await CipherModeContext.EncryptAsync(dataToEncrypt);
             
             if (bytesRead != buffer.Length)
             {
-                var padded = CipherPadding.Apply(
+                var padded = CipherPaddingContext.Apply(
                     buffer[..bytesRead]);
                 padded.CopyTo(buffer, 0);
                 dataToEncrypt =
@@ -218,8 +201,8 @@ public abstract class SymmetricEncryption :
     public override async Task<byte[]> DecryptAsync(
         byte[] data)
     {
-        await CipherMode.DecryptAsync(data);
-        data = CipherPadding.Remove(data);
+        await CipherModeContext.DecryptAsync(data);
+        data = CipherPaddingContext.Remove(data);
         return data;
     }
 
@@ -242,11 +225,11 @@ public abstract class SymmetricEncryption :
             var dataToDecrypt =
                 buffer.AsMemory()[..bytesRead];
             
-            await CipherMode.DecryptAsync(dataToDecrypt);
+            await CipherModeContext.DecryptAsync(dataToDecrypt);
             
             if (bytesRead != buffer.Length)
             {
-                var padded = CipherPadding.Remove(
+                var padded = CipherPaddingContext.Remove(
                     buffer[..bytesRead]);
                 padded.CopyTo(buffer, 0);
                 dataToDecrypt =

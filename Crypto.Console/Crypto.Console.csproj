@@ -9,6 +9,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\Crypto.SymmetricEncryption.DEAL\Crypto.SymmetricEncryption.DEAL.csproj" />
       <ProjectReference Include="..\Crypto.SymmetricEncryption\Crypto.SymmetricEncryption.csproj" />
       <ProjectReference Include="..\Crypto.Tests\Crypto.Tests.csproj" />
     </ItemGroup>

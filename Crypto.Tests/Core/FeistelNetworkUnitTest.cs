@@ -1,5 +1,4 @@
 using Crypto.SymmetricEncryption;
-using Crypto.SymmetricEncryption.FeistelNetwork;
 using Crypto.Tests.Infrastructure;
 using DryIoc;
 using Serilog;

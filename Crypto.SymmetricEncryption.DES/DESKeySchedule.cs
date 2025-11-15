@@ -1,6 +1,6 @@
 ﻿using System.Runtime.InteropServices;
 using Crypto.Core;
-using Crypto.SymmetricEncryption.FeistelNetwork.Base;
+using Crypto.SymmetricEncryption.Base.Interfaces;
 
 namespace Crypto.SymmetricEncryption;
 
@@ -52,17 +52,17 @@ public sealed class DESKeySchedule
     
     
     #region Methods
-    
+
     /// <summary>
     /// Expands the specified 64-bit master key into 16 round keys of 48 bits each.
     /// </summary>
     /// <param name="key">
-    /// The master key as a read-only span of bytes. Must be exactly 8 bytes (64 bits) long.
+    ///     The master key as a read-only span of bytes. Must be exactly 8 bytes (64 bits) long.
     /// </param>
     /// <returns>
     /// An array of 16 round keys, each represented as a 6-byte array (48 bits).
     /// </returns>
-    public byte[][] Expand(ReadOnlySpan<byte> key)
+    public byte[][] Expand(byte[] key)
     {
         var roundKeys = 
             new byte[RoundsCount][];

@@ -1,9 +1,43 @@
 ﻿using Crypto.Core;
 
-namespace Crypto.SymmetricEncryption.Base;
+namespace Crypto.SymmetricEncryption.Base.Interfaces;
 
-public interface ISymmetricEncryption : IEncryption
+public interface ISymmetricEncryption : 
+    IEncryption
 {
+    #region Properties
+    
+    /// <summary>
+    /// Size of a single encryption block, in bytes.
+    /// All input data is processed in chunks of this size.
+    /// </summary>
+    public int BlockSize { get; }
+
+    /// <summary>
+    /// The block cipher mode applied during encryption and decryption.
+    /// </summary>
+    public CipherMode Mode { get; }
+    
+    /// <summary>
+    /// The padding scheme used to fill blocks to the required size.
+    /// </summary>
+    public CipherPadding Padding { get; }
+    
+    /// <summary>
+    /// Optional initialization vector (IV) for certain cipher modes.
+    /// </summary>
+    public byte[]? InitializationVector { get; }
+
+    /// <summary>
+    /// Additional optional parameters for the selected encryption mode.
+    /// </summary>
+    public object[] Parameters { get; }
+    
+    #endregion
+    
+    
+    #region Methods
+    
     /// <summary>
     /// Encrypts the provided byte array and outputs the result via an out parameter.
     /// The <paramref name="data"/> array is modified in-place during encryption.
@@ -66,4 +100,5 @@ public interface ISymmetricEncryption : IEncryption
     /// <returns>A task that represents the asynchronous operation.</returns>
     public Task DecryptAsync(string inputFilePath, string outputFilePath);
     
+    #endregion
 }

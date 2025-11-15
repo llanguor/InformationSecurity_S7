@@ -1,7 +1,5 @@
-﻿using Crypto.SymmetricEncryption.CipherModes;
-using Crypto.SymmetricEncryption.CipherModes.Base;
-using Crypto.SymmetricEncryption.CipherPaddings;
-using Crypto.SymmetricEncryption.CipherPaddings.Base;
+﻿using Crypto.SymmetricEncryption.Base.Interfaces;
+using Crypto.SymmetricEncryption.Contexts;
 
 namespace Crypto.SymmetricEncryption.Base;
 
@@ -9,42 +7,57 @@ namespace Crypto.SymmetricEncryption.Base;
 /// Represents the execution context for a symmetric encryption algorithm,
 /// providing encryption and decryption operations with a specified key.
 /// </summary>
-public abstract class SymmetricEncryptionBase : ISymmetricEncryption
+public abstract class SymmetricEncryptionBase :
+    ISymmetricEncryption
 {
+    #region Fields
+
+    private byte[] _key;
+    
+    #endregion
+    
+    
     #region Properties
     
     /// <summary>
     /// The cipher mode used for block encryption and decryption operations.
     /// </summary>
-    protected ICipherMode CipherMode { get; }
+    protected ICipherMode CipherModeContext { get; }
 
     /// <summary>
     /// The padding strategy applied to ensure blocks match the required block size.
     /// </summary>
-    protected ICipherPadding CipherPadding { get; }
-    
-    /// <summary>
-    /// Size of a single encryption block, in bytes.
-    /// All input data is processed in chunks of this size.
-    /// </summary>
-    public int BlockSize { get; }
-    
-    /// <summary>
-    /// The block cipher mode applied during encryption and decryption.
-    /// </summary>
-    public CipherModes.CipherModes Modes { get; }
-
-    /// <summary>
-    /// The padding scheme used to fill blocks to the required size.
-    /// </summary>
-    public CipherPaddings.CipherPaddings Paddings { get; }
-    
-    /// <summary>
-    /// The encryption key used for all operations.
-    /// </summary>
-    protected byte[] Key { get; }
+    protected ICipherPadding CipherPaddingContext { get; }
     
     #endregion
+    
+    
+    #region Properties Implementation from ISymmetricEncryption
+    
+    /// <inheritdoc />
+    public virtual byte[] Key
+    {
+        get => _key;
+        set => _key = value;
+    }
+
+    /// <inheritdoc />
+    public int BlockSize { get; }
+
+    /// <inheritdoc />
+    public CipherMode Mode { get; set; }
+
+    /// <inheritdoc />
+    public CipherPadding Padding { get; }
+    
+    /// <inheritdoc />
+    public byte[]? InitializationVector { get; }
+    
+    /// <inheritdoc />
+    public object[] Parameters { get; }
+
+    #endregion
+    
     
     #region Constructors
 
@@ -53,32 +66,34 @@ public abstract class SymmetricEncryptionBase : ISymmetricEncryption
     /// providing encryption and decryption operations with a specified key.
     /// </summary>
     /// <param name="blockSize">Size of data block processed at a time in symmetric block cipher.</param>
-    /// <param name="key">The encryption key used for all operations.</param>
-    /// <param name="modes">The block cipher mode applied during encryption and decryption.</param>
-    /// <param name="paddings">The padding scheme used to fill blocks to the required size.</param>
+    /// <param name="key">The secret key used by the symmetric encryption algorithm.</param>
+    /// <param name="mode">The block cipher mode applied during encryption and decryption.</param>
+    /// <param name="padding">The padding scheme used to fill blocks to the required size.</param>
     /// <param name="initializationVector">Optional initialization vector (IV) for certain cipher modes.</param>
     /// <param name="parameters">Additional optional parameters for the selected encryption mode.</param>
     protected SymmetricEncryptionBase(
         int blockSize,
         byte[] key,
-        CipherPaddings.CipherPaddings paddings,
-        CipherModes.CipherModes modes,
+        CipherPadding padding,
+        CipherMode mode,
         byte[]? initializationVector = null,
         params object[] parameters)
     {
         BlockSize = blockSize;
-        Modes = modes;
-        Paddings = paddings;
-        Key = key;
-        
-        CipherPadding =
+        _key = key;
+        Mode = mode;
+        Padding = padding;
+        InitializationVector = initializationVector;
+        Parameters = parameters;
+
+        CipherPaddingContext =
             new CipherPaddingContext(
-                Paddings,
+                Padding,
                 BlockSize);
         
-        CipherMode = 
+        CipherModeContext = 
             new CipherModeContext(
-                Modes,
+                Mode,
                 EncryptBlock,
                 DecryptBlock,
                 BlockSize,
@@ -88,7 +103,8 @@ public abstract class SymmetricEncryptionBase : ISymmetricEncryption
     
     #endregion
     
-    #region Abstract Methods
+    
+    #region Methods
     
     /// <summary>
     /// Encrypts a single block in-place.
@@ -105,17 +121,17 @@ public abstract class SymmetricEncryptionBase : ISymmetricEncryption
     #endregion
     
     
-    #region Abstract Methods from interface
-    
+    #region Methods Implementation from ISymmetricEncryption 
+
     /// <inheritdoc />
-    public abstract void SetKey(byte[] key);
+    public void SetKey(byte[] key) => Key = key;
     
     /// <inheritdoc />
     public abstract byte[] Encrypt(byte[] data);
     
     /// <inheritdoc />
     public abstract byte[] Decrypt(byte[] data);
-    
+
     /// <inheritdoc />
     public abstract void Encrypt(byte[] data, out byte[] result);
 

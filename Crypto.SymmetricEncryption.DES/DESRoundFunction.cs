@@ -1,6 +1,6 @@
 ﻿using System.Runtime.InteropServices;
 using Crypto.Core;
-using Crypto.SymmetricEncryption.FeistelNetwork.Base;
+using Crypto.SymmetricEncryption.Base.Interfaces;
 
 namespace Crypto.SymmetricEncryption;
 
@@ -114,7 +114,7 @@ public sealed class DESRoundFunction
     /// The 48-bit round key used for this round, passed as a <see cref="ReadOnlySpan{Byte}"/>.
     /// Must be exactly 6 bytes.
     /// </param>
-    public void TransformBlock(Span<byte> block, ReadOnlySpan<byte> key)
+    public byte[] TransformBlock(byte[] block, byte[] key)
     {
         Span<byte> buffer = stackalloc byte[8];
         Permutation.Permute(
@@ -152,6 +152,8 @@ public sealed class DESRoundFunction
 		    Permutation.StartingBitIndex.First,
 		    Permutation.LeastSignificantBitPosition.Right,
 		    Permutation.LeastSignificantBitPosition.Left);
+
+	    return block;
     }
     
     #endregion

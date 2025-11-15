@@ -1,9 +1,7 @@
 using System.Reflection;
-using Crypto.SymmetricEncryption.CipherModes;
-using Crypto.SymmetricEncryption.CipherPaddings;
 using Crypto.SymmetricEncryption;
 using Crypto.SymmetricEncryption.Base;
-using Crypto.SymmetricEncryption.FeistelNetwork.Base;
+using Crypto.SymmetricEncryption.Base.Interfaces;
 using Crypto.Tests.Infrastructure;
 using DryIoc;
 using Serilog;
@@ -38,8 +36,8 @@ public class DESUnitTest
         _container.RegisterInstance<ISymmetricEncryption>(
             new SymmetricEncryption.DES(
                 _key,
-                CipherPaddings.ISO10126,
-                CipherModes.CBC,
+                CipherPadding.ISO10126,
+                CipherMode.CBC,
                 _initVector
             ));
     }

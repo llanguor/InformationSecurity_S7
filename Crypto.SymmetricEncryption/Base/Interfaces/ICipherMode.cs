@@ -1,4 +1,4 @@
-﻿namespace Crypto.SymmetricEncryption.CipherModes.Base;
+﻿namespace Crypto.SymmetricEncryption.Base.Interfaces;
 
 public interface ICipherMode
 {

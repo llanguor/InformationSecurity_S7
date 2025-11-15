@@ -1,6 +1,6 @@
-﻿using Crypto.SymmetricEncryption.CipherPaddings.Base;
+﻿using Crypto.SymmetricEncryption.Base;
 
-namespace Crypto.SymmetricEncryption.CipherPaddings.Paddings;
+namespace Crypto.SymmetricEncryption.Paddings;
 
 public class ANSIX923Padding(
     int blockSize) 

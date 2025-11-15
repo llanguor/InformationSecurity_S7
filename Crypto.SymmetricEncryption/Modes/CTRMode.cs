@@ -1,7 +1,7 @@
 ﻿using System.Numerics;
-using Crypto.SymmetricEncryption.CipherModes.Base;
+using Crypto.SymmetricEncryption.Base;
 
-namespace Crypto.SymmetricEncryption.CipherModes.Modes;
+namespace Crypto.SymmetricEncryption.Modes;
 
 public sealed class CTRMode(
     Action<Memory<byte>> encryptionFunc,

@@ -1,6 +1,6 @@
-﻿using Crypto.SymmetricEncryption.CipherModes.Base;
+﻿using Crypto.SymmetricEncryption.Base;
 
-namespace Crypto.SymmetricEncryption.CipherModes.Modes;
+namespace Crypto.SymmetricEncryption.Modes;
 
 public sealed class ECBMode(
     Action<Memory<byte>> encryptionFunc,

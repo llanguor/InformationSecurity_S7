@@ -1,8 +1,7 @@
-﻿using Crypto.SymmetricEncryption.CipherModes;
-using Crypto.SymmetricEncryption.CipherPaddings;
-using Crypto.SymmetricEncryption;
+﻿using Crypto.SymmetricEncryption;
 using Crypto;
 using Crypto.SymmetricEncryption.Base;
+using Crypto.SymmetricEncryption.Base.Interfaces;
 using Crypto.Tests.Infrastructure;
 using DryIoc;
 
@@ -44,8 +43,8 @@ public class DESIntegrationTest
         _container.RegisterInstance<ISymmetricEncryption>(
             new SymmetricEncryption.DES(
                 _key,
-                CipherPaddings.Zeros,
-                CipherModes.CFB,
+                CipherPadding.Zeros,
+                CipherMode.CFB,
                 _initializationVector));
     }
     

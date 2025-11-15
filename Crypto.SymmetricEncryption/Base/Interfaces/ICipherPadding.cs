@@ -1,4 +1,4 @@
-﻿namespace Crypto.SymmetricEncryption.CipherPaddings.Base;
+﻿namespace Crypto.SymmetricEncryption.Base.Interfaces;
 
 /// <summary>
 /// Represents a padding scheme for symmetric encryption.

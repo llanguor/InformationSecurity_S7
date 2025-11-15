@@ -64,7 +64,7 @@ public static class Permutation
                 outputLsbPosition == LeastSignificantBitPosition.Left ? 
                     i / 8 : 
                     output.Length - 1 - i / 8;
-            
+    
             output[byteIndex] &= (byte) ~(1 << bitIndex);
             output[byteIndex] |= (byte)(bitValue << bitIndex);
         }

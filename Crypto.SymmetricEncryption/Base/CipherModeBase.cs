@@ -1,4 +1,6 @@
-﻿namespace Crypto.SymmetricEncryption.CipherModes.Base;
+﻿using Crypto.SymmetricEncryption.Base.Interfaces;
+
+namespace Crypto.SymmetricEncryption.Base;
 
 public abstract class CipherModeBase (
     Action<Memory<byte>> encryptionFunc,

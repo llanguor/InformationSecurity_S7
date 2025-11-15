@@ -1,27 +1,40 @@
-﻿using Crypto.SymmetricEncryption.FeistelNetwork.Base;
+﻿using Crypto.Core;
+using Crypto.SymmetricEncryption.Base.Interfaces;
 
 namespace Crypto.SymmetricEncryption;
 
 public sealed class DEAL(
-    byte[] key, 
-    CipherPaddings.CipherPaddings paddings, 
-    CipherModes.CipherModes modes, 
-    byte[]? initializationVector = null, 
+    byte[] key,
+    CipherPadding padding,
+    CipherMode mode,
+    byte[]? initializationVector = null,
     params object[] parameters)
-    : SymmetricEncryption(8, key, paddings, modes, initializationVector, parameters)
+    : SymmetricEncryption(8, key, padding, mode, initializationVector, parameters)
 {
+    #region Fields
+
     /// <summary>
     /// The Crypto.Core.DEAL key schedule used to generate round keys.
     /// </summary>
     private static readonly IKeySchedule KeySchedule =
         new DEALKeySchedule();
-    
+
     /// <summary>
     /// The Crypto.Core.DEAL round function used in the Feistel network.
     /// </summary>
-    private static readonly IRoundFunction RoundFunction =
-        new DEALRoundFunctionAdapter();
+    private readonly IRoundFunction RoundFunction = 
+        new DESToDEALRoundFunctionAdapter(
+            new DES(
+                key,
+                padding,
+                mode,
+                initializationVector,
+                parameters));
 
+    #endregion
+    
+    
+    #region Methods
     
     internal override void EncryptBlock(Memory<byte> data)
     {
@@ -32,9 +45,6 @@ public sealed class DEAL(
     {
         throw new NotImplementedException();
     }
-
-    public override void SetKey(byte[] key)
-    {
-        throw new NotImplementedException();
-    }
+    
+    #endregion
 }

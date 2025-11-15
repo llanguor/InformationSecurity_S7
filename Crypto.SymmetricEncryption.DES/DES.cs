@@ -1,5 +1,5 @@
 ﻿using Crypto.Core;
-using Crypto.SymmetricEncryption.FeistelNetwork.Base;
+using Crypto.SymmetricEncryption.Base.Interfaces;
 
 namespace Crypto.SymmetricEncryption;
 
@@ -9,13 +9,15 @@ namespace Crypto.SymmetricEncryption;
 /// </summary>
 public sealed class DES(
     byte[] key, 
-    CipherPaddings.CipherPaddings paddings, 
-    CipherModes.CipherModes modes, 
+    CipherPadding padding, 
+    CipherMode mode, 
     byte[]? initializationVector = null, 
     params object[] parameters)
-    : SymmetricEncryption(8, key, paddings, modes, initializationVector, parameters)
+    : SymmetricEncryption(8, key, padding, mode, initializationVector, parameters)
 {
     #region Fields
+
+    private const int FeistelRoundsCount = 16;
     
     /// <summary>
     /// The Crypto.Core.DES key schedule used to generate round keys.
@@ -32,13 +34,12 @@ public sealed class DES(
     /// <summary>
     /// The internal Feistel network used for Crypto.Core.DES encryption and decryption.
     /// </summary>
-    private readonly FeistelNetwork.FeistelNetwork _feistelNetwork = 
+    private readonly FeistelNetwork _feistelNetwork = 
         new (
             KeySchedule, 
             RoundFunction, 
             key, 
-            16);
-    
+            FeistelRoundsCount);
     
     /// <summary>
     /// Initial permutation table (IP) for Crypto.Core.DES.
@@ -54,7 +55,6 @@ public sealed class DES(
         61, 53, 45, 37, 29, 21, 13, 5,
         63, 55, 47, 39, 31, 23, 15, 7 
     ];
-    
     
     /// <summary>
     /// Inverse of the initial permutation table (IP⁻¹) for Crypto.Core.DES.
@@ -74,20 +74,24 @@ public sealed class DES(
     #endregion
     
     
-    #region Methods
+    #region Properties
 
-    /// <summary>
-    /// Sets the master key for the Crypto.Core.DES cipher.
-    /// The key is stored internally and used for subsequent encryption and decryption operations.
-    /// </summary>
-    /// <param name="key">
-    ///     The master key as a read-only span of bytes. 
-    ///     The key must be exactly 8 bytes (64 bits) long.
-    /// </param>
-    public override void SetKey(byte[] key)
+    /// <inherit/>
+    public override byte[] Key
     {
-        _feistelNetwork.SetKey(key);
+        get => base.Key;
+        set
+        {
+            _feistelNetwork.SetKey(value);
+            base.Key = value;
+        }
     }
+
+    #endregion
+    
+    
+    #region Methods
+    
 
     /// <summary>
     /// Encrypts a 64-bit block of data in-place using Crypto.Core.DES.
@@ -98,7 +102,8 @@ public sealed class DES(
     /// </param>
     internal override void EncryptBlock(Memory<byte> data)
     {
-        Span<byte> buffer = stackalloc byte[8];
+        // Span<byte> buffer = stackalloc byte[BlockSize];
+        var buffer = new byte[BlockSize];
         Permutation.Permute(
             data.Span,
             InitialPermutation,
@@ -127,7 +132,8 @@ public sealed class DES(
     /// </param>
     internal override void DecryptBlock(Memory<byte> data)
     {
-        Span<byte> buffer = stackalloc byte[data.Length];
+        // Span<byte> buffer = stackalloc byte[BlockSize];
+        var buffer = new byte[BlockSize];
         Permutation.Permute(
             data.Span,
             InitialPermutation,
