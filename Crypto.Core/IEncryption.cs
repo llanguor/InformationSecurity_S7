@@ -8,26 +8,29 @@ public interface IEncryption
 {
     /// <summary>
     /// Gets or sets the key used by the encryption algorithm.
-    /// The key must be set before performing any encryption or decryption operations.
+    /// The key must be assigned before any encryption or decryption occurs.
     /// </summary>
     public byte[] Key { get; set; }
     
     /// <summary>
-    /// Sets the master key for the symmetric cipher.
-    /// This method must be called before encrypting or decrypting data.
+    /// Sets the master key for the cipher.
+    /// This method must be called before performing encryption or decryption.
     /// </summary>
-    /// <param name="key">The master key as a read-only span of bytes used to configure the cipher.</param>
+    /// <param name="key">The key material used to configure the cipher.</param>
     public void SetKey(byte[] key);
 
     /// <summary>
     /// Encrypts the specified block of data in-place.
     /// </summary>
     /// <param name="data">The input block to encrypt. It will be modified in-place.</param>
+    /// <returns>A new byte array containing the encrypted data.</returns>
     public byte[] Encrypt(byte[] data);
 
     /// <summary>
     /// Decrypts the specified block of data in-place.
     /// </summary>
     /// <param name="data">The input block to decrypt. It will be modified in-place.</param>
+    /// <returns>A new byte array containing the decrypted data.</returns>
     public byte[] Decrypt(byte[] data);
+    
 }

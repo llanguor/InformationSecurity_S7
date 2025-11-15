@@ -6,14 +6,14 @@ public class PKCS7Padding(
     int blockSize) 
     : CipherPaddingBase(blockSize)
 {
-    public override byte[] Apply(byte[] data)
+    public override byte[] Apply(Span<byte> data)
     {
         var padding = BlockSize - data.Length % BlockSize;
         var oldSize = data.Length;
         var newSize = data.Length + padding;
         
         var padded = new byte[newSize];
-        data.CopyTo(padded, 0);
+        data.CopyTo(padded);
 
         for (var i = oldSize; i < newSize; ++i)
         {
@@ -23,7 +23,7 @@ public class PKCS7Padding(
         return padded;
     }
 
-    public override byte[] Remove(byte[] data)
+    public override byte[] Remove(Span<byte> data)
     {
         if (data.Length == 0 || data.Length % BlockSize != 0)
             throw new InvalidOperationException("Invalid data length for PKCS7 remove.");
@@ -40,7 +40,8 @@ public class PKCS7Padding(
         
         var newSize = data.Length - padding;
         var unPadded = new byte[newSize];
-        Array.Copy(data, unPadded, newSize);
+        data[..newSize].CopyTo(unPadded);
+        
         return unPadded;
     }
 }

@@ -10,11 +10,11 @@ public interface ICipherPadding
     /// Applies padding to the provided block of data.
     /// </summary>
     /// <param name="data">The block of data to pad.</param>
-    public byte[] Apply(byte[] data);
+    public byte[] Apply(Span<byte> data);
 
     /// <summary>
     /// Removes padding from the provided block of data.
     /// </summary>
     /// <param name="data">The block of data to remove padding from.</param>
-    public byte[] Remove(byte[] data);
+    public byte[] Remove(Span<byte> data);
 }

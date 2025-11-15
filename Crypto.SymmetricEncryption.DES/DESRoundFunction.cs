@@ -102,19 +102,19 @@ public sealed class DESRoundFunction
 
 
     #region Methods
-    
+
     /// <summary>
     /// Transforms a 64-bit block using the Crypto.Core.DES round function (F-function).
     /// </summary>
     /// <param name="block">
-    /// The 64-bit data block to transform, passed as an 8-byte <see cref="Span{Byte}"/>.
-    /// This block is modified <c>in-place</c>.
+    ///     The 64-bit data block to transform, passed as an 8-byte <see cref="Span{Byte}"/>.
+    ///     This block is modified <c>in-place</c>.
     /// </param>
     /// <param name="key">
-    /// The 48-bit round key used for this round, passed as a <see cref="ReadOnlySpan{Byte}"/>.
-    /// Must be exactly 6 bytes.
+    ///     The 48-bit round key used for this round, passed as a <see cref="ReadOnlySpan{Byte}"/>.
+    ///     Must be exactly 6 bytes.
     /// </param>
-    public byte[] TransformBlock(byte[] block, byte[] key)
+    public void TransformBlock(Span<byte> block, ReadOnlySpan<byte> key)
     {
         Span<byte> buffer = stackalloc byte[8];
         Permutation.Permute(
@@ -144,7 +144,6 @@ public sealed class DESRoundFunction
 		    ulongResult |= (ulong)SBoxes[i, row, col] << 58;
 	    }
 	    
-	    
 	    Permutation.Permute(
 		    buffer,
 		    PrimitivePermutation,
@@ -152,8 +151,6 @@ public sealed class DESRoundFunction
 		    Permutation.StartingBitIndex.First,
 		    Permutation.LeastSignificantBitPosition.Right,
 		    Permutation.LeastSignificantBitPosition.Left);
-
-	    return block;
     }
     
     #endregion

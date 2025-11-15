@@ -82,6 +82,9 @@ public sealed class DES(
         get => base.Key;
         set
         {
+            if (base.Key == value)
+                return;
+            
             _feistelNetwork.SetKey(value);
             base.Key = value;
         }
@@ -101,8 +104,7 @@ public sealed class DES(
     ///     The block is modified in-place with the encrypted result.
     /// </param>
     internal override void EncryptBlock(Memory<byte> data)
-    {
-        // Span<byte> buffer = stackalloc byte[BlockSize];
+    { 
         var buffer = new byte[BlockSize];
         Permutation.Permute(
             data.Span,
@@ -132,7 +134,6 @@ public sealed class DES(
     /// </param>
     internal override void DecryptBlock(Memory<byte> data)
     {
-        // Span<byte> buffer = stackalloc byte[BlockSize];
         var buffer = new byte[BlockSize];
         Permutation.Permute(
             data.Span,

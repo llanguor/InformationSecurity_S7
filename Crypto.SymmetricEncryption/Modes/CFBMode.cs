@@ -61,7 +61,7 @@ public sealed class CFBMode(
         CancellationToken cancellationToken = default)
     {
         var ciphers = data.ToArray().AsMemory();
-        
+
         await Parallel.ForAsync(
             0,
             data.Length / BlockSize, 

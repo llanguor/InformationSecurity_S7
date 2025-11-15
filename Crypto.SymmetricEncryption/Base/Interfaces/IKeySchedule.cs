@@ -16,5 +16,5 @@ public interface IKeySchedule
     /// <returns>
     /// An array of round keys, where each element represents a single round key.
     /// </returns>
-    byte[][] Expand(byte[] key);
+    byte[][] Expand(ReadOnlySpan<byte> key);
 }

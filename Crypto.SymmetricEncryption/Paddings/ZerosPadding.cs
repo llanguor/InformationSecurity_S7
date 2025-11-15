@@ -7,22 +7,22 @@ public class ZerosPadding(
     : CipherPaddingBase(blockSize)
 {
     //Если длина данных не кратна размеру блока, последний блок надо дополнить до нужной длины.
-    public override byte[] Apply(byte[] data)
+    public override byte[] Apply(Span<byte> data)
     {
         var rem = data.Length % BlockSize;
         if (rem == 0) 
-            return data;
+            return data.ToArray();
         
         var padding = BlockSize - rem;
         var newSize = data.Length + padding;
    
         var padded = new byte[newSize];
-        data.CopyTo(padded, 0);
+        data.CopyTo(padded);
         
         return padded;
     }
 
-    public override byte[] Remove(byte[] data)
+    public override byte[] Remove(Span<byte> data)
     {
         if (data.Length == 0 || data.Length % BlockSize != 0)
             throw new InvalidOperationException("Invalid data length for PKCS7 remove.");
@@ -34,10 +34,11 @@ public class ZerosPadding(
         }
 
         if (newSize == data.Length)
-            return data;
+            return data.ToArray();
         
         var unPadded = new byte[newSize];
-        Array.Copy(data, unPadded, newSize);
+        data[..newSize].CopyTo(unPadded);
+        
         return unPadded;
     }
 }

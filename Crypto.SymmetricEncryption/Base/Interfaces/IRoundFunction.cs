@@ -12,14 +12,9 @@ public interface IRoundFunction
     /// The <paramref name="block"/> parameter is modified <c>in-place</c>.
     /// </summary>
     /// <param name="block">
-    /// The input block to be transformed.
-    /// the block is modified in-place.
+    ///     The input block to be transformed.
+    ///     the block is modified in-place.
     /// </param>
     /// <param name="key">The round key to use for transformation.</param>
-    /// /// <returns>
-    /// The same <paramref name="block"/> after transformation.
-    /// Although the block is modified in-place, the method also returns
-    /// it for convenience, allowing inline usage or method chaining.
-    /// </returns>
-    byte[] TransformBlock(byte[] block, byte[] key);
+    void TransformBlock(Span<byte> block, ReadOnlySpan<byte> key);
 }

@@ -8,7 +8,7 @@ public abstract class CipherPaddingBase (
 {
     protected int BlockSize { get; } = blockSize;
     
-    public abstract byte[] Apply(byte[] data);
+    public abstract byte[] Apply(Span<byte> data);
 
-    public abstract byte[] Remove(byte[] data);
+    public abstract byte[] Remove(Span<byte> data);
 }

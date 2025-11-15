@@ -8,10 +8,9 @@ public sealed class DESToDEALRoundFunctionAdapter(DES des)
 {
     private readonly DES _des = des;
     
-    public byte[] TransformBlock(byte[] block, byte[] key)
+    public void TransformBlock(Span<byte> block, ReadOnlySpan<byte> key)
     {
-        _des.SetKey(key);
-        _des.EncryptBlock(block);
-        return block;
+        _des.Key = key.ToArray();
+        _des.EncryptBlock(block.ToArray());
     }
 }

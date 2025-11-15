@@ -33,7 +33,7 @@ public class DESUnitTest
         _container = new Container();
         _container.Register<IKeySchedule, DESKeySchedule>();
         _container.Register<IRoundFunction, DESRoundFunction>();
-        _container.RegisterInstance<ISymmetricEncryption>(
+        _container.RegisterInstance<SymmetricEncryption.SymmetricEncryption>(
             new SymmetricEncryption.DES(
                 _key,
                 CipherPadding.ISO10126,

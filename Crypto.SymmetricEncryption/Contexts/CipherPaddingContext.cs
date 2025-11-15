@@ -18,12 +18,12 @@ public class CipherPaddingContext(
         _ => throw new ArgumentOutOfRangeException(nameof(padding), padding, null)
     };
 
-    public override byte[] Apply(byte[] data)
+    public override byte[] Apply(Span<byte> data)
     {
         return _cipherPadding.Apply(data);
     }
 
-    public override byte[] Remove(byte[] data)
+    public override byte[] Remove(Span<byte> data)
     {
         return _cipherPadding.Remove(data);
     }

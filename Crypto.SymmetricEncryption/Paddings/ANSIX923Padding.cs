@@ -6,19 +6,19 @@ public class ANSIX923Padding(
     int blockSize) 
     : CipherPaddingBase(blockSize)
 {
-    public override byte[] Apply(byte[] data)
+    public override byte[] Apply(Span<byte> data)
     {
         var padding = BlockSize - data.Length % BlockSize;
         var newSize = data.Length + padding;
         
         var padded = new byte[newSize];
-        data.CopyTo(padded, 0);
+        data.CopyTo(padded);
         padded[newSize - 1] = (byte)padding;
 
         return padded;
     }
 
-    public override byte[] Remove(byte[] data)
+    public override byte[] Remove(Span<byte> data)
     {
         if (data.Length == 0 || data.Length % BlockSize != 0)
             throw new InvalidOperationException("Invalid data length for ANSI X9.23 remove.");
@@ -35,7 +35,8 @@ public class ANSIX923Padding(
         
         var newSize = data.Length - padding;
         var unPadded = new byte[newSize];
-        Array.Copy(data, unPadded, newSize);
+        data[..newSize].CopyTo(unPadded);
+        
         return unPadded;
     }
 }

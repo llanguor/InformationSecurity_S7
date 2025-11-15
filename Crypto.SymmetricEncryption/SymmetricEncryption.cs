@@ -11,10 +11,12 @@ public abstract class SymmetricEncryption(
     params object[] parameters) : 
     SymmetricEncryptionBase(blockSize, key, padding, mode, initializationVector, parameters)
 {
-    #region Fields
+    
+    #region Properties
 
-    private readonly int _bufferSize = 8 * 1024;
-
+    private int BufferSize { get; }  = 8 * 1024;
+    
+    
     #endregion
     
     
@@ -30,13 +32,13 @@ public abstract class SymmetricEncryption(
         params object[] parameters)
         : this(blockSize, key, padding, mode, initializationVector, parameters)
     {
-        _bufferSize = bufferSize;
+        BufferSize = bufferSize;
     }
-    
-    #endregion
 
+    #endregion
     
-    #region Methods
+    
+    #region Sync Methods from SymmetricEncryptionBase Implementation
     
     /// <inheritdoc/>
     public override byte[] Encrypt(byte[] data)
@@ -60,7 +62,7 @@ public abstract class SymmetricEncryption(
         string inputFilePath,
         string outputFilePath)
     {
-        var buffer = new byte[_bufferSize];
+        var buffer = new byte[BufferSize];
 
         using var inputStream = 
             new FileStream(inputFilePath, FileMode.Open, FileAccess.Read);
@@ -80,7 +82,7 @@ public abstract class SymmetricEncryption(
             else
             {
                 var padded = CipherPaddingContext.Apply(
-                    buffer[..bytesRead]);
+                    buffer.AsSpan()[..bytesRead]);
                 padded.CopyTo(buffer, 0);
                 dataToEncrypt =
                     buffer.AsMemory()[..padded.Length];
@@ -99,8 +101,7 @@ public abstract class SymmetricEncryption(
     public override byte[] Decrypt(byte[] data)
     {
         CipherModeContext.Decrypt(data);
-        data = CipherPaddingContext.Remove(data);
-        return data;
+        return CipherPaddingContext.Remove(data);
     }
 
     /// <inheritdoc/>
@@ -117,7 +118,7 @@ public abstract class SymmetricEncryption(
         string inputFilePath, 
         string outputFilePath)
     {
-        var buffer = new byte[_bufferSize];
+        var buffer = new byte[BufferSize];
 
         using var inputStream = 
             new FileStream(inputFilePath, FileMode.Open, FileAccess.Read);
@@ -136,7 +137,7 @@ public abstract class SymmetricEncryption(
             if (bytesRead != buffer.Length)
             {
                 var padded = CipherPaddingContext.Remove(
-                    buffer[..bytesRead]);
+                    buffer.AsSpan()[..bytesRead]);
                 padded.CopyTo(buffer, 0);
                 dataToDecrypt =
                     buffer.AsMemory()[..padded.Length];
@@ -151,7 +152,8 @@ public abstract class SymmetricEncryption(
     
     #endregion
     
-    #region Async Methods
+    
+    #region Async Methods from SymmetricEncryptionBase Implementations
 
     /// <inheritdoc/>
     public override async Task<byte[]> EncryptAsync(
@@ -167,7 +169,7 @@ public abstract class SymmetricEncryption(
         string inputFilePath,
         string outputFilePath)
     {
-        var buffer = new byte[_bufferSize];
+        var buffer = new byte[BufferSize];
 
         await using var inputStream = 
             new FileStream(inputFilePath, FileMode.Open, FileAccess.Read);
@@ -186,7 +188,7 @@ public abstract class SymmetricEncryption(
             if (bytesRead != buffer.Length)
             {
                 var padded = CipherPaddingContext.Apply(
-                    buffer[..bytesRead]);
+                    buffer.AsSpan()[..bytesRead]);
                 padded.CopyTo(buffer, 0);
                 dataToEncrypt =
                     buffer.AsMemory()[..padded.Length];
@@ -211,7 +213,7 @@ public abstract class SymmetricEncryption(
         string inputFilePath,
         string outputFilePath)
     {
-        var buffer = new byte[_bufferSize];
+        var buffer = new byte[BufferSize];
 
         await using var inputStream = 
             new FileStream(inputFilePath, FileMode.Open, FileAccess.Read);
@@ -230,7 +232,7 @@ public abstract class SymmetricEncryption(
             if (bytesRead != buffer.Length)
             {
                 var padded = CipherPaddingContext.Remove(
-                    buffer[..bytesRead]);
+                    buffer.AsSpan()[..bytesRead]);
                 padded.CopyTo(buffer, 0);
                 dataToDecrypt =
                     buffer.AsMemory()[..padded.Length];

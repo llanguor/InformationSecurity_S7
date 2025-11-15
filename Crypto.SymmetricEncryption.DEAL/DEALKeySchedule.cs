@@ -5,7 +5,7 @@ namespace Crypto.SymmetricEncryption;
 public sealed class DEALKeySchedule 
     : IKeySchedule
 {
-    public byte[][] Expand(byte[] key)
+    public byte[][] Expand(ReadOnlySpan<byte> key)
     {
         throw new NotImplementedException();
     }

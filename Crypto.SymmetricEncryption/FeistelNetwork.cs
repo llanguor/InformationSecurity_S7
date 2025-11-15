@@ -1,4 +1,5 @@
-﻿using Crypto.Core;
+﻿using System.Security.Cryptography;
+using Crypto.Core;
 using Crypto.SymmetricEncryption.Base.Interfaces;
 
 namespace Crypto.SymmetricEncryption;
@@ -14,7 +15,7 @@ public sealed class FeistelNetwork (
     IRoundFunction roundFunction,
     byte[] key,
     int roundsCount)
-    : IEncryption
+    : EncryptionBase(key)
 {
     #region Fields
     
@@ -38,26 +39,21 @@ public sealed class FeistelNetwork (
     /// </summary>
     private readonly int _roundsCount = roundsCount;
     
-    /// <summary>
-    /// The secret key used by the Feistel network during encryption and decryption.
-    /// </summary>
-    private byte[] _key = key;
-    
     #endregion
     
     
     #region Properties
 
-    public byte[] Key
+    public override byte[] Key
     {
-        get => _key;
+        get => base.Key;
         set
         {
-            if (_key == value)
+            if (base.Key == value)
                 return;
             
-            _roundKeys = _keySchedule.Expand(_key);
-            _key = value;
+            _roundKeys = _keySchedule.Expand(value);
+            base.Key = value;
         }
     }
     
@@ -67,17 +63,6 @@ public sealed class FeistelNetwork (
     #region Methods
 
     /// <summary>
-    /// Sets the master key for the Feistel network and regenerates round keys.
-    /// </summary>
-    /// <param name="key">
-    ///     The master key as a <see cref="ReadOnlySpan{Byte}"/>. 
-    /// </param>
-    public void SetKey(byte[] key)
-    {
-        Key = key;
-    }
-
-    /// <summary>
     /// Encrypts the specified data block using the Feistel network.
     /// The input <paramref name="data"/> is modified <c>in-place</c>.
     /// </summary>
@@ -85,20 +70,21 @@ public sealed class FeistelNetwork (
     ///     The input block to encrypt.
     ///     Its length must be divisible by 2.
     /// </param>
-    public byte[] Encrypt(byte[] data)
+    public override byte[] Encrypt(byte[] data)
     {
         //todo: check divisible by 2
         
         var half = data.Length / 2;
+        var dataSpan = data.AsSpan();
+        var left = dataSpan[..half];
+        var right = dataSpan[half..];
         Span<byte> buffer = stackalloc byte[half];
-        var left =data[..half];
-        var right = data[half..];
         
         for (var i = 0; i < _roundsCount-1; ++i)
         {
             left.CopyTo(buffer);
-            right.CopyTo(left, 0);
-            right = _roundFunction.TransformBlock(right, _roundKeys[i]);
+            right.CopyTo(left);
+            _roundFunction.TransformBlock(right, _roundKeys[i]);
             for (var b = 0; b < half; ++b)
             {
                 right[b]^=buffer[b];
@@ -106,15 +92,16 @@ public sealed class FeistelNetwork (
         }
 
         left.CopyTo(buffer);
-        right.CopyTo(left, 0);
-        left = _roundFunction.TransformBlock(left, _roundKeys[_roundsCount-1]);
+        right.CopyTo(left);
+        _roundFunction.TransformBlock(left, _roundKeys[_roundsCount-1]);
         for (var b = 0; b < half; ++b)
         {
             left[b]^=buffer[b];
         }
-
+        
         return data;
     }
+
 
     /// <summary>
     /// Decrypts the specified data block using the Feistel network.
@@ -124,20 +111,21 @@ public sealed class FeistelNetwork (
     ///     The input block to decrypt.
     ///     Its length must be divisible by 2.
     /// </param>
-    public byte[] Decrypt(byte[] data)
+    public override byte[] Decrypt(byte[] data)
     {
         //todo: check divisible by 2
-        
+
         var half = data.Length / 2;
+        var dataSpan = data.AsSpan();
+        var left = dataSpan[..half];
+        var right = dataSpan[half..];
         Span<byte> buffer = stackalloc byte[half];
-        var left = data[..half];
-        var right = data[half..];
         
         for (var i = _roundsCount-1; i > 0 ; --i)
         {
             left.CopyTo(buffer);
-            right.CopyTo(left, 0);
-            right = _roundFunction.TransformBlock(right, _roundKeys[i]);
+            right.CopyTo(left);
+            _roundFunction.TransformBlock(right, _roundKeys[i]);
             for (var b = 0; b < half; ++b)
             {
                 right[b]^=buffer[b];
@@ -145,13 +133,13 @@ public sealed class FeistelNetwork (
         }
 
         left.CopyTo(buffer);
-        right.CopyTo(left, 0);
-        left = _roundFunction.TransformBlock(left, _roundKeys[0]);
+        right.CopyTo(left);
+        _roundFunction.TransformBlock(left, _roundKeys[0]);
         for (var b = 0; b < half; ++b)
         {
             left[b]^=buffer[b];
         }
-        
+
         return data;
     }
     

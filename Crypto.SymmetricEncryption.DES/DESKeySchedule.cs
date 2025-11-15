@@ -62,7 +62,7 @@ public sealed class DESKeySchedule
     /// <returns>
     /// An array of 16 round keys, each represented as a 6-byte array (48 bits).
     /// </returns>
-    public byte[][] Expand(byte[] key)
+    public byte[][] Expand(ReadOnlySpan<byte> key)
     {
         var roundKeys = 
             new byte[RoundsCount][];

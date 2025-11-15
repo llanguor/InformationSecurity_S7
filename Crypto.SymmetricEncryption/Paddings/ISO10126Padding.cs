@@ -6,14 +6,14 @@ public class ISO10126Padding(
     int blockSize) 
     : CipherPaddingBase(blockSize)
 {
-    public override byte[] Apply(byte[] data)
+    public override byte[] Apply(Span<byte> data)
     {
         var padding = BlockSize - data.Length % BlockSize;
         var oldSize = data.Length;
         var newSize = data.Length + padding;
         
         var padded = new byte[newSize];
-        data.CopyTo(padded, 0);
+        data.CopyTo(padded);
         padded[newSize - 1] = (byte)padding;
 
         var random = new Random(Environment.TickCount);
@@ -25,7 +25,7 @@ public class ISO10126Padding(
         return padded;
     }
 
-    public override byte[] Remove(byte[] data)
+    public override byte[] Remove(Span<byte> data)
     {
         if (data.Length == 0 || data.Length % BlockSize != 0)
             throw new InvalidOperationException("Invalid data length for ISO10126 remove.");
@@ -36,7 +36,8 @@ public class ISO10126Padding(
         
         var newSize = data.Length - padding;
         var unPadded = new byte[newSize];
-        Array.Copy(data, unPadded, newSize);
+        data[..newSize].CopyTo(unPadded);
+        
         return unPadded;
     }
 }
