@@ -16,5 +16,5 @@ public interface IRoundFunction
     ///     the block is modified in-place.
     /// </param>
     /// <param name="key">The round key to use for transformation.</param>
-    void TransformBlock(Span<byte> block, ReadOnlySpan<byte> key);
+    void TransformBlock(byte[] block, byte[] key);
 }

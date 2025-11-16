@@ -114,7 +114,7 @@ public sealed class DESRoundFunction
     ///     The 48-bit round key used for this round, passed as a <see cref="ReadOnlySpan{Byte}"/>.
     ///     Must be exactly 6 bytes.
     /// </param>
-    public void TransformBlock(Span<byte> block, ReadOnlySpan<byte> key)
+    public void TransformBlock(byte[] block, byte[] key)
     {
         Span<byte> buffer = stackalloc byte[8];
         Permutation.Permute(

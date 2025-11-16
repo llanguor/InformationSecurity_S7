@@ -75,15 +75,14 @@ public sealed class FeistelNetwork (
         //todo: check divisible by 2
         
         var half = data.Length / 2;
-        var dataSpan = data.AsSpan();
-        var left = dataSpan[..half];
-        var right = dataSpan[half..];
+        var left = data[..half];
+        var right = data[half..];
         Span<byte> buffer = stackalloc byte[half];
         
         for (var i = 0; i < _roundsCount-1; ++i)
         {
             left.CopyTo(buffer);
-            right.CopyTo(left);
+            right.CopyTo(left, 0);
             _roundFunction.TransformBlock(right, _roundKeys[i]);
             for (var b = 0; b < half; ++b)
             {
@@ -92,13 +91,15 @@ public sealed class FeistelNetwork (
         }
 
         left.CopyTo(buffer);
-        right.CopyTo(left);
+        right.CopyTo(left, 0);
         _roundFunction.TransformBlock(left, _roundKeys[_roundsCount-1]);
         for (var b = 0; b < half; ++b)
         {
             left[b]^=buffer[b];
         }
         
+        left.CopyTo(data, 0);
+        right.CopyTo(data, half);
         return data;
     }
 
@@ -116,15 +117,14 @@ public sealed class FeistelNetwork (
         //todo: check divisible by 2
 
         var half = data.Length / 2;
-        var dataSpan = data.AsSpan();
-        var left = dataSpan[..half];
-        var right = dataSpan[half..];
+        var left = data[..half];
+        var right = data[half..];
         Span<byte> buffer = stackalloc byte[half];
         
         for (var i = _roundsCount-1; i > 0 ; --i)
         {
             left.CopyTo(buffer);
-            right.CopyTo(left);
+            right.CopyTo(left, 0);
             _roundFunction.TransformBlock(right, _roundKeys[i]);
             for (var b = 0; b < half; ++b)
             {
@@ -133,13 +133,15 @@ public sealed class FeistelNetwork (
         }
 
         left.CopyTo(buffer);
-        right.CopyTo(left);
+        right.CopyTo(left, 0);
         _roundFunction.TransformBlock(left, _roundKeys[0]);
         for (var b = 0; b < half; ++b)
         {
             left[b]^=buffer[b];
         }
 
+        left.CopyTo(data, 0);
+        right.CopyTo(data, half);
         return data;
     }
     

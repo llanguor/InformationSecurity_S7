@@ -11,13 +11,6 @@ public interface IEncryption
     /// The key must be assigned before any encryption or decryption occurs.
     /// </summary>
     public byte[] Key { get; set; }
-    
-    /// <summary>
-    /// Sets the master key for the cipher.
-    /// This method must be called before performing encryption or decryption.
-    /// </summary>
-    /// <param name="key">The key material used to configure the cipher.</param>
-    public void SetKey(byte[] key);
 
     /// <summary>
     /// Encrypts the specified block of data in-place.

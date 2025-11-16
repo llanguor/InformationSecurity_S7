@@ -85,7 +85,7 @@ public sealed class DES(
             if (base.Key == value)
                 return;
             
-            _feistelNetwork.SetKey(value);
+            _feistelNetwork.Key = value;
             base.Key = value;
         }
     }

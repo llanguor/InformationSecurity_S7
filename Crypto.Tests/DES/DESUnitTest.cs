@@ -1,6 +1,4 @@
-using System.Reflection;
 using Crypto.SymmetricEncryption;
-using Crypto.SymmetricEncryption.Base;
 using Crypto.SymmetricEncryption.Base.Interfaces;
 using Crypto.Tests.Infrastructure;
 using DryIoc;
@@ -139,7 +137,7 @@ public class DESUnitTest
             0b00011100, 0b11001100, 0b01010101, 0b01011101
         ];
 
-        _container.Resolve<SymmetricEncryptionBase>()
+        _container.Resolve<SymmetricEncryption.SymmetricEncryption>()
             .EncryptBlock(block);
         
         Log.Information(
@@ -165,11 +163,8 @@ public class DESUnitTest
             0b01101101,0b11111111,0b10101010,0b01101110
         ];
        
-        var des = _container.Resolve<SymmetricEncryption.DES>();
-        var method = typeof(SymmetricEncryption.DES).GetMethod(
-                    "DecryptBlock", 
-                    BindingFlags.NonPublic | BindingFlags.Instance);
-        method?.Invoke(des, [block.AsMemory()]);
+        _container.Resolve<SymmetricEncryption.SymmetricEncryption>()
+            .DecryptBlock(block);
         
         Log.Information(
             $"Test Completed.\nResult:\n{Utils.BinaryToString(block)}Expected result:\n{Utils.BinaryToString(expectedResult)}");

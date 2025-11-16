@@ -11,15 +11,6 @@ public abstract class EncryptionBase(byte[] key):
     #endregion
     
     
-    #region Methods
-
-    /// <inheritdoc />
-    public void SetKey(byte[] key) =>
-        Key = key;
-
-    #endregion
-    
-    
     #region Abstract Methods
     
     /// <inheritdoc />
