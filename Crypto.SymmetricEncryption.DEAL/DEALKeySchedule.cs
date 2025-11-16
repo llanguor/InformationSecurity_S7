@@ -1,11 +1,12 @@
-﻿using Crypto.SymmetricEncryption.Base.Interfaces;
+﻿using Crypto.SymmetricEncryption.Base;
+using Crypto.SymmetricEncryption.Base.Interfaces;
 
 namespace Crypto.SymmetricEncryption;
 
 public sealed class DEALKeySchedule 
-    : IKeySchedule
+    : KeyScheduleBase
 {
-    public byte[][] Expand(ReadOnlySpan<byte> key)
+    protected override byte[][] GenerateSchedule(ReadOnlySpan<byte> key)
     {
         throw new NotImplementedException();
     }

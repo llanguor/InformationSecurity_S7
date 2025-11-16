@@ -13,12 +13,14 @@ public abstract class EncryptionBase(byte[] key):
     
     #region Methods
     
+    /// <inheritdoc />
     public byte[] Encrypt(byte[] data)
     {
         return Encrypt(data.AsMemory())
                 .ToArray();
     }
     
+    /// <inheritdoc />
     public byte[] Decrypt(byte[] data)
     {
         return Decrypt(data.AsMemory())

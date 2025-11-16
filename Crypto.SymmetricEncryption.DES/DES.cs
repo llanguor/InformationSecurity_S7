@@ -95,14 +95,7 @@ public sealed class DES(
     
     #region Methods
     
-
-    /// <summary>
-    /// Encrypts a 64-bit block of data in-place using Crypto.Core.DES.
-    /// </summary>
-    /// <param name="data">
-    ///     The input block to encrypt. Must be exactly 8 bytes long.
-    ///     The block is modified in-place with the encrypted result.
-    /// </param>
+    /// <inheritdoc/>
     internal override void EncryptBlock(Memory<byte> data)
     { 
         var buffer = new byte[BlockSize];
@@ -125,13 +118,7 @@ public sealed class DES(
             Permutation.LeastSignificantBitPosition.Left);
     }
 
-    /// <summary>
-    /// Decrypts a 64-bit block of data in-place using Crypto.Core.DES.
-    /// </summary>
-    /// <param name="data">
-    ///     The input block to decrypt. Must be exactly 8 bytes long.
-    ///     The block is modified in-place with the decrypted result.
-    /// </param>
+    /// <inheritdoc/>
     internal override void DecryptBlock(Memory<byte> data)
     {
         var buffer = new byte[BlockSize];

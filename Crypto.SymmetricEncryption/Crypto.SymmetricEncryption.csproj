@@ -10,5 +10,9 @@
     <ItemGroup>
       <ProjectReference Include="..\Crypto.Core\Crypto.Core.csproj" />
     </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="10.0.0" />
+    </ItemGroup>
     
 </Project>

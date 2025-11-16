@@ -1,5 +1,6 @@
 ﻿using System.Runtime.InteropServices;
 using Crypto.Core;
+using Crypto.SymmetricEncryption.Base;
 using Crypto.SymmetricEncryption.Base.Interfaces;
 
 namespace Crypto.SymmetricEncryption;
@@ -9,7 +10,7 @@ namespace Crypto.SymmetricEncryption;
 /// Responsible for generating 16 round keys from a 64-bit master key.
 /// </summary>
 public sealed class DESKeySchedule 
-    : IKeySchedule
+    : KeyScheduleBase
 {
     #region Fields
     
@@ -62,7 +63,7 @@ public sealed class DESKeySchedule
     /// <returns>
     /// An array of 16 round keys, each represented as a 6-byte array (48 bits).
     /// </returns>
-    public byte[][] Expand(ReadOnlySpan<byte> key)
+    protected override byte[][] GenerateSchedule(ReadOnlySpan<byte> key)
     {
         var roundKeys = 
             new byte[RoundsCount][];
