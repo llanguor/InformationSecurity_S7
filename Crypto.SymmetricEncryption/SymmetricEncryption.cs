@@ -41,11 +41,11 @@ public abstract class SymmetricEncryption(
     #region Sync Methods from SymmetricEncryptionBase Implementation
     
     /// <inheritdoc/>
-    public override byte[] Encrypt(byte[] data)
+    public override Memory<byte> Encrypt(Memory<byte> data)
     {
-        data = CipherPaddingContext.Apply(data);
-        CipherModeContext.Encrypt(data);
-        return data;
+        var result = CipherPaddingContext.Apply(data.Span);
+        CipherModeContext.Encrypt(result);
+        return result;
     }
     
     /// <inheritdoc/>
@@ -98,10 +98,10 @@ public abstract class SymmetricEncryption(
     }
     
     /// <inheritdoc/>
-    public override byte[] Decrypt(byte[] data)
+    public override Memory<byte> Decrypt(Memory<byte> data)
     {
         CipherModeContext.Decrypt(data);
-        return CipherPaddingContext.Remove(data);
+        return CipherPaddingContext.Remove(data.Span);
     }
 
     /// <inheritdoc/>

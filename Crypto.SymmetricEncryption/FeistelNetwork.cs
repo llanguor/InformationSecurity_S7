@@ -70,7 +70,7 @@ public sealed class FeistelNetwork (
     ///     The input block to encrypt.
     ///     Its length must be divisible by 2.
     /// </param>
-    public override byte[] Encrypt(byte[] data)
+    public override Memory<byte> Encrypt(Memory<byte> data)
     {
         //todo: check divisible by 2
         
@@ -81,25 +81,23 @@ public sealed class FeistelNetwork (
         
         for (var i = 0; i < _roundsCount-1; ++i)
         {
-            left.CopyTo(buffer);
-            right.CopyTo(left, 0);
+            left.Span.CopyTo(buffer);
+            right.CopyTo(left);
             _roundFunction.TransformBlock(right, _roundKeys[i]);
             for (var b = 0; b < half; ++b)
             {
-                right[b]^=buffer[b];
+                right.Span[b]^=buffer[b];
             }
         }
 
-        left.CopyTo(buffer);
-        right.CopyTo(left, 0);
+        left.Span.CopyTo(buffer);
+        right.CopyTo(left);
         _roundFunction.TransformBlock(left, _roundKeys[_roundsCount-1]);
         for (var b = 0; b < half; ++b)
         {
-            left[b]^=buffer[b];
+            left.Span[b]^=buffer[b];
         }
-        
-        left.CopyTo(data, 0);
-        right.CopyTo(data, half);
+
         return data;
     }
 
@@ -112,7 +110,7 @@ public sealed class FeistelNetwork (
     ///     The input block to decrypt.
     ///     Its length must be divisible by 2.
     /// </param>
-    public override byte[] Decrypt(byte[] data)
+    public override Memory<byte> Decrypt(Memory<byte> data)
     {
         //todo: check divisible by 2
 
@@ -123,25 +121,23 @@ public sealed class FeistelNetwork (
         
         for (var i = _roundsCount-1; i > 0 ; --i)
         {
-            left.CopyTo(buffer);
-            right.CopyTo(left, 0);
+            left.Span.CopyTo(buffer);
+            right.CopyTo(left);
             _roundFunction.TransformBlock(right, _roundKeys[i]);
             for (var b = 0; b < half; ++b)
             {
-                right[b]^=buffer[b];
+                right.Span[b]^=buffer[b];
             }
         }
 
-        left.CopyTo(buffer);
-        right.CopyTo(left, 0);
+        left.Span.CopyTo(buffer);
+        right.CopyTo(left);
         _roundFunction.TransformBlock(left, _roundKeys[0]);
         for (var b = 0; b < half; ++b)
         {
-            left[b]^=buffer[b];
+            left.Span[b]^=buffer[b];
         }
 
-        left.CopyTo(data, 0);
-        right.CopyTo(data, half);
         return data;
     }
     

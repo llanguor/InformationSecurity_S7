@@ -11,13 +11,30 @@ public abstract class EncryptionBase(byte[] key):
     #endregion
     
     
+    #region Methods
+    
+    public byte[] Encrypt(byte[] data)
+    {
+        return Encrypt(data.AsMemory())
+                .ToArray();
+    }
+    
+    public byte[] Decrypt(byte[] data)
+    {
+        return Decrypt(data.AsMemory())
+                .ToArray();
+    }
+    
+    #endregion
+    
+    
     #region Abstract Methods
     
     /// <inheritdoc />
-    public abstract byte[] Encrypt(byte[] data);
-    
+    public abstract Memory<byte> Encrypt(Memory<byte> data);
+
     /// <inheritdoc />
-    public abstract byte[] Decrypt(byte[] data);
+    public abstract Memory<byte> Decrypt(Memory<byte> data);
     
     #endregion
 }
