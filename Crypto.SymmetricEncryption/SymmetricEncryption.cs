@@ -7,8 +7,8 @@ public abstract class SymmetricEncryption(
     int blockSize,
     int keySize,
     byte[] key,
-    CipherPaddingContext.CipherPaddings paddings,
-    CipherModeContext.CipherModes modes,
+    CipherPaddings paddings,
+    CipherModes modes,
     byte[]? initializationVector = null,
     params object[] parameters) : 
     SymmetricEncryptionBase(blockSize, keySize, key, paddings, modes, initializationVector, parameters)
@@ -28,8 +28,8 @@ public abstract class SymmetricEncryption(
         int blockSize,
         int keySize,
         byte[] key, 
-        CipherPaddingContext.CipherPaddings paddings, 
-        CipherModeContext.CipherModes modes, 
+        CipherPaddings paddings, 
+        CipherModes modes, 
         int bufferSize,
         byte[]? initializationVector = null, 
         params object[] parameters)

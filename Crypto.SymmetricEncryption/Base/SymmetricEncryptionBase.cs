@@ -28,12 +28,12 @@ public abstract class SymmetricEncryptionBase :
     /// <summary>
     /// The block cipher mode applied during encryption and decryption.
     /// </summary>
-    public CipherModeContext.CipherModes modes { get; }
+    public CipherModes modes { get; }
 
     /// <summary>
     /// The padding scheme used to fill blocks to the required size.
     /// </summary>
-    public CipherPaddingContext.CipherPaddings paddings { get; }
+    public CipherPaddings paddings { get; }
     
     /// <summary>
     /// Optional initialization vector (IV) for certain cipher modes.
@@ -75,8 +75,8 @@ public abstract class SymmetricEncryptionBase :
         int blockSize,
         int keySize,
         byte[] key,
-        CipherPaddingContext.CipherPaddings paddings,
-        CipherModeContext.CipherModes modes,
+        CipherPaddings paddings,
+        CipherModes modes,
         byte[]? initializationVector = null,
         params object[] parameters) : base(key)
     {
