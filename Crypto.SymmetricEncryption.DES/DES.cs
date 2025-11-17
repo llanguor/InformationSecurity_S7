@@ -2,6 +2,7 @@
 using System.Security.Cryptography;
 using Crypto.Core;
 using Crypto.SymmetricEncryption.Base.Interfaces;
+using Crypto.SymmetricEncryption.Contexts;
 
 namespace Crypto.SymmetricEncryption;
 
@@ -11,8 +12,8 @@ namespace Crypto.SymmetricEncryption;
 /// </summary>
 public sealed class DES(
     byte[] key, 
-    CipherPadding padding, 
-    CipherMode mode, 
+    CipherPaddings padding, 
+    CipherModes mode, 
     byte[]? initializationVector = null, 
     params object[] parameters)
     : SymmetricEncryption(8, 8, key, padding, mode, initializationVector, parameters)

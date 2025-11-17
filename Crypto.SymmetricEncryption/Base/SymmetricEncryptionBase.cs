@@ -28,12 +28,12 @@ public abstract class SymmetricEncryptionBase :
     /// <summary>
     /// The block cipher mode applied during encryption and decryption.
     /// </summary>
-    public CipherMode Mode { get; set; }
+    public CipherModeContext.CipherModes modes { get; }
 
     /// <summary>
     /// The padding scheme used to fill blocks to the required size.
     /// </summary>
-    public CipherPadding Padding { get; }
+    public CipherPaddingContext.CipherPaddings paddings { get; }
     
     /// <summary>
     /// Optional initialization vector (IV) for certain cipher modes.
@@ -67,34 +67,34 @@ public abstract class SymmetricEncryptionBase :
     /// <param name="blockSize">Size of data block processed at a time in symmetric block cipher.</param>
     /// <param name="keySize">Size of key using for encryption.</param>
     /// <param name="key">The secret key used by the symmetric encryption algorithm.</param>
-    /// <param name="mode">The block cipher mode applied during encryption and decryption.</param>
-    /// <param name="padding">The padding scheme used to fill blocks to the required size.</param>
+    /// <param name="modes">The block cipher mode applied during encryption and decryption.</param>
+    /// <param name="paddings">The padding scheme used to fill blocks to the required size.</param>
     /// <param name="initializationVector">Optional initialization vector (IV) for certain cipher modes.</param>
     /// <param name="parameters">Additional optional parameters for the selected encryption mode.</param>
     protected SymmetricEncryptionBase(
         int blockSize,
         int keySize,
         byte[] key,
-        CipherPadding padding,
-        CipherMode mode,
+        CipherPaddingContext.CipherPaddings paddings,
+        CipherModeContext.CipherModes modes,
         byte[]? initializationVector = null,
         params object[] parameters) : base(key)
     {
         BlockSize = blockSize;
         KeySize = keySize;
-        Mode = mode;
-        Padding = padding;
+        this.modes = modes;
+        this.paddings = paddings;
         InitializationVector = initializationVector;
         Parameters = parameters;
         
         CipherPaddingContext =
             new CipherPaddingContext(
-                Padding,
+                this.paddings,
                 BlockSize);
         
         CipherModeContext = 
             new CipherModeContext(
-                Mode,
+                this.modes,
                 EncryptBlock,
                 DecryptBlock,
                 BlockSize,

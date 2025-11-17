@@ -1,9 +1,10 @@
-﻿namespace Crypto.SymmetricEncryption;
+﻿namespace Crypto.SymmetricEncryption.Contexts;
 
+    
 /// <summary>
 /// Defines the supported block cipher modes for symmetric encryption.
 /// </summary>
-public enum CipherMode
+public enum CipherModes
 {
     ECB = 0, 
     CBC = 1, 

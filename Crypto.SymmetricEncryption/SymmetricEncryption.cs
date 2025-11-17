@@ -1,4 +1,5 @@
 ﻿using Crypto.SymmetricEncryption.Base;
+using Crypto.SymmetricEncryption.Contexts;
 
 namespace Crypto.SymmetricEncryption;
 
@@ -6,11 +7,11 @@ public abstract class SymmetricEncryption(
     int blockSize,
     int keySize,
     byte[] key,
-    CipherPadding padding,
-    CipherMode mode,
+    CipherPaddingContext.CipherPaddings paddings,
+    CipherModeContext.CipherModes modes,
     byte[]? initializationVector = null,
     params object[] parameters) : 
-    SymmetricEncryptionBase(blockSize, keySize, key, padding, mode, initializationVector, parameters)
+    SymmetricEncryptionBase(blockSize, keySize, key, paddings, modes, initializationVector, parameters)
 {
     
     #region Properties
@@ -27,12 +28,12 @@ public abstract class SymmetricEncryption(
         int blockSize,
         int keySize,
         byte[] key, 
-        CipherPadding padding, 
-        CipherMode mode, 
+        CipherPaddingContext.CipherPaddings paddings, 
+        CipherModeContext.CipherModes modes, 
         int bufferSize,
         byte[]? initializationVector = null, 
         params object[] parameters)
-        : this(blockSize, keySize, key, padding, mode, initializationVector, parameters)
+        : this(blockSize, keySize, key, paddings, modes, initializationVector, parameters)
     {
         BufferSize = bufferSize;
     }

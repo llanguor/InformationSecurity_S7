@@ -5,18 +5,25 @@ using Crypto.SymmetricEncryption.Paddings;
 namespace Crypto.SymmetricEncryption.Contexts;
 
 public class CipherPaddingContext(
-    CipherPadding padding,
-    int blockSize) 
+    CipherPaddings paddings,
+    int blockSize)
     : CipherPaddingBase(blockSize)
 {
-    private readonly ICipherPadding _cipherPadding = padding switch
+    #region Fields
+    
+    private readonly ICipherPadding _cipherPadding = paddings switch
     {
-        CipherPadding.ISO10126 => new ISO10126Padding(blockSize),
-        CipherPadding.PKCS7 => new PKCS7Padding(blockSize),
-        CipherPadding.Zeros => new ZerosPadding(blockSize),
-        CipherPadding.ANSIX923 => new ANSIX923Padding(blockSize),
-        _ => throw new ArgumentOutOfRangeException(nameof(padding), padding, null)
+        CipherPaddings.ISO10126 => new ISO10126Padding(blockSize),
+        CipherPaddings.PKCS7 => new PKCS7Padding(blockSize),
+        CipherPaddings.Zeros => new ZerosPadding(blockSize),
+        CipherPaddings.ANSIX923 => new ANSIX923Padding(blockSize),
+        _ => throw new ArgumentOutOfRangeException(nameof(paddings), paddings, null)
     };
+
+    #endregion
+    
+    
+    #region Methods
 
     public override byte[] Apply(Span<byte> data)
     {
@@ -27,4 +34,6 @@ public class CipherPaddingContext(
     {
         return _cipherPadding.Remove(data);
     }
+    
+    #endregion
 }
