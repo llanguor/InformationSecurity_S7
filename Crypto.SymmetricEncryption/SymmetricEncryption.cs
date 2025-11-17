@@ -4,12 +4,13 @@ namespace Crypto.SymmetricEncryption;
 
 public abstract class SymmetricEncryption(
     int blockSize,
+    int keySize,
     byte[] key,
     CipherPadding padding,
     CipherMode mode,
     byte[]? initializationVector = null,
     params object[] parameters) : 
-    SymmetricEncryptionBase(blockSize, key, padding, mode, initializationVector, parameters)
+    SymmetricEncryptionBase(blockSize, keySize, key, padding, mode, initializationVector, parameters)
 {
     
     #region Properties
@@ -24,13 +25,14 @@ public abstract class SymmetricEncryption(
 
     protected SymmetricEncryption(
         int blockSize,
+        int keySize,
         byte[] key, 
         CipherPadding padding, 
         CipherMode mode, 
         int bufferSize,
         byte[]? initializationVector = null, 
         params object[] parameters)
-        : this(blockSize, key, padding, mode, initializationVector, parameters)
+        : this(blockSize, keySize, key, padding, mode, initializationVector, parameters)
     {
         BufferSize = bufferSize;
     }

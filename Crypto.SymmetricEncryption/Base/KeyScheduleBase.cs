@@ -30,7 +30,7 @@ public abstract class KeyScheduleBase(int cacheSize) :
     
     
     #region Methods
-    
+
     /// <summary>
     /// Expands the input key into a full key schedule for encryption.
     /// Uses MemoryCache to store schedules. The input byte array is converted to Base64 
@@ -38,9 +38,9 @@ public abstract class KeyScheduleBase(int cacheSize) :
     /// </summary>
     /// <param name="key">The input key as a byte array.</param>
     /// <returns>The full key schedule as a two-dimensional byte array.</returns>
-    public byte[][] Expand(ReadOnlySpan<byte> key)
+    public byte[][] Expand(Memory<byte> key)
     {
-        var cachedKey = Convert.ToBase64String(key);
+        var cachedKey = Convert.ToBase64String(key.Span);
         if (_cache.TryGetValue(cachedKey, out byte[][]? schedule))
         {
             return schedule!;
@@ -65,8 +65,7 @@ public abstract class KeyScheduleBase(int cacheSize) :
     /// </summary>
     /// <param name="key">The input key as a byte array.</param>
     /// <returns>The full key schedule as a two-dimensional byte array.</returns>
-    protected abstract byte[][] GenerateSchedule(
-        ReadOnlySpan<byte> key);
+    protected abstract byte[][] GenerateSchedule(Memory<byte> key);
     
     #endregion
 

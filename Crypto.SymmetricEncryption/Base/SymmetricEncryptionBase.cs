@@ -18,6 +18,12 @@ public abstract class SymmetricEncryptionBase :
     /// All input data is processed in chunks of this size.
     /// </summary>
     public int BlockSize { get; }
+    
+    /// <summary>
+    /// Size of a single encryption block, in bytes.
+    /// All input data is processed in chunks of this size.
+    /// </summary>
+    public int KeySize { get; }
 
     /// <summary>
     /// The block cipher mode applied during encryption and decryption.
@@ -59,12 +65,15 @@ public abstract class SymmetricEncryptionBase :
     /// providing encryption and decryption operations with a specified key.
     /// </summary>
     /// <param name="blockSize">Size of data block processed at a time in symmetric block cipher.</param>
+    /// <param name="keySize">Size of key using for encryption.</param>
     /// <param name="key">The secret key used by the symmetric encryption algorithm.</param>
     /// <param name="mode">The block cipher mode applied during encryption and decryption.</param>
     /// <param name="padding">The padding scheme used to fill blocks to the required size.</param>
     /// <param name="initializationVector">Optional initialization vector (IV) for certain cipher modes.</param>
     /// <param name="parameters">Additional optional parameters for the selected encryption mode.</param>
-    protected SymmetricEncryptionBase(int blockSize,
+    protected SymmetricEncryptionBase(
+        int blockSize,
+        int keySize,
         byte[] key,
         CipherPadding padding,
         CipherMode mode,
@@ -72,6 +81,7 @@ public abstract class SymmetricEncryptionBase :
         params object[] parameters) : base(key)
     {
         BlockSize = blockSize;
+        KeySize = keySize;
         Mode = mode;
         Padding = padding;
         InitializationVector = initializationVector;

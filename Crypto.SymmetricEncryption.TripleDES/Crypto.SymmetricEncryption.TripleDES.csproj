@@ -9,6 +9,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\Crypto.Core\Crypto.Core.csproj" />
+      <ProjectReference Include="..\Crypto.SymmetricEncryption.DES\Crypto.SymmetricEncryption.DES.csproj" />
       <ProjectReference Include="..\Crypto.SymmetricEncryption\Crypto.SymmetricEncryption.csproj" />
     </ItemGroup>
 

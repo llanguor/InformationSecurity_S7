@@ -3,33 +3,96 @@ using Crypto.SymmetricEncryption.Base.Interfaces;
 
 namespace Crypto.SymmetricEncryption;
 
-public sealed class DEAL(
-    byte[] key,
-    CipherPadding padding,
-    CipherMode mode,
-    byte[]? initializationVector = null,
-    params object[] parameters)
-    : SymmetricEncryption(8, key, padding, mode, initializationVector, parameters)
+//todo: add enum for key sizes
+
+public sealed class DEAL : 
+    SymmetricEncryption
 {
+    #region Enumerations
+
+    /// <summary>
+    /// Supported key sizes for DEAL encryption algorithm.
+    /// </summary>
+    public enum DealKeySize
+    {
+        /// <summary>128-bit key.</summary>
+        Key128 = 16,
+        
+        /// <summary>192-bit key.</summary>
+        Key192 = 24,
+        
+        /// <summary>256-bit key.</summary>
+        Key256 = 32
+    }
+    
+    #endregion
+    
+    
     #region Fields
 
     /// <summary>
-    /// The Crypto.Core.DEAL key schedule used to generate round keys.
+    /// The internal Feistel network used for Crypto.Core.DES encryption and decryption.
     /// </summary>
-    private static readonly IKeySchedule KeySchedule =
-        new DEALKeySchedule();
+    private readonly FeistelNetwork _feistelNetwork;
 
-    /// <summary>
-    /// The Crypto.Core.DEAL round function used in the Feistel network.
-    /// </summary>
-    private readonly IRoundFunction RoundFunction = 
-        new DESToDEALRoundFunctionAdapter(
+    #endregion
+    
+    
+    #region Properties
+
+    /// <inherit/>
+    public override byte[] Key
+    {
+        get => base.Key;
+        set
+        {
+            if (base.Key == value)
+            {
+                return;
+            }
+            
+            _feistelNetwork.Key = value;
+            base.Key = value;
+        }
+    }
+    
+    #endregion
+    
+    
+    #region Constructors
+    
+    public DEAL(
+        byte[] key,
+        byte[] keyForSchedule,
+        DealKeySize dealKeySize,
+        CipherPadding padding,
+        CipherMode mode,
+        byte[]? initializationVector = null,
+        params object[] parameters) : 
+        base(16, (int)dealKeySize, key, padding, mode, initializationVector, parameters)
+    {
+        var feistelRoundsCount = 
+            dealKeySize == DealKeySize.Key256 ? 8 : 6;
+        
+        var desEncryption = 
             new DES(
-                key,
+                keyForSchedule,
                 padding,
-                mode,
-                initializationVector,
-                parameters));
+                mode);
+        
+        IKeySchedule keySchedule = 
+            new DEALKeySchedule(desEncryption, dealKeySize, keyForSchedule);
+        
+        IRoundFunction roundFunction = 
+            new DESToDEALRoundFunctionAdapter(desEncryption);
+        
+        _feistelNetwork = 
+            new FeistelNetwork(
+                keySchedule, 
+                roundFunction, 
+                key, 
+                feistelRoundsCount);
+    }
 
     #endregion
     
@@ -38,12 +101,12 @@ public sealed class DEAL(
     
     internal override void EncryptBlock(Memory<byte> data)
     {
-        throw new NotImplementedException();
+        _feistelNetwork.Encrypt(data);
     }
 
     internal override void DecryptBlock(Memory<byte> data)
     {
-        throw new NotImplementedException();
+        _feistelNetwork.Decrypt(data);
     }
     
     #endregion

@@ -63,14 +63,14 @@ public sealed class DESKeySchedule
     /// <returns>
     /// An array of 16 round keys, each represented as a 6-byte array (48 bits).
     /// </returns>
-    protected override byte[][] GenerateSchedule(ReadOnlySpan<byte> key)
+    protected override byte[][] GenerateSchedule(Memory<byte> key)
     {
         var roundKeys = 
             new byte[RoundsCount][];
 
         Span<byte> keySpan = stackalloc byte[8];
         Permutation.Permute(
-            key,
+            key.Span,
             PermutedChoice1,
             keySpan,
             Permutation.StartingBitIndex.First,

@@ -1,4 +1,6 @@
-﻿using Crypto.Core;
+﻿using System.Runtime.InteropServices;
+using System.Security.Cryptography;
+using Crypto.Core;
 using Crypto.SymmetricEncryption.Base.Interfaces;
 
 namespace Crypto.SymmetricEncryption;
@@ -13,10 +15,13 @@ public sealed class DES(
     CipherMode mode, 
     byte[]? initializationVector = null, 
     params object[] parameters)
-    : SymmetricEncryption(8, key, padding, mode, initializationVector, parameters)
+    : SymmetricEncryption(8, 8, key, padding, mode, initializationVector, parameters)
 {
     #region Fields
 
+    /// <summary>
+    /// 
+    /// </summary>
     private const int FeistelRoundsCount = 16;
     
     /// <summary>
@@ -83,7 +88,15 @@ public sealed class DES(
         set
         {
             if (base.Key == value)
+            {
                 return;
+            }
+
+            if (IsWeakKey(value))
+            {
+                throw new CryptographicException(
+                    "The provided key is considered weak and cannot be used.");
+            }
             
             _feistelNetwork.Key = value;
             base.Key = value;
@@ -139,6 +152,23 @@ public sealed class DES(
             Permutation.StartingBitIndex.First,
             Permutation.LeastSignificantBitPosition.Left,
             Permutation.LeastSignificantBitPosition.Left);
+    }
+
+    private bool IsLegalKeySize(byte[]? key)
+    {
+        return key != null && key.Length == KeySize;
+    }
+    
+    private bool IsWeakKey(byte[] key)
+    {
+        if (!IsLegalKeySize(key))
+            return false;
+        
+        var keyValue = MemoryMarshal.Read<ulong>(key);
+        return keyValue == 0x0101010101010101 ||
+               keyValue == 0xfefefefefefefefe ||
+               keyValue == 0x1f1f1f1f0e0e0e0e ||
+               keyValue == 0xe0e0e0e0f1f1f1f1;
     }
     
     #endregion

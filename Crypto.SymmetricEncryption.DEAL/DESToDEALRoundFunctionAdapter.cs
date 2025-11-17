@@ -6,11 +6,9 @@ namespace Crypto.SymmetricEncryption;
 public sealed class DESToDEALRoundFunctionAdapter(DES des)
     : IRoundFunction
 {
-    private readonly DES _des = des;
-    
-    public void TransformBlock(Memory<byte> block, ReadOnlyMemory<byte> key)
+    public void TransformBlock(Memory<byte> block, byte[] key)
     {
-        _des.Key = key.ToArray();
-        _des.EncryptBlock(block);
+        des.Key = key;
+        des.EncryptBlock(block);
     }
 }
