@@ -8,3 +8,4 @@ riderModule.iml
 /Tests/Resources
 /Crypto.Tests/DES/Resources
 *.user
+/Crypto.Tests.SymmetricEncryption.DES/Resources
