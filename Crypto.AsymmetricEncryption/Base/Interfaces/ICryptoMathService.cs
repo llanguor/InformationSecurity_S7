@@ -20,7 +20,7 @@ public interface ICryptoMathService
         BigInteger a,
         BigInteger b);
     
-    public void CalculateGcdEuclideanExtended(
+    public void CalculateGcdEuclidean(
         BigInteger a,
         BigInteger b,
         out BigInteger gcd,

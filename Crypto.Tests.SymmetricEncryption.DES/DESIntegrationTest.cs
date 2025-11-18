@@ -34,7 +34,6 @@ public class DESIntegrationTest
     [SetUp]
     public void Setup()
     {
-        
         Logger.GetInstance();
         _container = new Container();
         _container.RegisterInstance<SymmetricEncryption.SymmetricEncryption>(
@@ -54,7 +53,7 @@ public class DESIntegrationTest
     #endregion
     
     
-    #region Crypto.Tests.DES1
+    #region Methods
     
     [Test]
     public void EncryptTextFileTest()
@@ -87,7 +86,6 @@ public class DESIntegrationTest
         des.Decrypt(encrypted, decrypted);
         Assert.True(true);
     }
-
     
     [Test]
     public void EncryptImageFileTest()

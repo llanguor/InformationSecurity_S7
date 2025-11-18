@@ -6,6 +6,8 @@ namespace Crypto.AsymmetricEncryption;
 public class CryptoMathService :
     ICryptoMathService
 {
+    #region Public methods
+    
     public int CalculateLegendreSymbol(
         BigInteger a,
         BigInteger p)
@@ -44,16 +46,49 @@ public class CryptoMathService :
         BigInteger a,
         BigInteger b)
     {
-        throw new NotImplementedException();
+        while (b != 0)
+        {
+            var temp = b;
+            b = a % b;
+            a = temp;
+        }
+        return a;
     }
 
-    public void CalculateGcdEuclideanExtended(
+    public void CalculateGcdEuclidean(
         BigInteger a,
         BigInteger b,
         out BigInteger gcd, 
         out BigInteger x,
         out BigInteger y)
     {
-        throw new NotImplementedException();
+        gcd = a;
+        x = BigInteger.One;
+        y = BigInteger.Zero;
+        var currGcd = b;
+        var currX = BigInteger.Zero;
+        var currY = BigInteger.One;
+
+        while (currGcd != 0)
+        {
+            var quotient = gcd / currGcd;
+            
+            (gcd, currGcd) = (currGcd, gcd - quotient * currGcd);
+            
+            (x, currX) = (currX, x - quotient * currX);
+            
+            (y, currY) = (currY, y - quotient * currY);
+        }
     }
+    
+    #endregion
+    
+    #region Private methods
+
+    private void Foo()
+    {
+        
+    }
+    
+    #endregion
 }
