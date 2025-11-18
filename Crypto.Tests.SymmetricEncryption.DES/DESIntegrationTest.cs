@@ -1,13 +1,8 @@
-﻿using Crypto.SymmetricEncryption;
-using Crypto;
-using Crypto.Core;
-using Crypto.SymmetricEncryption.Base;
-using Crypto.SymmetricEncryption.Base.Interfaces;
-using Crypto.SymmetricEncryption.Contexts;
+﻿using Crypto.SymmetricEncryption.Contexts;
 using Crypto.Tests.Infrastructure;
 using DryIoc;
 
-namespace Crypto.Tests.DES;
+namespace Crypto.Tests;
 
 public class DESIntegrationTest
 {
@@ -59,7 +54,7 @@ public class DESIntegrationTest
     #endregion
     
     
-    #region Crypto.Tests
+    #region Crypto.Tests.DES1
     
     [Test]
     public void EncryptTextFileTest()

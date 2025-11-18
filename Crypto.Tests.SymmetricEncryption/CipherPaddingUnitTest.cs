@@ -3,7 +3,7 @@ using Crypto.Tests.Infrastructure;
 using DryIoc;
 using Serilog;
 
-namespace Crypto.Tests.Core;
+namespace Crypto.Tests.SymmetricEncryption;
 
 [TestFixture]
 public class CipherPaddingUnitTest

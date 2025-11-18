@@ -3,7 +3,7 @@ using Crypto.Tests.Infrastructure;
 using DryIoc;
 using Serilog;
 
-namespace Crypto.Tests.Core;
+namespace Crypto.Tests.SymmetricEncryption;
 
 public class FeistelNetworkTests
 {
@@ -44,7 +44,7 @@ public class FeistelNetworkTests
     
     #endregion
     
-    #region Crypto.Tests
+    #region Crypto.Tests.DES1
     
     [Test]
     public void EncryptTest()
