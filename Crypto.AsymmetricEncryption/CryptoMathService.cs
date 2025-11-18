@@ -25,7 +25,19 @@ public class CryptoMathService :
         BigInteger exponent,
         BigInteger modulus)
     {
-        throw new NotImplementedException();
+        var result = BigInteger.One;
+        baseValue %= modulus;
+
+        while (exponent != BigInteger.Zero)
+        {
+            if((exponent & BigInteger.One) == BigInteger.One)
+                result = result * baseValue % modulus;
+            
+            baseValue = baseValue * baseValue % modulus;
+            exponent >>= 1;
+        }
+        
+        return result;
     }
 
     public BigInteger CalculateGcdEuclidean(
