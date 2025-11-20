@@ -52,8 +52,8 @@ public class CryptoMathServiceTest
     [Test]
     public void CalculateGcdEuclideanTest()
     {
-        BigInteger a = 14124;
-        BigInteger b = 3951;
+        BigInteger a = -14124;
+        BigInteger b = -3951;
         BigInteger expected = 3;
         
         var result = 
@@ -66,7 +66,7 @@ public class CryptoMathServiceTest
     [Test]
     public void CalculateGcdEuclideanExtendedTest()
     {
-        BigInteger a = 14124;
+        BigInteger a = -14124;
         BigInteger b = 3951;
         BigInteger expectedGcd = 3;
         
@@ -82,6 +82,61 @@ public class CryptoMathServiceTest
         {
             Assert.That(gcd, Is.EqualTo(expectedGcd));
             Assert.That(a * x + b * y, Is.EqualTo(gcd));
+        });
+    }
+    
+    [Test]
+    public void CalculateLegendreSymbolTest()
+    {
+        var mService = _container.Resolve<CryptoMathService>();
+        
+        Assert.Multiple(() =>
+        {
+            Assert.That(
+                mService.CalculateLegendreSymbol(3, 5), 
+                Is.EqualTo(-1));
+            Assert.That(
+                mService.CalculateLegendreSymbol(7, 23), 
+                Is.EqualTo(-1));
+            Assert.That(
+                mService.CalculateLegendreSymbol(-7, 23), 
+                Is.EqualTo(1));
+            Assert.That(
+                mService.CalculateLegendreSymbol(-9, 23), 
+                Is.EqualTo(-1));
+        });
+    }
+
+    [Test]
+    public void CalculateJacobiSymbolTest()
+    {
+        var mService = _container.Resolve<CryptoMathService>();
+
+        Assert.Multiple(() =>
+        {
+            Assert.Throws<ArgumentException>(() =>
+                mService.CalculateJacobiSymbol(5, 10));
+            Assert.That(
+                mService.CalculateJacobiSymbol(1, 23),
+                Is.EqualTo(1));
+            Assert.That(
+                mService.CalculateJacobiSymbol(-1, 23),
+                Is.EqualTo(1));
+            Assert.That(
+                mService.CalculateJacobiSymbol(17, 21),
+                Is.EqualTo(1));
+            Assert.That(
+                mService.CalculateJacobiSymbol(19, 25),
+                Is.EqualTo(1));
+            Assert.That(
+                mService.CalculateJacobiSymbol(3, 5),
+                Is.EqualTo(-1));
+            Assert.That(
+                mService.CalculateJacobiSymbol(5, 15),
+                Is.EqualTo(0));
+            Assert.That(
+                mService.CalculateJacobiSymbol(18, 21),
+                Is.EqualTo(0));
         });
     }
 

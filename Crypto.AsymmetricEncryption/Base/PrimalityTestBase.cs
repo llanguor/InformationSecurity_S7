@@ -59,6 +59,12 @@ public abstract class PrimalityTestBase(
         double targetErrorProbability, 
         double oneIterationErrorProbability)
     {
+        if (targetErrorProbability < 0 ||
+            targetErrorProbability >= 1) 
+            throw new ArgumentException(
+                "Invalid argument: ",
+                nameof(targetErrorProbability));
+
         return (int) Math.Ceiling(
             Math.Log(targetErrorProbability) /
             Math.Log(oneIterationErrorProbability));
