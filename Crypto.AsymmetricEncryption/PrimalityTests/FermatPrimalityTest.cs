@@ -23,7 +23,7 @@ public class FermatPrimalityTest() :
         10789013, 11522713, 11932213, 14612413, 15882613
     ];
     
-    protected override bool PerformCoreCheck(BigInteger p, BigInteger a)
+    protected override bool ValidateCondition(BigInteger p, BigInteger a)
     {
         if (CarmichaelNumbers.Contains(p))
             return false; 

@@ -46,7 +46,7 @@ public abstract class PrimalityTestBase(
                 = GenerateRandomNaturalValue(2, value);
             
             if (!IsCoprime(value, random) ||
-                !PerformCoreCheck(value, random))
+                !ValidateCondition(value, random))
             {
                 return PrimalityResult.Composite;
             }
@@ -87,7 +87,7 @@ public abstract class PrimalityTestBase(
             .CalculateGcdEuclidean(p, a) == 1;
     }
     
-    protected abstract bool PerformCoreCheck(
+    protected abstract bool ValidateCondition(
         BigInteger p,
         BigInteger a);
     
