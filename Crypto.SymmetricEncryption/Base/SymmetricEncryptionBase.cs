@@ -1,4 +1,5 @@
-﻿using Crypto.Core;
+﻿using System.Diagnostics.SymbolStore;
+using Crypto.Core;
 using Crypto.SymmetricEncryption.Base.Interfaces;
 using Crypto.SymmetricEncryption.Contexts;
 
@@ -9,31 +10,39 @@ namespace Crypto.SymmetricEncryption.Base;
 /// providing encryption and decryption operations with a specified key.
 /// </summary>
 public abstract class SymmetricEncryptionBase :
-    EncryptionBase
+    ISymmetricEncryption
 {
+    #region Fields
+    
+    private byte[] _key;
+    
+    #endregion
+    
+    
     #region Properties
 
-    /// <summary>
-    /// Size of a single encryption block, in bytes.
-    /// All input data is processed in chunks of this size.
-    /// </summary>
+    /// <inheritdoc/>
+    public virtual byte[] Key
+    {
+        get => _key; 
+        set => _key = value;
+    }
+    
+    /// <inheritdoc/>
     public int BlockSize { get; }
     
-    /// <summary>
-    /// Size of a single encryption block, in bytes.
-    /// All input data is processed in chunks of this size.
-    /// </summary>
+    /// <inheritdoc/>
     public int KeySize { get; }
-
+    
     /// <summary>
     /// The block cipher mode applied during encryption and decryption.
     /// </summary>
-    public CipherModes modes { get; }
+    public CipherModes Modes { get; }
 
     /// <summary>
     /// The padding scheme used to fill blocks to the required size.
     /// </summary>
-    public CipherPaddings paddings { get; }
+    public CipherPaddings Paddings { get; }
     
     /// <summary>
     /// Optional initialization vector (IV) for certain cipher modes.
@@ -78,23 +87,24 @@ public abstract class SymmetricEncryptionBase :
         CipherPaddings paddings,
         CipherModes modes,
         byte[]? initializationVector = null,
-        params object[] parameters) : base(key)
+        params object[] parameters)
     {
         BlockSize = blockSize;
         KeySize = keySize;
-        this.modes = modes;
-        this.paddings = paddings;
+        _key = key;
+        Modes = modes;
+        Paddings = paddings;
         InitializationVector = initializationVector;
         Parameters = parameters;
         
         CipherPaddingContext =
             new CipherPaddingContext(
-                this.paddings,
+                this.Paddings,
                 BlockSize);
         
         CipherModeContext = 
             new CipherModeContext(
-                this.modes,
+                this.Modes,
                 EncryptBlock,
                 DecryptBlock,
                 BlockSize,
@@ -105,7 +115,7 @@ public abstract class SymmetricEncryptionBase :
     #endregion
     
     
-    #region Methods for Block
+    #region Abstract Methods for Block
 
     /// <summary>
     /// Encrypts a single block in-place.
@@ -122,8 +132,14 @@ public abstract class SymmetricEncryptionBase :
     #endregion
     
     
-    #region Methods
+    #region Abstract Methods
+    
+    /// <inheritdoc/>
+    public abstract Memory<byte> Encrypt(Memory<byte> data);
 
+    /// <inheritdoc/>
+    public abstract Memory<byte> Decrypt(Memory<byte> data);
+    
     /// <summary>
     /// Encrypts the provided byte array and outputs the result via an out parameter.
     /// The <paramref name="data"/> array is modified in-place during encryption.
@@ -133,6 +149,14 @@ public abstract class SymmetricEncryptionBase :
     public abstract void Encrypt(byte[] data, out byte[] result);
 
     /// <summary>
+    /// Decrypts the provided byte array and outputs the result via an out parameter.
+    /// The <paramref name="data"/> array is modified in-place during decryption.
+    /// </summary>
+    /// <param name="data">The data to decrypt. Modified in-place.</param>
+    /// <param name="result">The resulting decrypted data.</param>
+    public abstract void Decrypt(byte[] data, out byte[] result);
+   
+    /// <summary>
     /// Encrypts the contents of the input file and writes the result to the output file.
     /// </summary>
     /// <param name="inputFilePath">Path to the file to be encrypted.</param>
@@ -140,21 +164,17 @@ public abstract class SymmetricEncryptionBase :
     public abstract void Encrypt(string inputFilePath, string outputFilePath);
 
     /// <summary>
-    /// Decrypts the provided byte array and outputs the result via an out parameter.
-    /// The <paramref name="data"/> array is modified in-place during decryption.
-    /// </summary>
-    /// <param name="data">The data to decrypt. Modified in-place.</param>
-    /// <param name="result">The resulting decrypted data.</param>
-
-    public abstract void Decrypt(byte[] data, out byte[] result);
-
-    /// <summary>
     /// Decrypts the contents of the input file and writes the result to the output file.
     /// </summary>
     /// <param name="inputFilePath">Path to the file to be decrypted.</param>
     /// <param name="outputFilePath">Path where the decrypted file will be saved.</param>
-
     public abstract void Decrypt(string inputFilePath, string outputFilePath);
+      
+    #endregion
+    
+    
+    #region Abstract Async Methods
+    
     /// <summary>
     /// Asynchronously encrypts the provided byte array using the current key, mode, and padding.
     /// The <paramref name="data"/> array is modified in-place during encryption.
@@ -164,21 +184,20 @@ public abstract class SymmetricEncryptionBase :
     public abstract Task<byte[]> EncryptAsync(byte[] data);
     
     /// <summary>
-    /// Asynchronously encrypts the contents of the input file and writes the result to the output file.
-    /// </summary>
-    /// <param name="inputFilePath">Path to the file to be encrypted.</param>
-    /// <param name="outputFilePath">Path where the encrypted file will be saved.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
-
-    public abstract Task EncryptAsync(string inputFilePath, string outputFilePath);
-    
-    /// <summary>
     /// Asynchronously decrypts the provided byte array using the current key, mode, and padding.
     /// The <paramref name="data"/> array is modified in-place during decryption.
     /// </summary>
     /// <param name="data">The data to decrypt. Modified in-place.</param>
     /// <returns>A task that represents the asynchronous operation. The task result contains the decrypted byte array.</returns>
     public abstract Task<byte[]> DecryptAsync(byte[] data);
+    
+    /// <summary>
+    /// Asynchronously encrypts the contents of the input file and writes the result to the output file.
+    /// </summary>
+    /// <param name="inputFilePath">Path to the file to be encrypted.</param>
+    /// <param name="outputFilePath">Path where the encrypted file will be saved.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
+    public abstract Task EncryptAsync(string inputFilePath, string outputFilePath);
 
     /// <summary>
     /// Asynchronously decrypts the contents of the input file and writes the result to the output file.

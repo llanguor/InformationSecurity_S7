@@ -15,9 +15,11 @@ public sealed class FeistelNetwork (
     IRoundFunction roundFunction,
     byte[] key,
     int roundsCount)
-    : EncryptionBase(key)
+    : IEncryption
 {
     #region Fields
+    
+    private byte[] _key = key;
     
     /// <summary>
     /// The key schedule used to generate round keys from the master key.
@@ -44,16 +46,16 @@ public sealed class FeistelNetwork (
     
     #region Properties
 
-    public override byte[] Key
+    public byte[] Key
     {
-        get => base.Key;
+        get => _key;
         set
         {
-            if (base.Key == value)
+            if (_key == value)
                 return;
             
             _roundKeys = _keySchedule.Expand(value);
-            base.Key = value;
+            _key = value;
         }
     }
     
@@ -70,7 +72,7 @@ public sealed class FeistelNetwork (
     ///     The input block to encrypt.
     ///     Its length must be divisible by 2.
     /// </param>
-    public override Memory<byte> Encrypt(Memory<byte> data)
+    public Memory<byte> Encrypt(Memory<byte> data)
     {
         //todo: check divisible by 2
         
@@ -110,7 +112,7 @@ public sealed class FeistelNetwork (
     ///     The input block to decrypt.
     ///     Its length must be divisible by 2.
     /// </param>
-    public override Memory<byte> Decrypt(Memory<byte> data)
+    public Memory<byte> Decrypt(Memory<byte> data)
     {
         //todo: check divisible by 2
 

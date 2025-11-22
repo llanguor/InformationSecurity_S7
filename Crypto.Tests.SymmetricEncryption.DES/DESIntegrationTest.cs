@@ -2,7 +2,7 @@
 using Crypto.Tests.Infrastructure;
 using DryIoc;
 
-namespace Crypto.Tests;
+namespace Crypto.Tests.DES;
 
 public class DESIntegrationTest
 {
@@ -10,7 +10,7 @@ public class DESIntegrationTest
     
     private Container? _container;
 
-    private const string ResourcesDirectoryPath = @"..\\..\\..\\DES\\Resources"; 
+    private const string ResourcesDirectoryPath = @"..\\..\\..\\Resources"; 
     
     private readonly byte [] _data = 
     [
