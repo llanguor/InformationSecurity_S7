@@ -15,8 +15,8 @@ public abstract class PrimalityTestBase(
     protected static ICryptoMathService CryptoMathService { get; } = 
         new CryptoMathService();
     
-    protected static Random Randomizer { get;  } = 
-        new();
+    public Random Randomizer { get; set; } =
+        new Random(Environment.TickCount);
     
     #endregion
     
@@ -61,7 +61,7 @@ public abstract class PrimalityTestBase(
         return PrimalityResult.Prime;
     }
     
-    protected virtual int GetIterationsCount(
+    private int GetIterationsCount(
         double targetErrorProbability, 
         double oneIterationErrorProbability)
     {
@@ -79,7 +79,7 @@ public abstract class PrimalityTestBase(
                 (long)maxValue);
     }
     
-    protected virtual bool IsCoprime(
+    private bool IsCoprime(
         BigInteger p, 
         BigInteger a)
     {

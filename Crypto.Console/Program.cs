@@ -1,30 +1,66 @@
 ﻿using System.Numerics;
+using System.Security.Cryptography;
 using System.Text;
 
 namespace Crypto.Console;
 
 internal static class Program
 {
-    private static readonly byte [] InitializationVector = 
+    private static readonly byte [] Randomized = 
     [
         0b11111111, 0b11111111, 0b11111111, 0b11111111,
-        0b00000000, 0b00000000, 0b00000000, 0b00000000
+        0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b11111111
     ];
-    
+
     private static void Main()
     {
-        var span = InitializationVector.AsSpan(
-            InitializationVector.Length/2, 
-            InitializationVector.Length/2);
-        var value =
-            new BigInteger(span, isUnsigned: true, isBigEndian: true) ;
+        //4294967295
+        //Последний байт - байт знака
+        //0b00000000 +
+        //0b11111111 -
+        //
+        //Чтобы умножить число на -1, нужно инвертировать все его биты, включая байт знака
+        //Но нам это по факту не нужно тк нужно только битовое представление.
+        //Нам достаточно просто поменять весь последний байт на 0b00000000 или 0b11111111
+        //
+        //Младший байт хранится спереди, в ячейке 0.
+        //Его надо выкрутить в 1, чтобы число стало нечетным
+        //
+        //BL и LL - это только ПОРЯДОК БАЙТ. БИТЫ ОСТАЮТСЯ КАК ПРЕЖДЕы
 
-        if ((value & 1)==0)
-            value += 1;
         
-        System.Console.WriteLine(value);
-        System.Console.WriteLine(BinaryToString(InitializationVector));
-        System.Console.WriteLine(BinaryToString(value.ToByteArray()));
+        
+        var array0 = new byte[9];
+       
+        RandomNumberGenerator.Fill(array0);
+        var value0 =
+            new BigInteger(array0, isUnsigned: false, isBigEndian: false) ;
+        System.Console.WriteLine(value0);
+        RandomNumberGenerator.Fill(array0);
+        System.Console.WriteLine(value0);
+        
+        
+        var array1 = new byte[9];
+        RandomNumberGenerator.Fill(array1.AsSpan(0, array1.Length - 1));
+        array1[0] |= 0b00000001;
+        //array1[^1] &= 0b00000000;
+        array1[^2] = (byte)(array1[^2] & 0b00111111 | 0b10000000);
+        
+        var array2 = new byte[9];
+        RandomNumberGenerator.Fill(array2.AsSpan(0, array1.Length - 1));
+        array2[0] |= 0b00000001;
+        
+        array2[^2] = (byte)(array2[^2] & (0xFF >> 3) | (0xFF << (8-3) & 0b10100000));
+        
+        var value1 =
+            new BigInteger(array1.AsSpan(), isUnsigned: false, isBigEndian: false) ;
+        var value2 =
+            new BigInteger(array2.AsSpan(), isUnsigned: false, isBigEndian: false) ;
+        
+        System.Console.WriteLine(value1);
+        System.Console.WriteLine(value2);
+        System.Console.WriteLine(BinaryToString(array1));
+        System.Console.WriteLine(BinaryToString(array2));
     }
     
     public static string BinaryToString(byte[][] keys)

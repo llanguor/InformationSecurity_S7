@@ -24,7 +24,7 @@ public sealed partial class DEAL
 
             switch (dealKeySize)
             {
-                case DEAL.DealKeySize.Key128:
+                case DealKeySize.Key128:
                 {
                     var roundKeys = new byte[6][];
                     des.EncryptBlock(
@@ -41,7 +41,7 @@ public sealed partial class DEAL
                         roundKeys[5] = Xor(masterKeys[1], roundKeys[4], 8));
                     return roundKeys;
                 }
-                case DEAL.DealKeySize.Key192:
+                case DealKeySize.Key192:
                 {
                     var roundKeys = new byte[6][];
                     des.EncryptBlock(
@@ -58,7 +58,7 @@ public sealed partial class DEAL
                         roundKeys[5] = Xor(masterKeys[2], roundKeys[4], 4));
                     return roundKeys;
                 }
-                case DEAL.DealKeySize.Key256:
+                case DealKeySize.Key256:
                 {
                     var roundKeys = new byte[8][];
                     des.EncryptBlock(

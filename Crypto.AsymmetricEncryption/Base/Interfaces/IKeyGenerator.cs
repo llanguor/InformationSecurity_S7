@@ -2,9 +2,9 @@
 
 namespace Crypto.AsymmetricEncryption.Base.Interfaces;
 
-public interface IKeyGenerator
+public interface IKeyGenerator<TKey>
 {
     public void GenerateKeys(
-        out byte[] publicKey,
-        out byte[] privateKey);
+        out TKey publicKey,
+        out TKey privateKey);
 }
