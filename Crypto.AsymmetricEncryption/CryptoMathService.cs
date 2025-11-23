@@ -3,7 +3,7 @@ using Crypto.AsymmetricEncryption.Base.Interfaces;
 
 namespace Crypto.AsymmetricEncryption;
 
-public class CryptoMathService :
+public sealed class CryptoMathService :
     ICryptoMathService
 {
     #region Public methods

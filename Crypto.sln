@@ -38,6 +38,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Crypto.Tests.SymmetricEncry
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Crypto.Tests.AsymmetricEncryption", "Crypto.Tests.AsymmetricEncryption\Crypto.Tests.AsymmetricEncryption.csproj", "{947BF9E6-A3A6-49F6-9E29-9521D9A9C03C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Crypto.Tests.AsymmetricEncryption.RSA", "Crypto.Tests.AsymmetricEncryption.RSA\Crypto.Tests.AsymmetricEncryption.RSA.csproj", "{85149023-D43D-4435-B952-C6C26EBE7783}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -104,6 +106,10 @@ Global
 		{947BF9E6-A3A6-49F6-9E29-9521D9A9C03C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{947BF9E6-A3A6-49F6-9E29-9521D9A9C03C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{947BF9E6-A3A6-49F6-9E29-9521D9A9C03C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{85149023-D43D-4435-B952-C6C26EBE7783}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{85149023-D43D-4435-B952-C6C26EBE7783}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{85149023-D43D-4435-B952-C6C26EBE7783}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{85149023-D43D-4435-B952-C6C26EBE7783}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{3055AE62-0CFE-437B-8B1F-C32FD34F3137} = {8458E490-6E7C-4245-8732-F1E2D4837EF8}
@@ -121,5 +127,6 @@ Global
 		{2B259C32-D5BF-4965-986A-0B0413DDD438} = {0C51D91C-D6EB-4D0F-A0A6-F307A4BA1295}
 		{6E1DC8B1-140E-4E53-BEE7-7D31C0BD546E} = {0C51D91C-D6EB-4D0F-A0A6-F307A4BA1295}
 		{947BF9E6-A3A6-49F6-9E29-9521D9A9C03C} = {0C51D91C-D6EB-4D0F-A0A6-F307A4BA1295}
+		{85149023-D43D-4435-B952-C6C26EBE7783} = {0C51D91C-D6EB-4D0F-A0A6-F307A4BA1295}
 	EndGlobalSection
 EndGlobal

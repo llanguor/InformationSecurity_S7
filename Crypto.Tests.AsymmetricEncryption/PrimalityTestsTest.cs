@@ -106,10 +106,10 @@ public class PrimalityTestsTest
     
     private void RunPrimalityTest(IPrimalityTest test)
     {
-        for (int n = 0; n <= 5000; n++)
+        for (var n = 0; n <= 5000; n++)
         {
             var actual =
-                test.IsPrimary(n, 1e-10);
+                test.IsPrimary(n, 0.999);
 
             var expected =
                 n <= 1

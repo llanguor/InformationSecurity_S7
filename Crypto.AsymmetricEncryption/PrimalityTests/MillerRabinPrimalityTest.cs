@@ -3,17 +3,9 @@ using Crypto.AsymmetricEncryption.Base;
 
 namespace Crypto.AsymmetricEncryption.PrimalityTests;
 
-public class MillerRabinPrimalityTest() :
+public sealed class MillerRabinPrimalityTest() :
     PrimalityTestBase(0.5)
 {
-    /*
-     •	на каждой итерации не нужно заново возводить число в полную степень.
-      У нас уже есть результат возведения с прошлой итерации. 
-      Нужно лишь возвести в квадрат по модулю. 
-      На следующей итерации еще раз возвести в квадрат по модулю.
-       И так далее. Так экономим перфоманс
-     */
-    
     protected override bool ValidateCondition(BigInteger n, BigInteger a)
     {
         var s = 0;

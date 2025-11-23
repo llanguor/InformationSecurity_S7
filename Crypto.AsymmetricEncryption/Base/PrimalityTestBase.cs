@@ -27,6 +27,12 @@ public abstract class PrimalityTestBase(
         BigInteger value, 
         double targetProbability)
     {
+        if (targetProbability < 0.5 ||
+            targetProbability >= 1)
+            throw new ArgumentException(
+                $"Probability must be between 0.5 and less than 1.",
+                nameof(targetProbability));
+        
         if (value < 2)
             return PrimalityResult.Indeterminate;
         
@@ -38,7 +44,7 @@ public abstract class PrimalityTestBase(
         
         for (var i = 0; 
              i < GetIterationsCount(
-                 targetProbability, 
+                 1 - targetProbability, 
                  OneIterationErrorProbability); 
              i++)
         {
@@ -55,16 +61,10 @@ public abstract class PrimalityTestBase(
         return PrimalityResult.Prime;
     }
     
-    private int GetIterationsCount(
+    protected virtual int GetIterationsCount(
         double targetErrorProbability, 
         double oneIterationErrorProbability)
     {
-        if (targetErrorProbability < 0 ||
-            targetErrorProbability >= 1) 
-            throw new ArgumentException(
-                "Invalid argument: ",
-                nameof(targetErrorProbability));
-
         return (int) Math.Ceiling(
             Math.Log(targetErrorProbability) /
             Math.Log(oneIterationErrorProbability));
@@ -79,7 +79,7 @@ public abstract class PrimalityTestBase(
                 (long)maxValue);
     }
     
-    private bool IsCoprime(
+    protected virtual bool IsCoprime(
         BigInteger p, 
         BigInteger a)
     {

@@ -3,7 +3,7 @@ using Crypto.AsymmetricEncryption.Base;
 
 namespace Crypto.AsymmetricEncryption.PrimalityTests;
 
-public class SolovayStrassenPrimalityTest() :
+public sealed class SolovayStrassenPrimalityTest() :
     PrimalityTestBase(0.25)
 {
     protected override bool ValidateCondition(BigInteger n, BigInteger a)

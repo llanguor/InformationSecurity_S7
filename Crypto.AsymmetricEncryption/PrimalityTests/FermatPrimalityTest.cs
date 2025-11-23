@@ -3,7 +3,7 @@ using Crypto.AsymmetricEncryption.Base;
 
 namespace Crypto.AsymmetricEncryption.PrimalityTests;
 
-public class FermatPrimalityTest() :
+public sealed class FermatPrimalityTest() :
     PrimalityTestBase(0.5)
 {
     private static readonly HashSet<BigInteger> CarmichaelNumbers =
