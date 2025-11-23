@@ -6,7 +6,7 @@ public sealed class CFBMode(
     Action<Memory<byte>> encryptionFunc,
     Action<Memory<byte>> decryptionFunc,
     int blockSize,
-    byte[] initializationVector)
+    Memory<byte> initializationVector)
     : CipherModeBase(
         encryptionFunc,
         decryptionFunc,

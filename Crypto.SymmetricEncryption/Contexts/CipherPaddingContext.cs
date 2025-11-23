@@ -4,22 +4,50 @@ using Crypto.SymmetricEncryption.Paddings;
 
 namespace Crypto.SymmetricEncryption.Contexts;
 
-public class CipherPaddingContext(
-    CipherPaddings paddings,
-    int blockSize)
-    : CipherPaddingBase(blockSize)
+public class CipherPaddingContext :
+    CipherPaddingBase
 {
     #region Fields
-    
-    private readonly ICipherPadding _cipherPadding = paddings switch
-    {
-        CipherPaddings.ISO10126 => new ISO10126Padding(blockSize),
-        CipherPaddings.PKCS7 => new PKCS7Padding(blockSize),
-        CipherPaddings.Zeros => new ZerosPadding(blockSize),
-        CipherPaddings.ANSIX923 => new ANSIX923Padding(blockSize),
-        _ => throw new ArgumentOutOfRangeException(nameof(paddings), paddings, null)
-    };
 
+    private ICipherPadding _cipherPadding = null!;
+
+    private CipherPadding _cipherPaddingType;
+
+    #endregion
+    
+    
+    #region Properties
+
+    public CipherPadding CipherPaddingType
+    {
+        get => _cipherPaddingType;
+        set
+        {
+            _cipherPaddingType = value;
+            _cipherPadding = value switch
+            {
+                CipherPadding.ISO10126 => new ISO10126Padding(BlockSize),
+                CipherPadding.PKCS7 => new PKCS7Padding(BlockSize),
+                CipherPadding.Zeros => new ZerosPadding(BlockSize),
+                CipherPadding.ANSIX923 => new ANSIX923Padding(BlockSize),
+                _ => throw new ArgumentOutOfRangeException(nameof(value), value, null)
+            };
+        }
+    }
+    
+    #endregion
+    
+    
+    #region Constructors
+    
+    public CipherPaddingContext(
+        CipherPadding padding,
+        int blockSize) : 
+        base(blockSize)
+    {
+        CipherPaddingType = padding;
+    }
+    
     #endregion
     
     

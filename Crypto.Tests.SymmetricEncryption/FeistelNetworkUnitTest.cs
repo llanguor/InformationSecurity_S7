@@ -21,12 +21,12 @@ public class FeistelNetworkTests
     public void Setup()
     {
         Logger.GetInstance();
-        var keySchedule = new DESKeySchedule();
-        var roundFunction = new DESRoundFunction();
+        var keySchedule = new DES.DESKeySchedule();
+        var roundFunction = new DES.DESRoundFunction();
         var feistel = 
             new FeistelNetwork(
-                new DESKeySchedule(),
-                new DESRoundFunction(),
+                new DES.DESKeySchedule(),
+                new DES.DESRoundFunction(),
                 _key,
                 16);
         

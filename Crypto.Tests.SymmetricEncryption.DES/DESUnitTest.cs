@@ -1,4 +1,3 @@
-using Crypto.SymmetricEncryption;
 using Crypto.SymmetricEncryption.Base.Interfaces;
 using Crypto.SymmetricEncryption.Contexts;
 using Crypto.Tests.Infrastructure;
@@ -30,13 +29,13 @@ public class DESUnitTest
     {
         Logger.GetInstance();
         _container = new Container();
-        _container.Register<IKeySchedule, DESKeySchedule>();
-        _container.Register<IRoundFunction, DESRoundFunction>();
+        _container.Register<IKeySchedule, SymmetricEncryption.DES.DESKeySchedule>();
+        _container.Register<IRoundFunction, SymmetricEncryption.DES.DESRoundFunction>();
         _container.RegisterInstance<SymmetricEncryption.SymmetricEncryption>(
             new SymmetricEncryption.DES(
                 _key,
-                CipherPaddings.ISO10126,
-                CipherModes.CBC,
+                CipherPadding.ISO10126,
+                CipherMode.CBC,
                 _initVector
             ));
     }

@@ -4,7 +4,7 @@
 /// Defines the supported padding schemes for symmetric encryption.
 /// Used to fill the last block to the required size if it is not complete.
 /// </summary>
-public enum CipherPaddings
+public enum CipherPadding
 {
     /// <summary>
     /// Pads the block with zeros.

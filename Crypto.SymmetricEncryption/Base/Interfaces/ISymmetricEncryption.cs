@@ -15,11 +15,11 @@ public interface ISymmetricEncryption :
     /// Size of a single encryption block, in bytes.
     /// All input data is processed in chunks of this size.
     /// </summary>
-    public int BlockSize { get; }
+    public int KeySize { get; }
     
     /// <summary>
     /// Size of a single encryption block, in bytes.
     /// All input data is processed in chunks of this size.
     /// </summary>
-    public int KeySize { get; }
+    public int BlockSize { get; }
 }

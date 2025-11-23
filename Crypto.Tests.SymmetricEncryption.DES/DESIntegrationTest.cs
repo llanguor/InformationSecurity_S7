@@ -39,8 +39,8 @@ public class DESIntegrationTest
         _container.RegisterInstance<SymmetricEncryption.SymmetricEncryption>(
             new SymmetricEncryption.DES(
                 _key,
-                CipherPaddings.Zeros,
-                CipherModes.CFB,
+                CipherPadding.Zeros,
+                CipherMode.CFB,
                 _initializationVector));
     }
     

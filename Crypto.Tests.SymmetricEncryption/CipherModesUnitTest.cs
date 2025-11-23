@@ -44,7 +44,7 @@ public class CipherModesUnitTest
         
         _container.RegisterInstance(BlockTransformation);
         _container.RegisterInstance(BlockSize);
-        _container.RegisterInstance(_initializationVector);
+        _container.RegisterInstance(_initializationVector.AsMemory());
 
         _container.Register<CBCMode>();
         _container.Register<CFBMode>();

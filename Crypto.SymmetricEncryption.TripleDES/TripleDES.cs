@@ -3,6 +3,7 @@ using System.Security.Cryptography;
 using Crypto.Core;
 using Crypto.SymmetricEncryption.Base.Interfaces;
 using Crypto.SymmetricEncryption.Contexts;
+using CipherMode = Crypto.SymmetricEncryption.Contexts.CipherMode;
 
 namespace Crypto.SymmetricEncryption;
 
@@ -52,8 +53,8 @@ public sealed class TripleDES :
     public TripleDES(
         byte[][] keys, 
         TripleDESType algorithmType,
-        CipherPaddings padding, 
-        CipherModes mode, 
+        CipherPadding padding, 
+        CipherMode mode, 
         byte[]? initializationVector = null, 
         params object[] parameters) : 
         base(8, 8, keys[0], padding, mode, initializationVector, parameters)

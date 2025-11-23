@@ -9,7 +9,48 @@ public sealed class CipherModeContext :
 {
     #region Fields
     
-    private readonly ICipherMode _cipherMode;
+    private ICipherMode _cipherMode = null!;
+    
+    private CipherMode _cipherModeType;
+    
+    #endregion
+    
+    
+    #region Properties
+
+    public CipherMode CipherModeType
+    {
+        get => _cipherModeType;
+        set
+        {
+            _cipherModeType = value;
+            _cipherMode = value switch
+            {
+                CipherMode.ECB => 
+                    new ECBMode(EncryptionFunc, DecryptionFunc, BlockSize),
+            
+                CipherMode.CBC => 
+                    new CBCMode(EncryptionFunc, DecryptionFunc, BlockSize, InitializationVector!.Value),
+            
+                CipherMode.PCBC => 
+                    new PCBCMode(EncryptionFunc,DecryptionFunc,  BlockSize, InitializationVector!.Value),
+            
+                CipherMode.CFB => 
+                    new CFBMode(EncryptionFunc, DecryptionFunc, BlockSize, InitializationVector!.Value),
+            
+                CipherMode.OFB => 
+                    new OFBMode(EncryptionFunc, DecryptionFunc, BlockSize, InitializationVector!.Value),
+            
+                CipherMode.CTR => 
+                    new CTRMode(EncryptionFunc, DecryptionFunc, BlockSize, InitializationVector!.Value),
+            
+                CipherMode.RandomDelta => 
+                    new RandomDeltaMode(EncryptionFunc, DecryptionFunc, BlockSize, InitializationVector!.Value!),
+            
+                _ => throw new ArgumentOutOfRangeException(nameof(value), value, null)
+            };
+        }
+    }
     
     #endregion
     
@@ -17,7 +58,7 @@ public sealed class CipherModeContext :
     #region Constructors
     
     public CipherModeContext(
-        CipherModes modes,
+        CipherMode mode,
         Action<Memory<byte>> encryptionFunc,
         Action<Memory<byte>> decryptionFunc,
         int blockSize,
@@ -25,35 +66,11 @@ public sealed class CipherModeContext :
         params object[] parameters):
         base(encryptionFunc, decryptionFunc, blockSize, initializationVector, parameters)
     {
-        if(modes != CipherModes.ECB &&
+        if(mode != CipherMode.ECB &&
            initializationVector == null)
             throw new ArgumentException(null, nameof(initializationVector));
-
-        _cipherMode = modes switch
-        {
-            CipherModes.ECB => 
-                new ECBMode(encryptionFunc, decryptionFunc, blockSize),
-            
-            CipherModes.CBC => 
-                new CBCMode(encryptionFunc, decryptionFunc, blockSize, initializationVector!),
-            
-            CipherModes.PCBC => 
-                new PCBCMode(encryptionFunc,decryptionFunc,  blockSize, initializationVector!),
-            
-            CipherModes.CFB => 
-                new CFBMode(encryptionFunc, decryptionFunc, blockSize, initializationVector!),
-            
-            CipherModes.OFB => 
-                new OFBMode(encryptionFunc, decryptionFunc, blockSize, initializationVector!),
-            
-            CipherModes.CTR => 
-                new CTRMode(encryptionFunc, decryptionFunc, blockSize, initializationVector!),
-            
-            CipherModes.RandomDelta => 
-                new RandomDeltaMode(encryptionFunc, decryptionFunc, blockSize, initializationVector!),
-            
-            _ => throw new ArgumentOutOfRangeException(nameof(modes), modes, null)
-        };
+        
+        CipherModeType = mode;
     }
     
     #endregion

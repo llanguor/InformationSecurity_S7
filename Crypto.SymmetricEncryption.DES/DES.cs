@@ -3,6 +3,7 @@ using System.Security.Cryptography;
 using Crypto.Core;
 using Crypto.SymmetricEncryption.Base.Interfaces;
 using Crypto.SymmetricEncryption.Contexts;
+using CipherMode = Crypto.SymmetricEncryption.Contexts.CipherMode;
 
 namespace Crypto.SymmetricEncryption;
 
@@ -10,10 +11,10 @@ namespace Crypto.SymmetricEncryption;
 /// Implements the Data Encryption Standard (Crypto.Core.DES) symmetric encryption algorithm.
 /// This class provides functionality for encrypting and decrypting 64-bit blocks of data.
 /// </summary>
-public sealed class DES(
+public sealed partial class DES(
     byte[] key, 
-    CipherPaddings padding, 
-    CipherModes mode, 
+    CipherPadding padding, 
+    CipherMode mode, 
     byte[]? initializationVector = null, 
     params object[] parameters)
     : SymmetricEncryption(8, 8, key, padding, mode, initializationVector, parameters)

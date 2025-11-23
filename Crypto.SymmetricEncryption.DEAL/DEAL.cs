@@ -2,12 +2,13 @@
 using Crypto.Core;
 using Crypto.SymmetricEncryption.Base.Interfaces;
 using Crypto.SymmetricEncryption.Contexts;
+using CipherMode = Crypto.SymmetricEncryption.Contexts.CipherMode;
 
 namespace Crypto.SymmetricEncryption;
 
 //todo: add enum for key sizes
 
-public sealed class DEAL : 
+public sealed partial class DEAL : 
     SymmetricEncryption
 {
     #region Enumerations
@@ -67,11 +68,11 @@ public sealed class DEAL :
         byte[] key,
         byte[] keyForSchedule,
         DealKeySize dealKeySize,
-        CipherPaddings paddings,
-        CipherModes mode,
+        CipherPadding padding,
+        CipherMode mode,
         byte[]? initializationVector = null,
         params object[] parameters) : 
-        base(16, (int)dealKeySize, key, paddings, mode, initializationVector, parameters)
+        base(16, (int)dealKeySize, key, padding, mode, initializationVector, parameters)
     {
         var feistelRoundsCount = 
             dealKeySize == DealKeySize.Key256 ? 8 : 6;
@@ -79,7 +80,7 @@ public sealed class DEAL :
         var desEncryption = 
             new DES(
                 keyForSchedule,
-                paddings,
+                padding,
                 mode);
         
         IKeySchedule keySchedule = 

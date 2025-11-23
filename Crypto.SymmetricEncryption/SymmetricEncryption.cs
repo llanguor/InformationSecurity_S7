@@ -7,17 +7,16 @@ public abstract class SymmetricEncryption(
     int blockSize,
     int keySize,
     byte[] key,
-    CipherPaddings paddings,
-    CipherModes modes,
+    CipherPadding padding,
+    CipherMode mode,
     byte[]? initializationVector = null,
     params object[] parameters) : 
-    SymmetricEncryptionBase(blockSize, keySize, key, paddings, modes, initializationVector, parameters)
+    SymmetricEncryptionBase(blockSize, keySize, key, padding, mode, initializationVector, parameters)
 {
     
     #region Properties
 
     private int BufferSize { get; }  = 8 * 1024;
-    
     
     #endregion
     
@@ -28,12 +27,12 @@ public abstract class SymmetricEncryption(
         int blockSize,
         int keySize,
         byte[] key, 
-        CipherPaddings paddings, 
-        CipherModes modes, 
+        CipherPadding padding, 
+        CipherMode mode, 
         int bufferSize,
         byte[]? initializationVector = null, 
         params object[] parameters)
-        : this(blockSize, keySize, key, paddings, modes, initializationVector, parameters)
+        : this(blockSize, keySize, key, padding, mode, initializationVector, parameters)
     {
         BufferSize = bufferSize;
     }

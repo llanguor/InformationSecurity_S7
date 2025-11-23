@@ -6,7 +6,7 @@ public abstract class CipherModeBase (
     Action<Memory<byte>> encryptionFunc,
     Action<Memory<byte>> decryptionFunc,
     int blockSize,
-    byte[]? initializationVector = null,
+    Memory<byte>? initializationVector = null,
     params object[] parameters) 
     : ICipherMode
 {
