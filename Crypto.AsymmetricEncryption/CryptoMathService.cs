@@ -105,7 +105,7 @@ public sealed class CryptoMathService :
         
         return result;
     }
-
+    
     public BigInteger CalculateGcdEuclidean(
         BigInteger a,
         BigInteger b)

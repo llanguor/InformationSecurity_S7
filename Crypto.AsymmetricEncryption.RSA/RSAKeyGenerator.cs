@@ -7,7 +7,7 @@ namespace Crypto.AsymmetricEncryption;
 
 public sealed partial class RSA
 {
-    public class RSAKeyGenerator :
+    internal class RSAKeyGenerator :
         IKeyGenerator<RSAKey>
     {
         #region Fields
@@ -57,7 +57,7 @@ public sealed partial class RSA
             
             var n = p * q;
             var eulerN = (p - 1) * (q - 1);
-            var minD = BigInteger.Abs(n)/3; //todo: optimize
+            var minD = FourthRoot(n) / 3;
             
             while (true)
             {
@@ -75,7 +75,7 @@ public sealed partial class RSA
 
         private void GeneratePrime(
             out BigInteger result,
-            byte bytesPrefix, 
+            byte prefixInBytes, 
             int prefixLength)
         {
             var bytes = new byte[_primesBitLength];
@@ -85,7 +85,7 @@ public sealed partial class RSA
             bytes[^2] = (byte)(
                 bytes[^2] & 
                 (0xFF >> prefixLength) | 
-                (0xFF << (8-prefixLength) & bytesPrefix));
+                (0xFF << (8-prefixLength) & prefixInBytes));
             
             result = new BigInteger(
                 bytes.AsSpan(), 
@@ -123,7 +123,7 @@ public sealed partial class RSA
             {
                 RandomNumberGenerator.Fill(bytes);
                 result = new BigInteger(
-                    bytes.AsSpan(), 
+                    bytes,
                     isUnsigned: false,
                     isBigEndian: false);
                 
@@ -152,6 +152,40 @@ public sealed partial class RSA
             if (result < 0)
                 result += eulerN;
         }
+        
+        /// <summary>
+        /// Computes the integer fourth root of a given BigInteger using the Newton–Raphson iteration.
+        /// The iterative formula used is:
+        /// xₖ₊₁ = (3*xₖ + n / xₖ³) / 4
+        /// </summary>
+        /// <param name="n">The BigInteger to compute the fourth root of. Must be non-negative.</param>
+        /// <returns>The largest integer x such that x⁴ ≤ n.</returns>
+        /// <exception cref="ArithmeticException">Thrown if <paramref name="n"/> is negative.</exception>
+        internal BigInteger FourthRoot(BigInteger n)
+        {
+            if (n < 0)
+                throw new ArithmeticException(
+                    "The algorithm does not assume finding the root of negative values");
+
+            if (n == 0)
+                return 0;
+
+            if (n < 16)
+                return 1;
+            
+            var x = n >> (int)(n.GetBitLength() / 4); 
+            BigInteger result;
+
+            do
+            {
+                result = x;
+                x = (3 * x + n / (x * x * x)) >> 2; // x_k+1 = (3*x + n/x^3)/4
+            } 
+            while (x < result);
+
+            return result;
+        }
+
         
         #endregion
     }

@@ -14,22 +14,8 @@ internal static class Program
 
     private static void Main()
     {
-        //4294967295
-        //Последний байт - байт знака
-        //0b00000000 +
-        //0b11111111 -
-        //
-        //Чтобы умножить число на -1, нужно инвертировать все его биты, включая байт знака
-        //Но нам это по факту не нужно тк нужно только битовое представление.
-        //Нам достаточно просто поменять весь последний байт на 0b00000000 или 0b11111111
-        //
-        //Младший байт хранится спереди, в ячейке 0.
-        //Его надо выкрутить в 1, чтобы число стало нечетным
-        //
-        //BL и LL - это только ПОРЯДОК БАЙТ. БИТЫ ОСТАЮТСЯ КАК ПРЕЖДЕы
-
         
-        
+        /* 
         var array0 = new byte[9];
        
         RandomNumberGenerator.Fill(array0);
@@ -61,6 +47,7 @@ internal static class Program
         System.Console.WriteLine(value2);
         System.Console.WriteLine(BinaryToString(array1));
         System.Console.WriteLine(BinaryToString(array2));
+        */
     }
     
     public static string BinaryToString(byte[][] keys)
