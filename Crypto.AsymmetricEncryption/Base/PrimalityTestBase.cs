@@ -74,9 +74,20 @@ public abstract class PrimalityTestBase(
         BigInteger minValue, 
         BigInteger maxValue)
     {
-        return Randomizer.NextInt64(
-                (long)minValue, 
-                (long)maxValue);
+        if (minValue >= maxValue)
+            throw new ArgumentException("minValue must be < maxValue");
+
+        var min = 
+            minValue < long.MinValue ? 
+            long.MinValue : 
+            (long)minValue;
+        
+        var max = 
+            maxValue > long.MaxValue ? 
+                long.MaxValue : 
+                (long)maxValue;
+
+        return Randomizer.NextInt64(min, max);
     }
     
     private bool IsCoprime(

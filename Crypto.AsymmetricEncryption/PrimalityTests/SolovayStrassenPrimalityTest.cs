@@ -10,9 +10,10 @@ public sealed class SolovayStrassenPrimalityTest() :
     {
         if(CryptoMathService.CalculateGcdEuclidean(n, a) != 1)
             return false;
-        
+  
         var powered = 
             CryptoMathService.ModPow(a, (n - 1) >> 1, n);
+        
         var jacobi = 
             CryptoMathService.CalculateJacobiSymbol(a, n);
         

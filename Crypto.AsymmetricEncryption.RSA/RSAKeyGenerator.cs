@@ -1,5 +1,5 @@
-﻿using System.Numerics;
-using System.Security.Cryptography;
+﻿using System.IO.Enumeration;
+using System.Numerics;
 using Crypto.AsymmetricEncryption.Base.Interfaces;
 using Crypto.AsymmetricEncryption.Contexts;
 
@@ -15,10 +15,10 @@ public sealed partial class RSA
         private readonly IPrimalityTest _primalityTest;
 
         private readonly double _targetPrimaryProbability;
-
-        private readonly int _primesBitLength;
         
-        private readonly int _keySizeInBits;
+        private readonly int _keySizeInBytes;
+
+        private const int _eSize = 3;
 
         #endregion
         
@@ -27,9 +27,8 @@ public sealed partial class RSA
         
         public RSAKeyGenerator(
             PrimalityTest primalityTestType,
-            double targetPrimaryProbability,
-            int primesBitLength,
-            int keySizeInBits)
+            RSAKeySize keySize,
+            double targetPrimaryProbability)
         {
             if (targetPrimaryProbability < 0.5 ||
                 targetPrimaryProbability >= 1.0)
@@ -41,8 +40,7 @@ public sealed partial class RSA
             
             _primalityTest = new PrimalityTestContext(primalityTestType);
             _targetPrimaryProbability = targetPrimaryProbability;
-            _primesBitLength = primesBitLength;
-            _keySizeInBits = keySizeInBits;
+            _keySizeInBytes = (int)keySize/8;
         }
 
         #endregion
@@ -72,24 +70,24 @@ public sealed partial class RSA
                 }
             }
         }
-
-        private void GeneratePrime(
+        
+        internal void GeneratePrime(
             out BigInteger result,
             byte prefixInBytes, 
             int prefixLength)
         {
-            var bytes = new byte[_primesBitLength];
-            RandomNumberGenerator.Fill(bytes.AsSpan(0, bytes.Length - 1));
+            var bytes = new byte[_keySizeInBytes/2]; //because N = p * q: a^x = b^(x/2) * c^(x/2)
+            System.Security.Cryptography.RandomNumberGenerator.Fill(bytes);
            
             bytes[0] |= 0b00000001;
-            bytes[^2] = (byte)(
-                bytes[^2] & 
+            bytes[^1] = (byte)(
+                bytes[^1] & 
                 (0xFF >> prefixLength) | 
                 (0xFF << (8-prefixLength) & prefixInBytes));
             
             result = new BigInteger(
                 bytes.AsSpan(), 
-                isUnsigned: false,
+                isUnsigned: true,
                 isBigEndian: false);
             
             
@@ -101,33 +99,35 @@ public sealed partial class RSA
             var sign = 
                 bytes[^1] == 0xFF ? -1 : 1;
             
+            // TODO: Improve performance
             for (var i = 0; ; ++i)
             {
                 result += sign * increments[i % 3];
-                
                 var isPrime = 
                     _primalityTest.IsPrimary(result, _targetPrimaryProbability);
 
                 if (isPrime == PrimalityResult.Prime)
+                {
                     return;
+                }
             }
         }
 
-        private void GenerateE(
+        internal void GenerateE(
             out BigInteger result,
             ref readonly BigInteger n)
         {
-            var bytes = new byte[_keySizeInBits];
-            
+            var bytes = new byte[_eSize];
+
             while (true)
             {
-                RandomNumberGenerator.Fill(bytes);
+                System.Security.Cryptography.RandomNumberGenerator.Fill(bytes);
                 result = new BigInteger(
                     bytes,
-                    isUnsigned: false,
+                    isUnsigned: true,
                     isBigEndian: false);
                 
-                var isCoprime = _cryptoMathService
+                var isCoprime = CryptoMathService
                     .CalculateGcdEuclidean(result, n) == 1;
                 var isMin = true; //todo: implement minimal count of 1
                 
@@ -137,12 +137,12 @@ public sealed partial class RSA
             }
         }
 
-        private void CalculateD(
+        internal void CalculateD(
             out BigInteger result,
             ref readonly BigInteger e,
             ref readonly BigInteger eulerN)
         {
-            _cryptoMathService.CalculateGcdEuclidean(
+            CryptoMathService.CalculateGcdEuclidean(
                 e, 
                 eulerN, 
                 out _,

@@ -2,13 +2,13 @@
 
 namespace Crypto.SymmetricEncryption.Base;
 
-public abstract class CipherModeBase (
+public abstract class SymmetricModeBase (
     Action<Memory<byte>> encryptionFunc,
     Action<Memory<byte>> decryptionFunc,
     int blockSize,
     Memory<byte>? initializationVector = null,
     params object[] parameters) 
-    : ICipherMode
+    : ISymmetricMode
 {
     #region Properties
     

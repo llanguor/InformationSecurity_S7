@@ -1,10 +1,11 @@
-﻿using Crypto.SymmetricEncryption.Base;
+﻿using Crypto.Core.Base;
+using Crypto.SymmetricEncryption.Base;
 
 namespace Crypto.SymmetricEncryption.Paddings;
 
 public class ZerosPadding(
     int blockSize) 
-    : CipherPaddingBase(blockSize)
+    : SymmetricPaddingBase(blockSize)
 {
     //Если длина данных не кратна размеру блока, последний блок надо дополнить до нужной длины.
     public override byte[] Apply(Span<byte> data)

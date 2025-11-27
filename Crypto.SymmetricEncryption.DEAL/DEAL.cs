@@ -1,8 +1,5 @@
-﻿using System.Security.Cryptography;
-using Crypto.Core;
-using Crypto.SymmetricEncryption.Base.Interfaces;
+﻿using Crypto.SymmetricEncryption.Base.Interfaces;
 using Crypto.SymmetricEncryption.Contexts;
-using CipherMode = Crypto.SymmetricEncryption.Contexts.CipherMode;
 
 namespace Crypto.SymmetricEncryption;
 
@@ -68,11 +65,11 @@ public sealed partial class DEAL :
         byte[] key,
         byte[] keyForSchedule,
         DealKeySize dealKeySize,
-        CipherPadding padding,
-        CipherMode mode,
+        SymmetricPaddingContext.SymmetricPaddingMode paddingMode,
+        SymmetricModeContext.SymmetricMode mode,
         byte[]? initializationVector = null,
         params object[] parameters) : 
-        base(16, (int)dealKeySize, key, padding, mode, initializationVector, parameters)
+        base(16, (int)dealKeySize, key, paddingMode, mode, initializationVector, parameters)
     {
         var feistelRoundsCount = 
             dealKeySize == DealKeySize.Key256 ? 8 : 6;
@@ -80,7 +77,7 @@ public sealed partial class DEAL :
         var desEncryption = 
             new DES(
                 keyForSchedule,
-                padding,
+                paddingMode,
                 mode);
         
         IKeySchedule keySchedule = 

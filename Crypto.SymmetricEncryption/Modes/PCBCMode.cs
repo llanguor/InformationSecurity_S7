@@ -7,7 +7,7 @@ public sealed class PCBCMode(
     Action<Memory<byte>> decryptionFunc,
     int blockSize,
     Memory<byte> initializationVector)
-    : CipherModeBase(
+    : SymmetricModeBase(
         encryptionFunc,
         decryptionFunc,
         blockSize,

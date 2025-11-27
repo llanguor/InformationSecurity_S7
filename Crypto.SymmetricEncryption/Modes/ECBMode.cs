@@ -6,7 +6,7 @@ public sealed class ECBMode(
     Action<Memory<byte>> encryptionFunc,
     Action<Memory<byte>> decryptionFunc,
     int blockSize)
-    : CipherModeBase(
+    : SymmetricModeBase(
         encryptionFunc,
         decryptionFunc,
         blockSize)

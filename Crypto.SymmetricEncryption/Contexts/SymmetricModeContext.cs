@@ -4,47 +4,47 @@ using Crypto.SymmetricEncryption.Modes;
 
 namespace Crypto.SymmetricEncryption.Contexts;
 
-public sealed class CipherModeContext : 
-    CipherModeBase
+public sealed class SymmetricModeContext : 
+    SymmetricModeBase
 {
     #region Fields
     
-    private ICipherMode _cipherMode = null!;
+    private ISymmetricMode _modeAlgorithm = null!;
     
-    private CipherMode _cipherModeType;
+    private SymmetricMode _mode;
     
     #endregion
     
     
     #region Properties
 
-    public CipherMode CipherModeType
+    public SymmetricMode Mode
     {
-        get => _cipherModeType;
+        get => _mode;
         set
         {
-            _cipherModeType = value;
-            _cipherMode = value switch
+            _mode = value;
+            _modeAlgorithm = value switch
             {
-                CipherMode.ECB => 
+                SymmetricMode.ECB => 
                     new ECBMode(EncryptionFunc, DecryptionFunc, BlockSize),
             
-                CipherMode.CBC => 
+                SymmetricMode.CBC => 
                     new CBCMode(EncryptionFunc, DecryptionFunc, BlockSize, InitializationVector!.Value),
             
-                CipherMode.PCBC => 
+                SymmetricMode.PCBC => 
                     new PCBCMode(EncryptionFunc,DecryptionFunc,  BlockSize, InitializationVector!.Value),
             
-                CipherMode.CFB => 
+                SymmetricMode.CFB => 
                     new CFBMode(EncryptionFunc, DecryptionFunc, BlockSize, InitializationVector!.Value),
             
-                CipherMode.OFB => 
+                SymmetricMode.OFB => 
                     new OFBMode(EncryptionFunc, DecryptionFunc, BlockSize, InitializationVector!.Value),
             
-                CipherMode.CTR => 
+                SymmetricMode.CTR => 
                     new CTRMode(EncryptionFunc, DecryptionFunc, BlockSize, InitializationVector!.Value),
             
-                CipherMode.RandomDelta => 
+                SymmetricMode.RandomDelta => 
                     new RandomDeltaMode(EncryptionFunc, DecryptionFunc, BlockSize, InitializationVector!.Value!),
             
                 _ => throw new ArgumentOutOfRangeException(nameof(value), value, null)
@@ -55,10 +55,29 @@ public sealed class CipherModeContext :
     #endregion
     
     
+    #region Enumerations
+    
+    /// <summary>
+    /// Defines the supported block cipher modes for symmetric encryption.
+    /// </summary>
+    public enum SymmetricMode
+    {
+        ECB = 0,
+        CBC = 1,
+        PCBC = 2,
+        CFB = 3,
+        OFB = 4,
+        CTR = 5,
+        RandomDelta = 6
+    }
+    
+    #endregion
+
+    
     #region Constructors
     
-    public CipherModeContext(
-        CipherMode mode,
+    public SymmetricModeContext(
+        SymmetricMode mode,
         Action<Memory<byte>> encryptionFunc,
         Action<Memory<byte>> decryptionFunc,
         int blockSize,
@@ -66,11 +85,11 @@ public sealed class CipherModeContext :
         params object[] parameters):
         base(encryptionFunc, decryptionFunc, blockSize, initializationVector, parameters)
     {
-        if(mode != CipherMode.ECB &&
+        if(mode != SymmetricMode.ECB &&
            initializationVector == null)
             throw new ArgumentException(null, nameof(initializationVector));
         
-        CipherModeType = mode;
+        Mode = mode;
     }
     
     #endregion
@@ -80,26 +99,26 @@ public sealed class CipherModeContext :
 
     public override void Encrypt(Memory<byte> data)
     {
-        _cipherMode.Encrypt(data);
+        _modeAlgorithm.Encrypt(data);
     }
 
     public override void Decrypt(Memory<byte> data)
     {
-        _cipherMode.Decrypt(data);
+        _modeAlgorithm.Decrypt(data);
     }
 
     public override async Task EncryptAsync(
         Memory<byte> data,
         CancellationToken cancellationToken = default)
     {
-        await _cipherMode.EncryptAsync(data, cancellationToken);
+        await _modeAlgorithm.EncryptAsync(data, cancellationToken);
     }
 
     public override async Task DecryptAsync(
         Memory<byte> data,
         CancellationToken cancellationToken = default)
     {
-        await _cipherMode.DecryptAsync(data, cancellationToken);
+        await _modeAlgorithm.DecryptAsync(data, cancellationToken);
     }
     
     #endregion

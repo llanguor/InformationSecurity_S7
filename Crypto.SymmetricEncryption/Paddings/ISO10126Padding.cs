@@ -1,10 +1,11 @@
-﻿using Crypto.SymmetricEncryption.Base;
+﻿using Crypto.Core.Base;
+using Crypto.SymmetricEncryption.Base;
 
 namespace Crypto.SymmetricEncryption.Paddings;
 
 public class ISO10126Padding(
     int blockSize) 
-    : CipherPaddingBase(blockSize)
+    : SymmetricPaddingBase(blockSize)
 {
     public override byte[] Apply(Span<byte> data)
     {

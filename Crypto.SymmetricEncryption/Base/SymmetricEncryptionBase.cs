@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics.SymbolStore;
 using Crypto.Core;
+using Crypto.Core.Base.Interfaces;
 using Crypto.SymmetricEncryption.Base.Interfaces;
 using Crypto.SymmetricEncryption.Contexts;
 
@@ -37,12 +38,12 @@ public abstract class SymmetricEncryptionBase :
     /// <summary>
     /// The block cipher mode applied during encryption and decryption.
     /// </summary>
-    public CipherMode mode { get; }
+    public SymmetricModeContext.SymmetricMode Mode { get; }
 
     /// <summary>
     /// The padding scheme used to fill blocks to the required size.
     /// </summary>
-    public CipherPadding padding { get; }
+    public SymmetricPaddingContext.SymmetricPaddingMode PaddingMode { get; }
     
     /// <summary>
     /// Optional initialization vector (IV) for certain cipher modes.
@@ -57,12 +58,12 @@ public abstract class SymmetricEncryptionBase :
     /// <summary>
     /// The cipher mode used for block encryption and decryption operations.
     /// </summary>
-    protected ICipherMode CipherModeContext { get; }
+    protected ISymmetricMode ModeContext { get; }
 
     /// <summary>
     /// The padding strategy applied to ensure blocks match the required block size.
     /// </summary>
-    protected ICipherPadding CipherPaddingContext { get; }
+    protected ISymmetricPadding PaddingContext { get; }
     
     #endregion
     
@@ -77,34 +78,34 @@ public abstract class SymmetricEncryptionBase :
     /// <param name="keySize">Size of key using for encryption.</param>
     /// <param name="key">The secret key used by the symmetric encryption algorithm.</param>
     /// <param name="mode">The block cipher mode applied during encryption and decryption.</param>
-    /// <param name="padding">The padding scheme used to fill blocks to the required size.</param>
+    /// <param name="paddingMode">The padding scheme used to fill blocks to the required size.</param>
     /// <param name="initializationVector">Optional initialization vector (IV) for certain cipher modes.</param>
     /// <param name="parameters">Additional optional parameters for the selected encryption mode.</param>
     protected SymmetricEncryptionBase(
         int blockSize,
         int keySize,
         byte[] key,
-        CipherPadding padding,
-        CipherMode mode,
+        SymmetricPaddingContext.SymmetricPaddingMode paddingMode,
+        SymmetricModeContext.SymmetricMode mode,
         byte[]? initializationVector = null,
         params object[] parameters)
     {
         BlockSize = blockSize;
         KeySize = keySize;
         _key = key;
-        this.mode = mode;
-        this.padding = padding;
+        Mode = mode;
+        PaddingMode = paddingMode;
         InitializationVector = initializationVector;
         Parameters = parameters;
         
-        CipherPaddingContext =
-            new CipherPaddingContext(
-                this.padding,
+        PaddingContext =
+            new SymmetricPaddingContext(
+                PaddingMode,
                 BlockSize);
         
-        CipherModeContext = 
-            new CipherModeContext(
-                this.mode,
+        ModeContext = 
+            new SymmetricModeContext(
+                Mode,
                 EncryptBlock,
                 DecryptBlock,
                 BlockSize,

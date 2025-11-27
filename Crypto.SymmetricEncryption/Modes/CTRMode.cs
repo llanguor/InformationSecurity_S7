@@ -8,7 +8,7 @@ public sealed class CTRMode(
     Action<Memory<byte>> decryptionFunc,
     int blockSize,
     Memory<byte> initializationVector)
-    : CipherModeBase(
+    : SymmetricModeBase(
         encryptionFunc,
         decryptionFunc,
         blockSize,

@@ -1,8 +1,8 @@
-using Crypto.Core;
+using Crypto.SymmetricEncryption;
 using Crypto.Tests.Infrastructure;
 using Serilog;
 
-namespace Crypto.Tests.Core;
+namespace Crypto.Tests.SymmetricEncryption;
 
 public class PermutationTests
 {

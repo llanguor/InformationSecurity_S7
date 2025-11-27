@@ -1,6 +1,4 @@
-﻿using System.Numerics;
-
-namespace Crypto.AsymmetricEncryption.Base.Interfaces;
+﻿namespace Crypto.AsymmetricEncryption.Base.Interfaces;
 
 public interface IKeyGenerator<TKey>
 {

@@ -7,7 +7,7 @@ public class OFBMode(
     Action<Memory<byte>> decryptionFunc,
     int blockSize,
     Memory<byte> initializationVector)
-    : CipherModeBase(
+    : SymmetricModeBase(
         encryptionFunc,
         decryptionFunc,
         blockSize,

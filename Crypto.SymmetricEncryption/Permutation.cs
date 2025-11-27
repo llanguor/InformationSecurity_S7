@@ -1,4 +1,4 @@
-﻿namespace Crypto.Core;
+﻿namespace Crypto.SymmetricEncryption;
 
 /// <summary>
 /// Provides methods for performing bit-level transformations used in symmetric encryption algorithms,

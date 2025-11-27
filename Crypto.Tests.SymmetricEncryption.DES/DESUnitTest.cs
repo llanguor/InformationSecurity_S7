@@ -34,8 +34,8 @@ public class DESUnitTest
         _container.RegisterInstance<SymmetricEncryption.SymmetricEncryption>(
             new SymmetricEncryption.DES(
                 _key,
-                CipherPadding.ISO10126,
-                CipherMode.CBC,
+                SymmetricPaddingContext.SymmetricPaddingMode.ISO10126,
+                SymmetricModeContext.SymmetricMode.CBC,
                 _initVector
             ));
     }

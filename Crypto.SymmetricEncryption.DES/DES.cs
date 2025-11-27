@@ -1,9 +1,7 @@
 ﻿using System.Runtime.InteropServices;
 using System.Security.Cryptography;
-using Crypto.Core;
 using Crypto.SymmetricEncryption.Base.Interfaces;
 using Crypto.SymmetricEncryption.Contexts;
-using CipherMode = Crypto.SymmetricEncryption.Contexts.CipherMode;
 
 namespace Crypto.SymmetricEncryption;
 
@@ -13,11 +11,11 @@ namespace Crypto.SymmetricEncryption;
 /// </summary>
 public sealed partial class DES(
     byte[] key, 
-    CipherPadding padding, 
-    CipherMode mode, 
+    SymmetricPaddingContext.SymmetricPaddingMode paddingMode, 
+    SymmetricModeContext.SymmetricMode mode, 
     byte[]? initializationVector = null, 
     params object[] parameters)
-    : SymmetricEncryption(8, 8, key, padding, mode, initializationVector, parameters)
+    : SymmetricEncryption(8, 8, key, paddingMode, mode, initializationVector, parameters)
 {
     #region Fields
 

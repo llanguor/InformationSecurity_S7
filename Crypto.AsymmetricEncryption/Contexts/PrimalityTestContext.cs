@@ -1,5 +1,4 @@
 ﻿using System.Numerics;
-using System.Security.Cryptography;
 using Crypto.AsymmetricEncryption.Base;
 using Crypto.AsymmetricEncryption.Base.Interfaces;
 using Crypto.AsymmetricEncryption.PrimalityTests;
