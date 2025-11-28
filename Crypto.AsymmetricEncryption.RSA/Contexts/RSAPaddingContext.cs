@@ -20,6 +20,12 @@ public sealed class RSAPaddingContext:
     
     
     #region Properties
+    
+    public override int PlaintextBlockSize => 
+        _paddingAlgorithm.PlaintextBlockSize;
+    
+    public override int CiphertextBlockSize =>
+        _paddingAlgorithm.CiphertextBlockSize;
 
     public RSAPaddingMode PaddingMode
     {
@@ -55,15 +61,15 @@ public sealed class RSAPaddingContext:
         RSA.RSAKeySize keySize) : 
         base(keySize)
     {
-        PaddingMode = paddingMode;
         _keySize = keySize;
+        PaddingMode = paddingMode;
     }
     
     #endregion
     
     
-    #region Methods 
-    
+    #region Methods
+
     public override byte[] Apply(Span<byte> data)
     {
         return _paddingAlgorithm.Apply(data);

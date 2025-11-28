@@ -7,10 +7,17 @@ public sealed class PKCS1Padding(
     RSA.RSAKeySize keySize) :
     RSAPaddingBase(keySize)
 {
+    public override int PlaintextBlockSize =>
+        KeySizeInBytes - 11;
+
+    public override int CiphertextBlockSize => 
+        KeySizeInBytes;
+    
+
     public override byte[] Apply(Span<byte> data)
     {
         var msgLen = data.Length;
-        if (msgLen > KeySizeInBytes - 11)
+        if (msgLen > PlaintextBlockSize)
         {
             throw new ArgumentException("Message too long.");
         }
@@ -18,7 +25,7 @@ public sealed class PKCS1Padding(
         var paddingLen = KeySizeInBytes - msgLen - 3;
         if (paddingLen < 8)
         {
-            throw new ArgumentException("PS length must be at least 8.");
+            throw new ArgumentException("Padding length must be at least 8.");
         }
         
         var block = 
@@ -26,12 +33,6 @@ public sealed class PKCS1Padding(
 
         block[0] = 0x00;
         block[1] = 0x02;
-        block[2+paddingLen] = 0x02;
-        data.CopyTo(
-            block.AsSpan(
-                3 + paddingLen, 
-                msgLen));
-        
         
         var padding =
             block.AsSpan(2, paddingLen);
@@ -47,13 +48,18 @@ public sealed class PKCS1Padding(
                 RandomNumberGenerator.Fill(span);
             }
         }
+        
+        block[2 + paddingLen] = 0x00;
+        data.CopyTo(
+            block.AsSpan(
+                3 + paddingLen));
 
         return block;
     }
 
     public override byte[] Remove(Span<byte> data)
     {
-        if (data.Length != KeySizeInBytes)
+        if (data.Length != CiphertextBlockSize)
         {
             throw new ArgumentException("The message must be the size of a key.");
         }
@@ -74,7 +80,7 @@ public sealed class PKCS1Padding(
         }
         ++msgStartIndex;
 
-        if (msgStartIndex < 10)
+        if (msgStartIndex < 11)
         {
             throw new ArgumentException("Incorrect input data.");
         }

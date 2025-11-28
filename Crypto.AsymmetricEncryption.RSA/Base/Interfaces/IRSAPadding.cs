@@ -3,7 +3,7 @@
 namespace Crypto.AsymmetricEncryption.Base.Interfaces;
 
 public interface IRSAPadding : 
-    ICipherPadding
+    IAsymmetricPadding
 {
     public int KeySizeInBytes { get; }
 }

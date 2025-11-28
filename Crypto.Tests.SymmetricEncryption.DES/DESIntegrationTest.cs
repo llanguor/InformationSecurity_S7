@@ -90,8 +90,8 @@ public class DESIntegrationTest
     [Test]
     public void EncryptImageFileTest()
     {
-        const string input = $"{ResourcesDirectoryPath}\\input.png";
-        const string output = $"{ResourcesDirectoryPath}\\encrypted.png";
+        const string input = $"{ResourcesDirectoryPath}\\input.jpg";
+        const string output = $"{ResourcesDirectoryPath}\\encrypted.jpg";
         var des = _container.Resolve<SymmetricEncryption.SymmetricEncryption>();
         des.Encrypt(input, output);
         Assert.True(true);
@@ -100,8 +100,8 @@ public class DESIntegrationTest
     [Test]
     public void DecryptImageFileTest()
     { 
-        const string input = $"{ResourcesDirectoryPath}\\encrypted.png";
-        const string output = $"{ResourcesDirectoryPath}\\decrypted.png";
+        const string input = $"{ResourcesDirectoryPath}\\encrypted.jpg";
+        const string output = $"{ResourcesDirectoryPath}\\decrypted.jpg";
         var des = _container.Resolve<SymmetricEncryption.SymmetricEncryption>();
         des.Decrypt(input, output);
         Assert.True(true);
@@ -110,9 +110,9 @@ public class DESIntegrationTest
     [Test]
     public void EncryptDecryptImageFileTest()
     {
-        const string input = $"{ResourcesDirectoryPath}\\input.png";
-        const string encrypted = $"{ResourcesDirectoryPath}\\encrypted.png";
-        const string decrypted = $"{ResourcesDirectoryPath}\\decrypted.png";
+        const string input = $"{ResourcesDirectoryPath}\\input.jpg";
+        const string encrypted = $"{ResourcesDirectoryPath}\\encrypted.jpg";
+        const string decrypted = $"{ResourcesDirectoryPath}\\decrypted.jpg";
         var des = _container.Resolve<SymmetricEncryption.SymmetricEncryption>();
         des.Encrypt(input, encrypted);
         des.Decrypt(encrypted,decrypted);

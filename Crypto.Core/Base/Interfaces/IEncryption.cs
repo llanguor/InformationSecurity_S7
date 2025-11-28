@@ -1,4 +1,4 @@
-﻿namespace Crypto.Core;
+﻿namespace Crypto.Core.Base.Interfaces;
 
 /// <summary>
 /// Represents a symmetric encryption algorithm.

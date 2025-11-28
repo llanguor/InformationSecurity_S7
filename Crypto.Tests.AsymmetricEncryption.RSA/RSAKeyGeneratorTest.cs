@@ -15,7 +15,7 @@ public class RSAKeyGeneratorTest
     private Container? _container;
 
     private const Crypto.AsymmetricEncryption.RSA.RSAKeySize KeySize  = 
-        Crypto.AsymmetricEncryption.RSA.RSAKeySize.Bits2048;
+        Crypto.AsymmetricEncryption.RSA.RSAKeySize.Bits1024;
     
     private const double targetPrimaryProbability = 0.999;
     
@@ -54,24 +54,27 @@ public class RSAKeyGeneratorTest
     [Test]
     public void GenerateKeysTest()
     {
-        var generator = 
-            _container.Resolve<Crypto.AsymmetricEncryption.RSA.RSAKeyGenerator>();
-        
-        generator.GenerateKeys(
-            out var pbk,
-            out var pvk);
-        
-        Assert.That(pvk.Exponent, 
-            Is.GreaterThan(generator.FourthRoot(pvk.Modulus)/3));
-        
-        var message = new BigInteger(123456789);
-        var encrypted = BigInteger.ModPow(message, pbk.Exponent, pbk.Modulus);
-        var decrypted = BigInteger.ModPow(encrypted, pvk.Exponent, pvk.Modulus);
-        Assert.That(decrypted, Is.EqualTo(message));
-        
-        var signature = BigInteger.ModPow(message, pvk.Exponent, pvk.Modulus);
-        var verified = BigInteger.ModPow(signature, pbk.Exponent, pbk.Modulus);
-        Assert.That(verified, Is.EqualTo(message));
+        for (var i = 0; i < 10; ++i)
+        {
+            var generator =
+                _container.Resolve<Crypto.AsymmetricEncryption.RSA.RSAKeyGenerator>();
+
+            generator.GenerateKeys(
+                out var pbk,
+                out var pvk);
+
+            Assert.That(pvk.Exponent,
+                Is.GreaterThan(generator.FourthRoot(pvk.Modulus) / 3));
+
+            var message = new BigInteger(123456789);
+            var encrypted = BigInteger.ModPow(message, pbk.Exponent, pbk.Modulus);
+            var decrypted = BigInteger.ModPow(encrypted, pvk.Exponent, pvk.Modulus);
+            Assert.That(decrypted, Is.EqualTo(message));
+
+            var signature = BigInteger.ModPow(message, pvk.Exponent, pvk.Modulus);
+            var verified = BigInteger.ModPow(signature, pbk.Exponent, pbk.Modulus);
+            Assert.That(verified, Is.EqualTo(message));
+        }
     }
 
     [Test]
@@ -80,50 +83,24 @@ public class RSAKeyGeneratorTest
         var generator = 
             _container.Resolve<Crypto.AsymmetricEncryption.RSA.RSAKeyGenerator>();
        
-        var action = new Action<BigInteger, BigInteger, BigInteger>(
-            (value1, value2, expected) =>
+        var action = new Action<BigInteger, BigInteger>(
+            (value1, expected) =>
         {
             generator.CalculateD(
                 out var result, 
-                ref value1, 
-                ref value2);
+                ref value1);
             
             Assert.That(
                 result, 
                 Is.EqualTo(expected));
         });
-      
-       action.Invoke(180, 150, 1);
-       action.Invoke(1800, 23933, -10597+23933);
-       action.Invoke(1800, 134, -30+134);
-       action.Invoke(99999, 23933, 7471);
-    }
 
-    [Test]
-    public void GenerateETest()
-    {
-        var generator = 
-            _container.Resolve<Crypto.AsymmetricEncryption.RSA.RSAKeyGenerator>();
-
-        for (var i = 0; i < 10; ++i)
-        {
-            generator.GeneratePrime(out var p, 0b10, 2);
-            generator.GeneratePrime(out var q, 0b11, 2);
-            
-            var n = p * q;
-            var eulerN = (p - 1) * (q - 1);
-            var minD = generator.FourthRoot(n) / 3;
-            
-            generator.GenerateE(out var e, ref eulerN); 
-                
-            var isCoprime = new CryptoMathService()
-                .CalculateGcdEuclidean(e, n) == 1;
-            
-            Assert.That(
-                isCoprime, 
-                Is.EqualTo(true));
-        }
+        const int e = Crypto.AsymmetricEncryption.RSA.RSAKeyGenerator.E;
+       action.Invoke(180, 53);
+       action.Invoke(1800, -127+1800);
+       action.Invoke(99999,  10304);
     }
+    
     
     [Test]
     public void GeneratePrimeTest()
@@ -161,7 +138,6 @@ public class RSAKeyGeneratorTest
         }
      
     }
-    
     
     #endregion
 }

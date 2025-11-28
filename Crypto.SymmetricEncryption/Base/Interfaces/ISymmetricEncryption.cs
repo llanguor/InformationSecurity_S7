@@ -1,10 +1,13 @@
 ﻿using Crypto.Core;
+using Crypto.Core.Base.Interfaces;
 
 namespace Crypto.SymmetricEncryption.Base.Interfaces;
 
 public interface ISymmetricEncryption :
-    IEncryption
+    IEncryptionAlgorithm
 {
+    #region Properties
+    
     /// <summary>
     /// Gets or sets the key used by the encryption algorithm.
     /// The key must be assigned before any encryption or decryption occurs.
@@ -22,4 +25,6 @@ public interface ISymmetricEncryption :
     /// All input data is processed in chunks of this size.
     /// </summary>
     public int BlockSize { get; }
+    
+    #endregion
 }

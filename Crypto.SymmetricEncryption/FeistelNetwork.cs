@@ -1,5 +1,6 @@
 ﻿using System.Security.Cryptography;
 using Crypto.Core;
+using Crypto.Core.Base.Interfaces;
 using Crypto.SymmetricEncryption.Base.Interfaces;
 
 namespace Crypto.SymmetricEncryption;

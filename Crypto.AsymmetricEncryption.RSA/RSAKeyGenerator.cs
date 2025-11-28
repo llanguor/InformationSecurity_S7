@@ -18,7 +18,7 @@ public sealed partial class RSA
         
         private readonly int _keySizeInBytes;
 
-        private const int _eSize = 3;
+        internal const int E = 65537;
 
         #endregion
         
@@ -50,24 +50,29 @@ public sealed partial class RSA
         
         public void GenerateKeys(out RSAKey publicKey, out RSAKey privateKey)
         {
-            GeneratePrime(out var p, 0b10, 2);
-            GeneratePrime(out var q, 0b11, 2);
-            
-            var n = p * q;
-            var eulerN = (p - 1) * (q - 1);
-            var minD = FourthRoot(n) / 3;
-            
             while (true)
             {
-                GenerateE(out var e, ref eulerN);
-                CalculateD(out var d, ref e, ref eulerN);
+                GeneratePrime(out var p, 0b10, 2);
+                GeneratePrime(out var q, 0b11, 2);
+            
+                var n = p * q;
+                var eulerN = (p - 1) * (q - 1);
 
-                if (d > minD)
+                if (CryptoMathService.CalculateGcdEuclidean(eulerN, E) != 1)
                 {
-                    publicKey = new RSAKey(e, n);
-                    privateKey = new RSAKey(d, n);
-                    return;
+                    continue;
                 }
+                
+                CalculateD(out var d, ref eulerN);
+
+                if (d <= FourthRoot(n) / 3)
+                {
+                    continue;
+                }
+                
+                publicKey = new RSAKey(E, n);
+                privateKey = new RSAKey(d, n);
+                return;
             }
         }
         
@@ -76,7 +81,7 @@ public sealed partial class RSA
             byte prefixInBytes, 
             int prefixLength)
         {
-            var bytes = new byte[_keySizeInBytes/2]; //because N = p * q: a^x = b^(x/2) * c^(x/2)
+            var bytes = new byte[_keySizeInBytes/2]; //because N = p * q: |a^x| = |b^(x/2)| + |c^(x/2)|
             System.Security.Cryptography.RandomNumberGenerator.Fill(bytes);
            
             bytes[0] |= 0b00000001;
@@ -98,8 +103,7 @@ public sealed partial class RSA
             
             var sign = 
                 bytes[^1] == 0xFF ? -1 : 1;
-            
-            // TODO: Improve performance
+
             for (var i = 0; ; ++i)
             {
                 result += sign * increments[i % 3];
@@ -113,37 +117,12 @@ public sealed partial class RSA
             }
         }
 
-        internal void GenerateE(
-            out BigInteger result,
-            ref readonly BigInteger n)
-        {
-            var bytes = new byte[_eSize];
-
-            while (true)
-            {
-                System.Security.Cryptography.RandomNumberGenerator.Fill(bytes);
-                result = new BigInteger(
-                    bytes,
-                    isUnsigned: true,
-                    isBigEndian: false);
-                
-                var isCoprime = CryptoMathService
-                    .CalculateGcdEuclidean(result, n) == 1;
-                var isMin = true; //todo: implement minimal count of 1
-                
-                if (isCoprime &&
-                    isMin)
-                    return;
-            }
-        }
-
         internal void CalculateD(
             out BigInteger result,
-            ref readonly BigInteger e,
             ref readonly BigInteger eulerN)
         {
             CryptoMathService.CalculateGcdEuclidean(
-                e, 
+                E, 
                 eulerN, 
                 out _,
                 out result,

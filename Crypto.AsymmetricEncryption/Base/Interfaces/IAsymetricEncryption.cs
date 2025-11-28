@@ -1,15 +1,9 @@
 ﻿using Crypto.Core;
+using Crypto.Core.Base.Interfaces;
 
 namespace Crypto.AsymmetricEncryption.Base.Interfaces;
 
 public interface IAsymmetricEncryption<TKey> :
-    IEncryption
+    IEncryptionAlgorithm
 {
-    public Memory<byte> Encrypt(
-        Memory<byte> data, 
-        TKey key);
-    
-    public Memory<byte> Decrypt(
-        Memory<byte> data, 
-        TKey key);
 }
