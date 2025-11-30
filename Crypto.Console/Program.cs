@@ -1,4 +1,5 @@
 ﻿using System.Numerics;
+using System.Reflection.PortableExecutable;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -8,41 +9,47 @@ internal static class Program
 {
     private static readonly byte [] Randomized = 
     [
-        0b11111111, 0b11111111, 0b11111111, 0b11111111,
-        0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b11111111
+        0b00000000, 0b00000000,0b00000000, 0b01111111, 0b10111111, 0b11011111,
+        0b11101111, 0b11110111, 0b11111011, 0b11111101
     ];
 
     private static void Main()
     {
+        var bi = new BigInteger(Randomized, true, true);
+        System.Console.WriteLine(bi.ToString());
         
-        /* 
+        var r = bi.ToByteArray(true, true);
+        System.Console.WriteLine(BinaryToString(Randomized));
+        System.Console.WriteLine(BinaryToString(r));
+        
+        /*
         var array0 = new byte[9];
-       
+
         RandomNumberGenerator.Fill(array0);
         var value0 =
             new BigInteger(array0, isUnsigned: false, isBigEndian: false) ;
         System.Console.WriteLine(value0);
         RandomNumberGenerator.Fill(array0);
         System.Console.WriteLine(value0);
-        
-        
+
+
         var array1 = new byte[9];
         RandomNumberGenerator.Fill(array1.AsSpan(0, array1.Length - 1));
         array1[0] |= 0b00000001;
         //array1[^1] &= 0b00000000;
         array1[^2] = (byte)(array1[^2] & 0b00111111 | 0b10000000);
-        
+
         var array2 = new byte[9];
         RandomNumberGenerator.Fill(array2.AsSpan(0, array1.Length - 1));
         array2[0] |= 0b00000001;
-        
+
         array2[^2] = (byte)(array2[^2] & (0xFF >> 3) | (0xFF << (8-3) & 0b10100000));
-        
+
         var value1 =
             new BigInteger(array1.AsSpan(), isUnsigned: false, isBigEndian: false) ;
         var value2 =
             new BigInteger(array2.AsSpan(), isUnsigned: false, isBigEndian: false) ;
-        
+
         System.Console.WriteLine(value1);
         System.Console.WriteLine(value2);
         System.Console.WriteLine(BinaryToString(array1));

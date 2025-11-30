@@ -104,20 +104,58 @@ public abstract class AsymmetricEncryptionBase<TKey> :
         return output.ToArray();
     }
     
+    private async Task<byte[]> EncryptInternalAsync(
+        Memory<byte> data,
+        CancellationToken cancellationToken = default)
+    {
+        var bytesPerPlaintextBlock = _paddingContext.PlaintextBlockSize;
+        var bytesPerCipherBlock = _paddingContext.CiphertextBlockSize;
+        var blocksCount = (int) Math.Ceiling((double)data.Length / bytesPerPlaintextBlock);
+        var output = new byte[blocksCount * bytesPerCipherBlock];
+       
+        await Parallel.ForAsync(
+            0,
+            blocksCount, 
+            cancellationToken,
+            (i, token) =>
+            {
+                token.ThrowIfCancellationRequested();
+
+                var currentBlockStartIndex = i * bytesPerPlaintextBlock;
+                var slice = data.Slice(
+                    currentBlockStartIndex, 
+                    Math.Min(
+                        bytesPerPlaintextBlock,
+                        data.Length - currentBlockStartIndex));
+
+                var padded =
+                    _paddingContext.Apply(slice.Span);
+
+                var encrypted =
+                    EncryptBlock(padded, PublicKey);
+                
+                encrypted.Span.CopyTo(
+                    output.AsSpan(i * bytesPerCipherBlock));
+                
+                return ValueTask.CompletedTask;
+            });
+        
+        return output;
+    }
+    
     private byte[] DecryptInternal(
         Memory<byte> data)
     {
         using var output = new MemoryStream();
         var bytesPerBlock = _paddingContext.CiphertextBlockSize;
+        if (data.Length % bytesPerBlock != 0)
+            throw new CryptographicException("Invalid block length for decryption");
         
         for (var i = 0; i < data.Length; i += bytesPerBlock)
         {
             var slice = data.Slice(
                 i,
-                Math.Min(bytesPerBlock, data.Length - i));
-            
-            if (slice.Length != bytesPerBlock)
-                throw new CryptographicException("Invalid block length for decryption");
+                bytesPerBlock);
             
             var decrypted = 
                 DecryptBlock(slice, PrivateKey);
@@ -131,6 +169,58 @@ public abstract class AsymmetricEncryptionBase<TKey> :
         return output.ToArray();
     }
 
+    private async Task<byte[]> DecryptInternalAsync(
+        Memory<byte> data,
+        CancellationToken cancellationToken = default)
+    {
+        var bytesPerPlaintextBlock = _paddingContext.PlaintextBlockSize;
+        var bytesPerCipherBlock = _paddingContext.CiphertextBlockSize;
+        if (data.Length % bytesPerCipherBlock != 0)
+            throw new CryptographicException("Invalid block length for decryption");
+
+        
+        var blocksCount = data.Length / bytesPerCipherBlock - 1;
+        
+        var lastBlockSlice = data.Slice(
+            blocksCount * bytesPerCipherBlock, 
+            bytesPerCipherBlock);
+                
+        var lastBlockDecrypted =
+            DecryptBlock(lastBlockSlice, PrivateKey);
+                
+        var lastBlockUnPadded = _paddingContext
+            .Remove(lastBlockDecrypted.Span);
+        
+        var output = new byte[blocksCount * bytesPerPlaintextBlock + lastBlockUnPadded.Length];
+        lastBlockUnPadded.CopyTo(output.AsSpan(blocksCount * bytesPerPlaintextBlock));
+        
+        
+        await Parallel.ForAsync(
+            0,
+            blocksCount, 
+            cancellationToken,
+            (i, token) =>
+            {
+                token.ThrowIfCancellationRequested();
+
+                var currentBlockStartIndex = i * bytesPerCipherBlock;
+                var slice = data.Slice(
+                    currentBlockStartIndex, 
+                    bytesPerCipherBlock);
+                
+                var decrypted =
+                    DecryptBlock(slice, PrivateKey);
+                
+                var unPadded = _paddingContext
+                    .Remove(decrypted.Span);
+                    
+                unPadded.CopyTo(output.AsSpan(i * bytesPerPlaintextBlock));
+                
+                return ValueTask.CompletedTask;
+            });
+        
+        return output;
+    }
     
     #endregion
     
@@ -236,33 +326,80 @@ public abstract class AsymmetricEncryptionBase<TKey> :
     #region Async Methods from IAsymmetricEncryption
 
     /// <inheritdoc/>
-    public Task<byte[]> EncryptAsync(
-        byte[] data)
+    public async Task<byte[]> EncryptAsync(
+        byte[] data,
+        CancellationToken cancellationToken = default)
     {
-        throw new NotImplementedException();
+        return await EncryptInternalAsync(data, cancellationToken);
     }
 
     /// <inheritdoc/>
-    public Task<byte[]> DecryptAsync(
-        byte[] data)
+    public async Task<byte[]> DecryptAsync(
+        byte[] data,
+        CancellationToken cancellationToken = default)
     {
-        throw new NotImplementedException();
+        return await DecryptInternalAsync(data, cancellationToken);
     }
 
     /// <inheritdoc/>
-    public Task EncryptAsync(
+    public async Task EncryptAsync(
         string inputFilePath,
-        string outputFilePath)
+        string outputFilePath,
+        CancellationToken cancellationToken = default)
     {
-        throw new NotImplementedException();
+        var bytesPerBlock = _paddingContext.CiphertextBlockSize;
+        var buffer = new byte[bytesPerBlock];
+
+        await using var inputStream = 
+            new FileStream(inputFilePath, FileMode.Open, FileAccess.Read);
+        await using var outputStream = 
+            new FileStream(outputFilePath, FileMode.Create, FileAccess.Write);
+
+        
+        while (await inputStream.ReadAsync(buffer, cancellationToken) > 0)
+        {
+            if (buffer.Length != bytesPerBlock)
+                throw new CryptographicException("Invalid block length for decryption");
+
+            var decrypted =
+                DecryptBlock(buffer, PrivateKey);
+
+            var unPadded =
+                _paddingContext.Remove(decrypted.Span);
+
+            var toWrite = unPadded.ToArray();
+            await outputStream.WriteAsync(toWrite, cancellationToken);
+        }
     }
 
     /// <inheritdoc/>
-    public Task DecryptAsync(
+    public async Task DecryptAsync(
         string inputFilePath,
-        string outputFilePath)
+        string outputFilePath,
+        CancellationToken cancellationToken = default)
     {
-        throw new NotImplementedException();
+        var bytesPerBlock = _paddingContext.CiphertextBlockSize;
+        var buffer = new byte[bytesPerBlock];
+
+        await using var inputStream = 
+            new FileStream(inputFilePath, FileMode.Open, FileAccess.Read);
+        await using var outputStream = 
+            new FileStream(outputFilePath, FileMode.Create, FileAccess.Write);
+        
+        while (await inputStream.ReadAsync(buffer, cancellationToken) > 0)
+        {
+            if (buffer.Length != bytesPerBlock)
+                throw new CryptographicException("Invalid block length for decryption");
+            
+            var decrypted = 
+                DecryptBlock(buffer, PrivateKey);
+            
+            var unPadded = 
+                _paddingContext.Remove(decrypted.Span);
+            
+            var toWrite = unPadded.ToArray();
+            await outputStream.WriteAsync(toWrite, cancellationToken);
+        }
     }
     
     #endregion

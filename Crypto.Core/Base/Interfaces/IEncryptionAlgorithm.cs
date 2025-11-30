@@ -53,38 +53,54 @@ public interface IEncryptionAlgorithm :
     /// The <paramref name="data"/> array is modified in-place during encryption.
     /// </summary>
     /// <param name="data">The data to encrypt. Modified in-place.</param>
+    /// /// <param name="cancellationToken">
+    /// A token that can be used to cancel the asynchronous encryption operation.
+    /// </param>
     /// <returns>A task that represents the asynchronous operation. The task result contains the encrypted byte array.</returns>
     public Task<byte[]> EncryptAsync(
-        byte[] data);
+        byte[] data,
+        CancellationToken cancellationToken = default);
     
     /// <summary>
     /// Asynchronously decrypts the provided byte array using the current key, mode, and padding.
     /// The <paramref name="data"/> array is modified in-place during decryption.
     /// </summary>
     /// <param name="data">The data to decrypt. Modified in-place.</param>
+    /// /// <param name="cancellationToken">
+    /// A token that can be used to cancel the asynchronous encryption operation.
+    /// </param>
     /// <returns>A task that represents the asynchronous operation. The task result contains the decrypted byte array.</returns>
     public Task<byte[]> DecryptAsync(
-        byte[] data);
+        byte[] data,
+        CancellationToken cancellationToken = default);
     
     /// <summary>
     /// Asynchronously encrypts the contents of the input file and writes the result to the output file.
     /// </summary>
     /// <param name="inputFilePath">Path to the file to be encrypted.</param>
     /// <param name="outputFilePath">Path where the encrypted file will be saved.</param>
+    /// /// <param name="cancellationToken">
+    /// A token that can be used to cancel the asynchronous encryption operation.
+    /// </param>
     /// <returns>A task that represents the asynchronous operation.</returns>
     public Task EncryptAsync(
         string inputFilePath, 
-        string outputFilePath);
+        string outputFilePath,
+        CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Asynchronously decrypts the contents of the input file and writes the result to the output file.
     /// </summary>
     /// <param name="inputFilePath">Path to the file to be decrypted.</param>
     /// <param name="outputFilePath">Path where the decrypted file will be saved.</param>
+    /// /// <param name="cancellationToken">
+    /// A token that can be used to cancel the asynchronous encryption operation.
+    /// </param>
     /// <returns>A task that represents the asynchronous operation.</returns>
     public Task DecryptAsync(
         string inputFilePath, 
-        string outputFilePath);
+        string outputFilePath,
+        CancellationToken cancellationToken = default);
     
     #endregion
 }

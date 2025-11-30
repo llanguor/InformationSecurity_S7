@@ -170,21 +170,25 @@ public abstract class SymmetricEncryptionBase :
     
     /// <inheritdoc/>
     public abstract Task<byte[]> EncryptAsync(
-        byte[] data);
+        byte[] data,
+        CancellationToken cancellationToken = default);
     
     /// <inheritdoc/>
     public abstract Task<byte[]> DecryptAsync(
-        byte[] data);
+        byte[] data,
+        CancellationToken cancellationToken = default);
     
     /// <inheritdoc/>
     public abstract Task EncryptAsync(
         string inputFilePath, 
-        string outputFilePath);
+        string outputFilePath,
+        CancellationToken cancellationToken = default);
 
     /// <inheritdoc/>
     public abstract Task DecryptAsync(
         string inputFilePath, 
-        string outputFilePath);
+        string outputFilePath,
+        CancellationToken cancellationToken = default);
     
     #endregion
 }

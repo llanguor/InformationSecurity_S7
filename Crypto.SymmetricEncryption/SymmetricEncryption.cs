@@ -159,17 +159,19 @@ public abstract class SymmetricEncryption(
 
     /// <inheritdoc/>
     public override async Task<byte[]> EncryptAsync(
-        byte[] data)
+        byte[] data,
+        CancellationToken cancellationToken = default)
     {
         data = PaddingContext.Apply(data);
-        await ModeContext.EncryptAsync(data);
+        await ModeContext.EncryptAsync(data, cancellationToken);
         return data;
     }
 
     /// <inheritdoc/>
     public override async Task EncryptAsync(
         string inputFilePath,
-        string outputFilePath)
+        string outputFilePath,
+        CancellationToken cancellationToken = default)
     {
         var buffer = new byte[BufferSize];
 
@@ -180,12 +182,12 @@ public abstract class SymmetricEncryption(
         
         int bytesRead;
     
-        while ((bytesRead = await inputStream.ReadAsync(buffer)) > 0)
+        while ((bytesRead = await inputStream.ReadAsync(buffer, cancellationToken)) > 0)
         {
             var dataToEncrypt =
                 buffer.AsMemory()[..bytesRead];
             
-            await ModeContext.EncryptAsync(dataToEncrypt);
+            await ModeContext.EncryptAsync(dataToEncrypt, cancellationToken);
             
             if (bytesRead != buffer.Length)
             {
@@ -197,15 +199,17 @@ public abstract class SymmetricEncryption(
             }
             
             await outputStream.WriteAsync(
-                buffer.AsMemory(0, dataToEncrypt.Length));
+                buffer.AsMemory(0, dataToEncrypt.Length),
+                cancellationToken);
         }
     }
     
     /// <inheritdoc/>
     public override async Task<byte[]> DecryptAsync(
-        byte[] data)
+        byte[] data,
+        CancellationToken cancellationToken = default)
     {
-        await ModeContext.DecryptAsync(data);
+        await ModeContext.DecryptAsync(data, cancellationToken);
         data = PaddingContext.Remove(data);
         return data;
     }
@@ -213,7 +217,8 @@ public abstract class SymmetricEncryption(
     /// <inheritdoc/>
     public override async Task DecryptAsync(
         string inputFilePath,
-        string outputFilePath)
+        string outputFilePath,
+        CancellationToken cancellationToken = default)
     {
         var buffer = new byte[BufferSize];
 
@@ -224,12 +229,12 @@ public abstract class SymmetricEncryption(
         
         int bytesRead;
     
-        while ((bytesRead = await inputStream.ReadAsync(buffer)) > 0)
+        while ((bytesRead = await inputStream.ReadAsync(buffer, cancellationToken)) > 0)
         {
             var dataToDecrypt =
                 buffer.AsMemory()[..bytesRead];
             
-            await ModeContext.DecryptAsync(dataToDecrypt);
+            await ModeContext.DecryptAsync(dataToDecrypt, cancellationToken);
             
             if (bytesRead != buffer.Length)
             {
@@ -241,7 +246,8 @@ public abstract class SymmetricEncryption(
             }
             
             await outputStream.WriteAsync(
-                buffer.AsMemory(0, dataToDecrypt.Length));
+                buffer.AsMemory(0, dataToDecrypt.Length),
+                cancellationToken);
         }
     }
 
