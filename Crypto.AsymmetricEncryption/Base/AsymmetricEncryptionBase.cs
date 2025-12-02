@@ -60,11 +60,12 @@ public abstract class AsymmetricEncryptionBase<TKey> :
         IKeyGenerator<TKey> keyGenerator,
         IAsymmetricPadding paddingContext)
     {
+        if (keySize <= 0)
+            throw new ArgumentOutOfRangeException(nameof(keySize), "Key size must be positive.");
+
         KeySize = keySize;
-        
-        _paddingContext = paddingContext;
-        
-        _keyGenerator = keyGenerator;
+        _paddingContext = paddingContext ?? throw new ArgumentNullException(nameof(paddingContext));
+        _keyGenerator = keyGenerator ?? throw new ArgumentNullException(nameof(keyGenerator));
 
         _keyGenerator.GenerateKeys(
             out _publicKey,
@@ -121,6 +122,9 @@ public abstract class AsymmetricEncryptionBase<TKey> :
     private byte[] EncryptInternal(
         Memory<byte> data)
     {
+        if (data.Length == 0)
+            return data.ToArray();
+        
         using var output = new MemoryStream();
         var bytesPerBlock = _paddingContext.PlaintextBlockSize;
 
@@ -146,6 +150,9 @@ public abstract class AsymmetricEncryptionBase<TKey> :
         Memory<byte> data,
         CancellationToken cancellationToken = default)
     {
+        if (data.Length == 0)
+            throw new ArgumentException("Data cannot be empty.", nameof(data));
+        
         var bytesPerPlaintextBlock = _paddingContext.PlaintextBlockSize;
         var bytesPerCipherBlock = _paddingContext.CiphertextBlockSize;
         var blocksCount = (int) Math.Ceiling((double)data.Length / bytesPerPlaintextBlock);
@@ -184,6 +191,9 @@ public abstract class AsymmetricEncryptionBase<TKey> :
     private byte[] DecryptInternal(
         Memory<byte> data)
     {
+        if (data.Length == 0)
+            throw new ArgumentException("Data cannot be empty.", nameof(data));
+        
         using var output = new MemoryStream();
         var bytesPerBlock = _paddingContext.CiphertextBlockSize;
         if (data.Length % bytesPerBlock != 0)
@@ -211,6 +221,9 @@ public abstract class AsymmetricEncryptionBase<TKey> :
         Memory<byte> data,
         CancellationToken cancellationToken = default)
     {
+        if (data.Length == 0)
+            throw new ArgumentException("Data cannot be empty.", nameof(data));
+        
         var bytesPerPlaintextBlock = _paddingContext.PlaintextBlockSize;
         var bytesPerCipherBlock = _paddingContext.CiphertextBlockSize;
         if (data.Length % bytesPerCipherBlock != 0)
@@ -300,6 +313,9 @@ public abstract class AsymmetricEncryptionBase<TKey> :
         string inputFilePath,
         string outputFilePath)
     {
+        if (string.IsNullOrWhiteSpace(inputFilePath))
+            throw new ArgumentException("Input file path cannot be null or empty.", nameof(inputFilePath));
+        
         var bytesPerBlock = _paddingContext.PlaintextBlockSize;
         var buffer = new byte[bytesPerBlock];
 
@@ -329,6 +345,9 @@ public abstract class AsymmetricEncryptionBase<TKey> :
         string inputFilePath,
         string outputFilePath)
     {
+        if (string.IsNullOrWhiteSpace(inputFilePath))
+            throw new ArgumentException("Input file path cannot be null or empty.", nameof(inputFilePath));
+        
         var bytesPerBlock = _paddingContext.CiphertextBlockSize;
         var buffer = new byte[bytesPerBlock];
 
@@ -383,6 +402,9 @@ public abstract class AsymmetricEncryptionBase<TKey> :
         string outputFilePath,
         CancellationToken cancellationToken = default)
     {
+        if (string.IsNullOrWhiteSpace(inputFilePath))
+            throw new ArgumentException("Input file path cannot be null or empty.", nameof(inputFilePath));
+        
         var bytesPerBlock = _paddingContext.CiphertextBlockSize;
         var buffer = new byte[bytesPerBlock];
 
@@ -414,6 +436,9 @@ public abstract class AsymmetricEncryptionBase<TKey> :
         string outputFilePath,
         CancellationToken cancellationToken = default)
     {
+        if (string.IsNullOrWhiteSpace(inputFilePath))
+            throw new ArgumentException("Input file path cannot be null or empty.", nameof(inputFilePath));
+        
         var bytesPerBlock = _paddingContext.CiphertextBlockSize;
         var buffer = new byte[bytesPerBlock];
 

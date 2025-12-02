@@ -9,20 +9,31 @@ namespace Crypto.SymmetricEncryption.Modes;
 /// the initialization vector and the block index. Encryption and decryption
 /// are identical operations.
 /// </summary
-public sealed class CTRMode(
-    Action<Memory<byte>> encryptionFunc,
-    Action<Memory<byte>> decryptionFunc,
-    int blockSize,
-    Memory<byte> initializationVector)
-    : SymmetricModeBase(
-        encryptionFunc,
+public sealed class CTRMode : 
+    SymmetricModeBase
+{
+    /// <summary>
+    /// Implements the Counter (CTR) mode of operation for symmetric encryption.
+    /// Each block is XORed with the encryption of a counter value derived from
+    /// the initialization vector and the block index. Encryption and decryption
+    /// are identical operations.
+    /// </summary
+    public CTRMode(Action<Memory<byte>> encryptionFunc,
+        Action<Memory<byte>> decryptionFunc,
+        int blockSize,
+        Memory<byte> initializationVector) : base(encryptionFunc,
         decryptionFunc,
         blockSize,
         initializationVector)
-{
+    {
+        ThrowIfInitializationVectorIsNull();
+    }
+
     /// <inheritdoc/>
     public override void Encrypt(Memory<byte> data)
     {
+        ThrowIfIncorrectInputData(data);
+        
         Parallel.For(0, data.Length / BlockSize, i =>
         {
             ProcessEncryptBlock(data, i);
@@ -32,6 +43,7 @@ public sealed class CTRMode(
     /// <inheritdoc/>
     public override void Decrypt(Memory<byte> data)
     {
+        ThrowIfIncorrectInputData(data);
         Encrypt(data);
     }
 
@@ -40,6 +52,8 @@ public sealed class CTRMode(
         Memory<byte> data, 
         CancellationToken cancellationToken = default)
     {
+        ThrowIfIncorrectInputData(data);
+        
         await Parallel.ForAsync(
             0,
             data.Length / BlockSize, 
@@ -57,6 +71,7 @@ public sealed class CTRMode(
         Memory<byte> data, 
         CancellationToken cancellationToken = default)
     {
+        ThrowIfIncorrectInputData(data);
         await EncryptAsync(data, cancellationToken);
     }
     

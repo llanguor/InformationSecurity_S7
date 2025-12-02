@@ -28,6 +28,9 @@ public sealed class CryptoMathService :
             throw new ArgumentException(
                 "The Legendre symbol is defined only for numbers greater than 2", nameof(p));
         
+        if (a < 0)
+            throw new ArgumentException("Parameter 'a' must be non-negative.", nameof(a));
+        
         if (CalculateGcdEuclidean(a, p) != 1)
             return 0;
 
@@ -142,6 +145,9 @@ public sealed class CryptoMathService :
         BigInteger a,
         BigInteger b)
     {
+        if (a == 0 && b == 0)
+            throw new ArgumentException("GCD is undefined for both parameters equal to zero.");
+        
         while (b != 0)
         {
             var temp = b;
@@ -171,6 +177,9 @@ public sealed class CryptoMathService :
         out BigInteger x,
         out BigInteger y)
     {
+        if (a == 0 && b == 0)
+            throw new ArgumentException("GCD is undefined for both parameters equal to zero.");
+        
         gcd = a;
         x = BigInteger.One;
         y = BigInteger.Zero;

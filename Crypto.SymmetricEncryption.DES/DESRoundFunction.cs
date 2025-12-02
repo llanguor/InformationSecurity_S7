@@ -10,7 +10,7 @@ public sealed partial class DES
 	/// Implementation of the <see cref="IRoundFunction"/> interface for the Crypto.Core.DES algorithm.
 	/// Represents the F-function (round function) used in the Crypto.Core.DES Feistel network.
 	/// </summary>
-	public sealed class DESRoundFunction
+	internal sealed class DESRoundFunction
 		: IRoundFunction
 	{
 		#region Fields
@@ -118,6 +118,15 @@ public sealed partial class DES
 		/// </param>
 		public void TransformBlock(Memory<byte> block, byte[] key)
 		{
+			if (key == null)
+				throw new ArgumentNullException(nameof(key), "Key cannot be null.");
+			
+			if (key.Length != 6)
+				throw new ArgumentNullException(nameof(key), "Key must be 48-bit's size");
+
+			if (block.Length != 8)
+				throw new ArgumentNullException(nameof(key), "Block must be 64-bit's size");
+			
 			Span<byte> buffer = stackalloc byte[8];
 			Permutation.Permute(
 				block.Span,

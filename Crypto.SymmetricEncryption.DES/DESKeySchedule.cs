@@ -11,7 +11,7 @@ public sealed partial class DES
     /// Implementation of the <see cref="IKeySchedule"/> interface for the Crypto.Core.DES algorithm.
     /// Responsible for generating 16 round keys from a 64-bit master key.
     /// </summary>
-    public sealed class DESKeySchedule
+    internal sealed class DESKeySchedule
         : KeyScheduleBase
     {
         #region Fields
@@ -67,6 +67,9 @@ public sealed partial class DES
         /// </returns>
         protected override byte[][] GenerateSchedule(Memory<byte> key)
         {
+            if (key.Length != 8)
+                throw new ArgumentNullException(nameof(key), "Key must be 64-bit's size");
+            
             var roundKeys =
                 new byte[RoundsCount][];
 

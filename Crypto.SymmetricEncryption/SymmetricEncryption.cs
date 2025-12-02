@@ -9,17 +9,9 @@ namespace Crypto.SymmetricEncryption;
 /// Offers synchronous and asynchronous methods for processing byte arrays and files,
 /// using an internal buffer for streaming operations.
 /// </summary>
-public abstract class SymmetricEncryption(
-    int blockSize,
-    int keySize,
-    byte[] key,
-    SymmetricPaddingContext.SymmetricPaddingMode paddingMode,
-    SymmetricModeContext.SymmetricMode mode,
-    byte[]? initializationVector = null,
-    params object[] parameters) : 
-    SymmetricEncryptionBase(blockSize, keySize, key, paddingMode, mode, initializationVector, parameters)
+public abstract class SymmetricEncryption : 
+    SymmetricEncryptionBase
 {
-    
     #region Properties
 
     /// <summary>
@@ -32,6 +24,26 @@ public abstract class SymmetricEncryption(
     
     #region Constructors
 
+    /// <summary>
+    /// Provides a base implementation for symmetric block cipher encryption and decryption.
+    /// Supports configurable block size, key size, padding modes, and cipher modes.
+    /// Offers synchronous and asynchronous methods for processing byte arrays and files,
+    /// using an internal buffer for streaming operations.
+    /// </summary>
+    protected SymmetricEncryption(
+        int blockSize,
+        int keySize,
+        byte[] key,
+        SymmetricPaddingContext.SymmetricPaddingMode paddingMode,
+        SymmetricModeContext.SymmetricMode mode,
+        byte[]? initializationVector = null,
+        params object[] parameters) :
+        base(blockSize, keySize, key, paddingMode, mode, initializationVector, parameters)
+    {
+        if (blockSize <= 0)
+            throw new ArgumentException("Block must be positive.", nameof(blockSize));
+    }
+    
     /// <summary>
     /// Initializes a new instance with a custom buffer size for streaming operations.
     /// </summary>
@@ -46,6 +58,9 @@ public abstract class SymmetricEncryption(
         params object[] parameters)
         : this(blockSize, keySize, key, paddingMode, mode, initializationVector, parameters)
     {
+        if (bufferSize <= 0)
+            throw new ArgumentOutOfRangeException(nameof(bufferSize), "Buffer size must be positive.");
+        
         BufferSize = bufferSize;
     }
 
@@ -57,6 +72,9 @@ public abstract class SymmetricEncryption(
     /// <inheritdoc/>
     public override Memory<byte> Encrypt(Memory<byte> data)
     {
+        if (data.Length == 0)
+            return data;
+        
         var result = PaddingContext.Apply(data.Span);
         ModeContext.Encrypt(result);
         return result;
@@ -67,6 +85,9 @@ public abstract class SymmetricEncryption(
         byte[] data, 
         out byte[] result)
     {
+        if (data.Length == 0)
+            result = data;
+        
         result = PaddingContext.Apply(data);
         ModeContext.Encrypt(result);
     }
@@ -76,6 +97,9 @@ public abstract class SymmetricEncryption(
         string inputFilePath,
         string outputFilePath)
     {
+        if (string.IsNullOrWhiteSpace(inputFilePath))
+            throw new ArgumentException("Input file path cannot be null or empty.", nameof(inputFilePath));
+        
         var buffer = new byte[BufferSize];
 
         using var inputStream = 
@@ -114,6 +138,9 @@ public abstract class SymmetricEncryption(
     /// <inheritdoc/>
     public override Memory<byte> Decrypt(Memory<byte> data)
     {
+        if (data.Length == 0)
+            return data;
+        
         ModeContext.Decrypt(data);
         return PaddingContext.Remove(data.Span);
     }
@@ -123,6 +150,9 @@ public abstract class SymmetricEncryption(
         byte[] data,
         out byte[] result)
     {
+        if (data.Length == 0)
+            result = data;
+        
         ModeContext.Decrypt(data);
         result = PaddingContext.Remove(data);
     }
@@ -132,6 +162,9 @@ public abstract class SymmetricEncryption(
         string inputFilePath, 
         string outputFilePath)
     {
+        if (string.IsNullOrWhiteSpace(inputFilePath))
+            throw new ArgumentException("Input file path cannot be null or empty.", nameof(inputFilePath));
+        
         var buffer = new byte[BufferSize];
 
         using var inputStream = 
@@ -174,6 +207,11 @@ public abstract class SymmetricEncryption(
         byte[] data,
         CancellationToken cancellationToken = default)
     {
+        ArgumentNullException.ThrowIfNull(data);
+
+        if (data.Length == 0)
+            throw new ArgumentException("Data cannot be empty.", nameof(data));
+        
         data = PaddingContext.Apply(data);
         await ModeContext.EncryptAsync(data, cancellationToken);
         return data;
@@ -185,6 +223,9 @@ public abstract class SymmetricEncryption(
         string outputFilePath,
         CancellationToken cancellationToken = default)
     {
+        if (string.IsNullOrWhiteSpace(inputFilePath))
+            throw new ArgumentException("Input file path cannot be null or empty.", nameof(inputFilePath));
+        
         var buffer = new byte[BufferSize];
 
         await using var inputStream = 
@@ -221,6 +262,11 @@ public abstract class SymmetricEncryption(
         byte[] data,
         CancellationToken cancellationToken = default)
     {
+        ArgumentNullException.ThrowIfNull(data);
+        
+        if (data.Length == 0)
+            throw new ArgumentException("Data cannot be empty.", nameof(data));
+        
         await ModeContext.DecryptAsync(data, cancellationToken);
         data = PaddingContext.Remove(data);
         return data;
@@ -232,6 +278,9 @@ public abstract class SymmetricEncryption(
         string outputFilePath,
         CancellationToken cancellationToken = default)
     {
+        if (string.IsNullOrWhiteSpace(inputFilePath))
+            throw new ArgumentException("Input file path cannot be null or empty.", nameof(inputFilePath));
+        
         var buffer = new byte[BufferSize];
 
         await using var inputStream = 

@@ -48,6 +48,9 @@ public sealed partial class DEAL :
         get => base.Key;
         set
         {
+            if(value == null)
+                throw new ArgumentNullException(nameof(value), "Key cannot be null."); 
+            
             if (base.Key == value)
             {
                 return;
@@ -77,6 +80,9 @@ public sealed partial class DEAL :
         params object[] parameters) : 
         base(16, (int)dealKeySize, key, paddingMode, mode, initializationVector, parameters)
     {
+        if(keyForSchedule == null)
+            throw new ArgumentNullException(nameof(keyForSchedule), "Key cannot be null."); 
+        
         var feistelRoundsCount = 
             dealKeySize == DealKeySize.Key256 ? 8 : 6;
         

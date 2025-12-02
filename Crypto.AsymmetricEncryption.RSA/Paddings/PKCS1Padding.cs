@@ -21,6 +21,9 @@ public sealed class PKCS1Padding(
     /// <inheritdoc/>
     public override byte[] Apply(Span<byte> data)
     {
+        if (data == null)
+            throw new ArgumentNullException(nameof(data));
+        
         var msgLen = data.Length;
         if (msgLen > PlaintextBlockSize)
         {
@@ -65,6 +68,9 @@ public sealed class PKCS1Padding(
     /// <inheritdoc/>
     public override byte[] Remove(Span<byte> data)
     {
+        if (data == null)
+            throw new ArgumentNullException(nameof(data));
+
         if (data.Length != CiphertextBlockSize)
         {
             throw new ArgumentException("The message must be the size of a key.");

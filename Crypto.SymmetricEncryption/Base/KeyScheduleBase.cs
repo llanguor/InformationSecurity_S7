@@ -10,17 +10,12 @@ namespace Crypto.SymmetricEncryption.Base;
 /// Provides caching of expanded keys and defines an abstract method for generating
 /// algorithm-specific key schedules.
 /// </summary>
-/// <param name="cacheSize">The maximum number of key schedules to cache in memory.</param>
-public abstract class KeyScheduleBase(int cacheSize) :
+public abstract class KeyScheduleBase :
     IKeySchedule
 {
     #region Fields
     
-    private readonly IMemoryCache _cache = new MemoryCache(
-        new MemoryCacheOptions()
-        {
-            SizeLimit = cacheSize
-        });
+    private readonly IMemoryCache _cache;
 
     #endregion
     
@@ -34,6 +29,24 @@ public abstract class KeyScheduleBase(int cacheSize) :
     protected KeyScheduleBase() :
         this(1024)
     {
+    }
+    
+    /// <summary>
+    /// Base class for key schedule implementations in symmetric encryption algorithms.
+    /// Provides caching of expanded keys and defines an abstract method for generating
+    /// algorithm-specific key schedules.
+    /// </summary>
+    /// <param name="cacheSize">The maximum number of key schedules to cache in memory.</param>
+    protected KeyScheduleBase(int cacheSize)
+    {
+        if (cacheSize <= 0)
+            throw new ArgumentOutOfRangeException(nameof(cacheSize), "Cache size must be positive.");
+        
+        _cache = new MemoryCache(
+            new MemoryCacheOptions()
+            {
+                SizeLimit = cacheSize
+            });
     }
     
     #endregion
@@ -50,6 +63,9 @@ public abstract class KeyScheduleBase(int cacheSize) :
     /// <returns>The full key schedule as a two-dimensional byte array.</returns>
     public byte[][] Expand(Memory<byte> key)
     {
+        if (key.IsEmpty)
+            throw new ArgumentException("Key cannot be empty.", nameof(key));
+        
         var cachedKey = Convert.ToBase64String(key.Span);
         if (_cache.TryGetValue(cachedKey, out byte[][]? schedule))
         {

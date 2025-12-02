@@ -7,20 +7,31 @@ namespace Crypto.SymmetricEncryption.Modes;
 /// Applies XOR with the previous ciphertext block (or the initialization vector for the first block)
 /// before encryption, and reverses the process during decryption.
 /// </summary>
-public sealed class CBCMode (
-    Action<Memory<byte>> encryptionFunc,
-    Action<Memory<byte>> decryptionFunc,
-    int blockSize,
-    Memory<byte> initializationVector)
-    : SymmetricModeBase(
-        encryptionFunc,
+public sealed class CBCMode : 
+    SymmetricModeBase
+{
+    /// <summary>
+    /// Implements the Cipher Block Chaining (CBC) mode of operation for symmetric encryption.
+    /// Applies XOR with the previous ciphertext block (or the initialization vector for the first block)
+    /// before encryption, and reverses the process during decryption.
+    /// </summary>
+    public CBCMode(Action<Memory<byte>> encryptionFunc,
+        Action<Memory<byte>> decryptionFunc,
+        int blockSize,
+        Memory<byte> initializationVector) :
+        base(encryptionFunc,
         decryptionFunc,
         blockSize,
         initializationVector)
-{
+    {
+        ThrowIfInitializationVectorIsNull();
+    }
+
     /// <inheritdoc/>   
     public override void Encrypt(Memory<byte> data)
     {
+        ThrowIfIncorrectInputData(data);
+        
         var lastBlock =
             InitializationVector!.Value;
         
@@ -42,6 +53,8 @@ public sealed class CBCMode (
     /// <inheritdoc/>   
     public override void Decrypt(Memory<byte> data)
     {
+        ThrowIfIncorrectInputData(data);
+        
         var ciphers = 
             data.ToArray().AsMemory();
         
@@ -56,6 +69,7 @@ public sealed class CBCMode (
         Memory<byte> data, 
         CancellationToken cancellationToken = default)
     {
+        ThrowIfIncorrectInputData(data);
         await Task.Run(() => Encrypt(data), cancellationToken);
     }
 
@@ -64,6 +78,8 @@ public sealed class CBCMode (
         Memory<byte> data, 
         CancellationToken cancellationToken = default)
     {
+        ThrowIfIncorrectInputData(data);
+        
         var ciphers = 
             data.ToArray().AsMemory();
         

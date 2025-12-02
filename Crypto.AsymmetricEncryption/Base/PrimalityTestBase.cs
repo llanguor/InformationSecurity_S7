@@ -87,7 +87,7 @@ public abstract class PrimalityTestBase(
     /// <param name="targetErrorProbability">The acceptable error probability for the test.</param>
     /// <param name="oneIterationErrorProbability">The error probability of a single iteration.</param>
     /// <returns>The number of iterations to perform.</returns>
-    private int GetIterationsCount(
+    private static int GetIterationsCount(
         double targetErrorProbability, 
         double oneIterationErrorProbability)
     {
@@ -128,7 +128,7 @@ public abstract class PrimalityTestBase(
     /// <param name="p">The first integer.</param>
     /// <param name="a">The second integer.</param>
     /// <returns>True if the numbers are coprime; otherwise, false.</returns>
-    private bool IsCoprime(
+    private static bool IsCoprime(
         BigInteger p, 
         BigInteger a)
     {

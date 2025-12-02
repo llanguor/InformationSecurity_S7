@@ -92,6 +92,9 @@ public sealed partial class DES(
         get => base.Key;
         set
         {
+            if(value == null)
+                throw new ArgumentNullException(nameof(value), "Key cannot be null."); 
+            
             if (base.Key == value)
             {
                 return;
@@ -116,6 +119,9 @@ public sealed partial class DES(
     /// <inheritdoc/>
     internal override void EncryptBlock(Memory<byte> data)
     { 
+        if (data.Length != BlockSize)
+            throw new ArgumentNullException(nameof(data), $"Block must be {BlockSize}-byte's size");
+        
         var buffer = new byte[BlockSize];
         Permutation.Permute(
             data.Span,
@@ -136,9 +142,13 @@ public sealed partial class DES(
             Permutation.LeastSignificantBitPosition.Left);
     }
 
+    /// <exception cref="ArgumentNullException"></exception>
     /// <inheritdoc/>
     internal override void DecryptBlock(Memory<byte> data)
     {
+        if (data.Length != BlockSize)
+            throw new ArgumentNullException(nameof(data), $"Block must be {BlockSize}-byte's size");
+
         var buffer = new byte[BlockSize];
         Permutation.Permute(
             data.Span,

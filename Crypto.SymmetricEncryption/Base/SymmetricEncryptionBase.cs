@@ -25,8 +25,18 @@ public abstract class SymmetricEncryptionBase :
     /// <inheritdoc/>
     public virtual byte[] Key
     {
-        get => _key; 
-        set => _key = value;
+        get => _key;
+        set
+        {
+            if(_key==null)
+                throw new ArgumentNullException(nameof(value), "Key cannot be null."); 
+            
+            if (value.Length != KeySize)
+                throw new ArgumentException($"Key length must be {KeySize} bytes.", nameof(value));
+
+            _key = value;
+            
+        }
     }
     
     /// <inheritdoc/>
@@ -90,9 +100,16 @@ public abstract class SymmetricEncryptionBase :
         byte[]? initializationVector = null,
         params object[] parameters)
     {
+        if (blockSize <= 0)
+            throw new ArgumentOutOfRangeException(nameof(blockSize), "Block size must be positive.");
+        if (keySize <= 0)
+            throw new ArgumentOutOfRangeException(nameof(keySize), "Key size must be positive.");
+        if (key.Length != keySize)
+            throw new ArgumentException($"Key length must be {keySize} bytes.", nameof(key));
+
         BlockSize = blockSize;
         KeySize = keySize;
-        _key = key;
+        _key = key ?? throw new ArgumentNullException(nameof(key), "Key cannot be null.");
         Mode = mode;
         PaddingMode = paddingMode;
         InitializationVector = initializationVector;

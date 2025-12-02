@@ -19,6 +19,8 @@ public sealed class ECBMode(
     /// <inheritdoc/>
     public override void Encrypt(Memory<byte> data)
     {
+        ThrowIfIncorrectInputData(data);
+        
         Parallel.For(0, data.Length / BlockSize, i =>
         {
             EncryptionFunc(
@@ -29,6 +31,8 @@ public sealed class ECBMode(
     /// <inheritdoc/>
     public override void Decrypt(Memory<byte> data)
     {
+        ThrowIfIncorrectInputData(data);
+        
         Parallel.For(0, data.Length / BlockSize, i =>
         {
             DecryptionFunc(
@@ -41,6 +45,8 @@ public sealed class ECBMode(
         Memory<byte> data, 
         CancellationToken cancellationToken = default)
     {
+        ThrowIfIncorrectInputData(data);
+        
         await Parallel.ForAsync(
             0,
             data.Length / BlockSize, 
@@ -58,6 +64,8 @@ public sealed class ECBMode(
         Memory<byte> data, 
         CancellationToken cancellationToken = default)
     {
+        ThrowIfIncorrectInputData(data);
+        
         await Parallel.ForAsync(
             0,
             data.Length / BlockSize, 

@@ -63,9 +63,19 @@ public sealed class TripleDES :
         params object[] parameters) : 
         base(8, 8, keys[0], paddingMode, mode, initializationVector, parameters)
     {
+        if (keys == null)
+            throw new ArgumentNullException(nameof(keys), "Keys array cannot be null.");
+
         if (keys.Length != 3)
+            throw new ArgumentException("Keys array must contain exactly 3 keys.", nameof(keys));
+
+        for (var i = 0; i < keys.Length; i++)
         {
-            throw new ArgumentException("Key must be 3 or more.");
+            if (keys[i] == null)
+                throw new ArgumentNullException(nameof(keys), $"Key at index {i} cannot be null.");
+    
+            if (keys[i].Length != 8)
+                throw new ArgumentException($"Key at index {i} must be exactly 8 bytes.", nameof(keys));
         }
 
         _type = algorithmType;

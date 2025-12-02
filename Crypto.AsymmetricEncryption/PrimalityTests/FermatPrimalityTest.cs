@@ -30,6 +30,12 @@ public sealed class FermatPrimalityTest() :
     /// <inheritdoc/>
     protected override bool ValidateCondition(BigInteger p, BigInteger a)
     {
+        if (p <= 1) 
+            throw new ArgumentOutOfRangeException(nameof(p), "p must be greater than 1.");
+        
+        if (a <= 1 || a >= p) 
+            throw new ArgumentOutOfRangeException(nameof(a), "a must be in range [2, p-1].");
+        
         if (CarmichaelNumbers.Contains(p))
             return false; 
         

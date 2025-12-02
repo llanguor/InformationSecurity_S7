@@ -7,20 +7,30 @@ namespace Crypto.SymmetricEncryption.Modes;
 /// Each plaintext block is XORed with the previous ciphertext block and the previous plaintext block
 /// before encryption. Decryption reverses this process, propagating changes across all subsequent blocks.
 /// </summary>
-public sealed class PCBCMode(
-    Action<Memory<byte>> encryptionFunc,
-    Action<Memory<byte>> decryptionFunc,
-    int blockSize,
-    Memory<byte> initializationVector)
-    : SymmetricModeBase(
-        encryptionFunc,
+public sealed class PCBCMode :
+    SymmetricModeBase
+{
+    /// <summary>
+    /// Implements the Propagating Cipher Block Chaining (PCBC) mode of operation for symmetric encryption.
+    /// Each plaintext block is XORed with the previous ciphertext block and the previous plaintext block
+    /// before encryption. Decryption reverses this process, propagating changes across all subsequent blocks.
+    /// </summary>
+    public PCBCMode(Action<Memory<byte>> encryptionFunc,
+        Action<Memory<byte>> decryptionFunc,
+        int blockSize,
+        Memory<byte> initializationVector) : base(encryptionFunc,
         decryptionFunc,
         blockSize,
         initializationVector)
-{
+    {
+        ThrowIfInitializationVectorIsNull();
+    }
+
     /// <inheritdoc/>
     public override void Encrypt(Memory<byte> data)
     {
+        ThrowIfIncorrectInputData(data);
+        
         var lastBlock =
             InitializationVector!.Value;
         
@@ -55,6 +65,8 @@ public sealed class PCBCMode(
     /// <inheritdoc/>
     public override void Decrypt(Memory<byte> data)
     {
+        ThrowIfIncorrectInputData(data);
+        
         var lastBlock =
             InitializationVector!.Value.ToArray().AsSpan();
         Span<byte> lastPlainText = null;
@@ -90,6 +102,7 @@ public sealed class PCBCMode(
         Memory<byte> data, 
         CancellationToken cancellationToken = default)
     {
+        ThrowIfIncorrectInputData(data);
         await Task.Run(() => Encrypt(data), cancellationToken);
     }
 
@@ -98,6 +111,7 @@ public sealed class PCBCMode(
         Memory<byte> data, 
         CancellationToken cancellationToken = default)
     {
+        ThrowIfIncorrectInputData(data);
         await Task.Run(() => Decrypt(data), cancellationToken);
     }
 }

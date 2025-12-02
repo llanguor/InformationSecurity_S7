@@ -10,20 +10,32 @@ namespace Crypto.SymmetricEncryption.Modes;
 /// each block uses a unique, non-repeating offset. Encryption and decryption
 /// are identical operations.
 /// </summary>
-public sealed class RandomDeltaMode(
-    Action<Memory<byte>> encryptionFunc,
-    Action<Memory<byte>> decryptionFunc,
-    int blockSize,
-    Memory<byte> initializationVector)
-    : SymmetricModeBase(
-        encryptionFunc,
+public sealed class RandomDeltaMode : 
+    SymmetricModeBase
+{
+    /// <summary>
+    /// Implements a stream-like block mode where each block is XORed with a
+    /// pseudo-random value derived from the initialization vector and a delta.
+    /// The delta is computed from the IV and enforced to be odd, ensuring that
+    /// each block uses a unique, non-repeating offset. Encryption and decryption
+    /// are identical operations.
+    /// </summary>
+    public RandomDeltaMode(Action<Memory<byte>> encryptionFunc,
+        Action<Memory<byte>> decryptionFunc,
+        int blockSize,
+        Memory<byte> initializationVector) : base(encryptionFunc,
         decryptionFunc,
         blockSize,
         initializationVector)
-{
+    {
+        ThrowIfInitializationVectorIsNull();
+    }
+
     /// <inheritdoc/>
     public override void Encrypt(Memory<byte> data)
     {
+        ThrowIfIncorrectInputData(data);
+        
         var delta
             = ComputeDelta();
         
@@ -36,6 +48,7 @@ public sealed class RandomDeltaMode(
     /// <inheritdoc/>
     public override void Decrypt(Memory<byte> data)
     {
+        ThrowIfIncorrectInputData(data);
         Encrypt(data);
     }
 
@@ -44,6 +57,8 @@ public sealed class RandomDeltaMode(
         Memory<byte> data, 
         CancellationToken cancellationToken = default)
     {
+        ThrowIfIncorrectInputData(data);
+        
         var delta = 
             ComputeDelta();
         
@@ -64,6 +79,7 @@ public sealed class RandomDeltaMode(
         Memory<byte> data, 
         CancellationToken cancellationToken = default)
     {
+        ThrowIfIncorrectInputData(data);
         await EncryptAsync(data, cancellationToken);
     }
 

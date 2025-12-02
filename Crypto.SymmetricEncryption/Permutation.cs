@@ -51,6 +51,15 @@ public static class Permutation
         LeastSignificantBitPosition inputLsbPosition,
         LeastSignificantBitPosition outputLsbPosition)
     {
+        if (bytes.IsEmpty)
+            throw new ArgumentException("Input bytes cannot be empty.", nameof(bytes));
+        if (mask.IsEmpty)
+            throw new ArgumentException("Mask cannot be empty.", nameof(mask));
+        if (output.IsEmpty)
+            throw new ArgumentException("Output buffer cannot be empty.", nameof(output));
+        if (output.Length * 8 < mask.Length)
+            throw new ArgumentException("Output buffer is too small for the mask.", nameof(output));
+        
         for (var i = 0; i < mask.Length; i++)
         {
             var targetIndex = mask[i] - (int)startingBitIndex;

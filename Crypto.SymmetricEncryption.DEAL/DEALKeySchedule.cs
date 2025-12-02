@@ -12,15 +12,41 @@ public sealed partial class DEAL
     /// Implements a key schedule for the DEAL cipher using DES.
     /// Generates round keys based on the specified DEAL key size (128, 192, 256 bits).
     /// </summary>
-    /// <param name="des">DES instance used for block encryption.</param>
-    /// <param name="dealKeySize">Specifies the DEAL key size for round key generation.</param>
-    /// <param name="keyForSchedule">Initial key bytes used to derive round keys.</param>
-    public sealed class DEALKeySchedule(
-        DES des,
-        DealKeySize dealKeySize,
-        byte[] keyForSchedule)
-        : KeyScheduleBase
+    internal sealed class DEALKeySchedule : KeyScheduleBase
     {
+        #region Fields
+
+        private readonly DES _des;
+        
+        private readonly DealKeySize _dealKeySize;
+        
+        private readonly byte[] _keyForSchedule;
+
+        #endregion
+
+
+        #region Constructors     
+        
+        /// <summary>
+        /// Implements a key schedule for the DEAL cipher using DES.
+        /// Generates round keys based on the specified DEAL key size (128, 192, 256 bits).
+        /// </summary>
+        /// <param name="des">DES instance used for block encryption.</param>
+        /// <param name="dealKeySize">Specifies the DEAL key size for round key generation.</param>
+        /// <param name="keyForSchedule">Initial key bytes used to derive round keys.</param>
+        public DEALKeySchedule(DES des,
+            DealKeySize dealKeySize,
+            byte[] keyForSchedule)
+        {
+            _des = des ?? throw new ArgumentNullException(nameof(des));
+            _dealKeySize = dealKeySize;
+            _keyForSchedule = keyForSchedule ?? throw new ArgumentNullException(nameof(keyForSchedule));
+        }
+        
+        #endregion
+        
+        
+        #region Methods
 
         /// <summary>
         /// Generates round keys for the DEAL cipher using DES and XOR operations.
@@ -29,7 +55,11 @@ public sealed partial class DEAL
         /// <returns>Jagged array of byte arrays containing the round keys.</returns>
         protected override byte[][] GenerateSchedule(Memory<byte> key)
         {
-            des.Key = keyForSchedule;
+            if (key.IsEmpty)
+                throw new ArgumentException("Key cannot be empty.", nameof(key));
+            
+            if (key.Length != _des.KeySize)
+                throw new ArgumentOutOfRangeException(nameof(key), "Key size must be equal to the size of the deal.");
 
             var masterKeys = new Memory<byte>[key.Length / 8];
             for (var i = 0; i < key.Length / 8; i++)
@@ -37,60 +67,60 @@ public sealed partial class DEAL
                 masterKeys[i] = key.Slice(i * 8, 8);
             }
 
-            switch (dealKeySize)
+            switch (_dealKeySize)
             {
                 case DealKeySize.Key128:
                 {
                     var roundKeys = new byte[6][];
-                    des.EncryptBlock(
+                    _des.EncryptBlock(
                         roundKeys[0] = masterKeys[0].ToArray());
-                    des.EncryptBlock(
+                    _des.EncryptBlock(
                         roundKeys[1] = Xor(masterKeys[1], roundKeys[0]));
-                    des.EncryptBlock(
+                    _des.EncryptBlock(
                         roundKeys[2] = Xor(masterKeys[0], roundKeys[1], 1));
-                    des.EncryptBlock(
+                    _des.EncryptBlock(
                         roundKeys[3] = Xor(masterKeys[1], roundKeys[2], 2));
-                    des.EncryptBlock(
+                    _des.EncryptBlock(
                         roundKeys[4] = Xor(masterKeys[0], roundKeys[3], 4));
-                    des.EncryptBlock(
+                    _des.EncryptBlock(
                         roundKeys[5] = Xor(masterKeys[1], roundKeys[4], 8));
                     return roundKeys;
                 }
                 case DealKeySize.Key192:
                 {
                     var roundKeys = new byte[6][];
-                    des.EncryptBlock(
+                    _des.EncryptBlock(
                         roundKeys[0] = masterKeys[0].ToArray());
-                    des.EncryptBlock(
+                    _des.EncryptBlock(
                         roundKeys[1] = Xor(masterKeys[1], roundKeys[0]));
-                    des.EncryptBlock(
+                    _des.EncryptBlock(
                         roundKeys[2] = Xor(masterKeys[2], roundKeys[1]));
-                    des.EncryptBlock(
+                    _des.EncryptBlock(
                         roundKeys[3] = Xor(masterKeys[0], roundKeys[2], 1));
-                    des.EncryptBlock(
+                    _des.EncryptBlock(
                         roundKeys[4] = Xor(masterKeys[1], roundKeys[3], 2));
-                    des.EncryptBlock(
+                    _des.EncryptBlock(
                         roundKeys[5] = Xor(masterKeys[2], roundKeys[4], 4));
                     return roundKeys;
                 }
                 case DealKeySize.Key256:
                 {
                     var roundKeys = new byte[8][];
-                    des.EncryptBlock(
+                    _des.EncryptBlock(
                         roundKeys[0] = masterKeys[0].ToArray());
-                    des.EncryptBlock(
+                    _des.EncryptBlock(
                         roundKeys[1] = Xor(masterKeys[1], roundKeys[0]));
-                    des.EncryptBlock(
+                    _des.EncryptBlock(
                         roundKeys[2] = Xor(masterKeys[2], roundKeys[1]));
-                    des.EncryptBlock(
+                    _des.EncryptBlock(
                         roundKeys[3] = Xor(masterKeys[3], roundKeys[2]));
-                    des.EncryptBlock(
+                    _des.EncryptBlock(
                         roundKeys[4] = Xor(masterKeys[0], roundKeys[3], 1));
-                    des.EncryptBlock(
+                    _des.EncryptBlock(
                         roundKeys[5] = Xor(masterKeys[1], roundKeys[4], 2));
-                    des.EncryptBlock(
+                    _des.EncryptBlock(
                         roundKeys[6] = Xor(masterKeys[2], roundKeys[5], 4));
-                    des.EncryptBlock(
+                    _des.EncryptBlock(
                         roundKeys[7] = Xor(masterKeys[3], roundKeys[6], 8));
                     return roundKeys;
                 }
@@ -110,6 +140,12 @@ public sealed partial class DEAL
             Memory<byte> left,
             Memory<byte> right)
         {
+            if (left.Length != 8)
+                throw new ArgumentException("Left block must be exactly 8 bytes.", nameof(left));
+
+            if (right.Length != 8)
+                throw new ArgumentException("Right block must be exactly 8 bytes.", nameof(right));
+            
             var result = left.ToArray();
             MemoryMarshal.AsRef<ulong>(result) =
                 MemoryMarshal.AsRef<ulong>(left.Span) ^
@@ -129,6 +165,12 @@ public sealed partial class DEAL
             Memory<byte> right,
             ulong mask)
         {
+            if (left.Length != 8)
+                throw new ArgumentException("Left block must be exactly 8 bytes.", nameof(left));
+
+            if (right.Length != 8)
+                throw new ArgumentException("Right block must be exactly 8 bytes.", nameof(right));
+            
             var result = left.ToArray();
             MemoryMarshal.AsRef<ulong>(result) =
                 MemoryMarshal.AsRef<ulong>(left.Span) ^
@@ -136,5 +178,7 @@ public sealed partial class DEAL
                 mask;
             return result;
         }
+        
+        #endregion
     }
 }
