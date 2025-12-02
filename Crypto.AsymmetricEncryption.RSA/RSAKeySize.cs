@@ -2,6 +2,9 @@
 
 public partial class RSA
 {
+    /// <summary>
+    /// Specifies the supported RSA key sizes in bits, with guidance on recommended usage.
+    /// </summary>
     public enum RSAKeySize
     {
         /// <summary>

@@ -3,11 +3,16 @@ using Crypto.SymmetricEncryption.Base;
 
 namespace Crypto.SymmetricEncryption.Paddings;
 
+/// <summary>
+/// Implements zero-byte padding for block ciphers.
+/// Pads data to a multiple of the block size by appending zero bytes.
+/// Provides methods to apply and remove padding, handling trailing zeros correctly.
+/// </summary>
 public class ZerosPadding(
     int blockSize) 
     : SymmetricPaddingBase(blockSize)
 {
-    //Если длина данных не кратна размеру блока, последний блок надо дополнить до нужной длины.
+    /// <inheritdoc/>   
     public override byte[] Apply(Span<byte> data)
     {
         var rem = data.Length % BlockSize;
@@ -23,6 +28,7 @@ public class ZerosPadding(
         return padded;
     }
 
+    /// <inheritdoc/>   
     public override byte[] Remove(Span<byte> data)
     {
         if (data.Length == 0 || data.Length % BlockSize != 0)

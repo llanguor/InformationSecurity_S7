@@ -3,6 +3,13 @@ using Crypto.SymmetricEncryption.Base;
 
 namespace Crypto.SymmetricEncryption.Modes;
 
+/// <summary>
+/// Implements a stream-like block mode where each block is XORed with a
+/// pseudo-random value derived from the initialization vector and a delta.
+/// The delta is computed from the IV and enforced to be odd, ensuring that
+/// each block uses a unique, non-repeating offset. Encryption and decryption
+/// are identical operations.
+/// </summary>
 public sealed class RandomDeltaMode(
     Action<Memory<byte>> encryptionFunc,
     Action<Memory<byte>> decryptionFunc,
@@ -14,6 +21,7 @@ public sealed class RandomDeltaMode(
         blockSize,
         initializationVector)
 {
+    /// <inheritdoc/>
     public override void Encrypt(Memory<byte> data)
     {
         var delta
@@ -25,11 +33,13 @@ public sealed class RandomDeltaMode(
         });
     }
 
+    /// <inheritdoc/>
     public override void Decrypt(Memory<byte> data)
     {
         Encrypt(data);
     }
 
+    /// <inheritdoc/>
     public override async Task EncryptAsync(
         Memory<byte> data, 
         CancellationToken cancellationToken = default)
@@ -48,7 +58,8 @@ public sealed class RandomDeltaMode(
                 return ValueTask.CompletedTask;
             });
     }
-
+    
+    /// <inheritdoc/>
     public override async Task DecryptAsync(
         Memory<byte> data, 
         CancellationToken cancellationToken = default)
@@ -56,6 +67,10 @@ public sealed class RandomDeltaMode(
         await EncryptAsync(data, cancellationToken);
     }
 
+    /// <summary>
+    /// Computes the delta value used to generate unique offsets for each block.
+    /// The delta is derived from the second half of the IV and forced to be odd.
+    /// </summary>
     private BigInteger ComputeDelta()
     {
         var span = 
@@ -75,6 +90,11 @@ public sealed class RandomDeltaMode(
         return delta;
     }
 
+    /// <summary>
+    /// Applies the delta-based transformation to a single block:
+    /// computes the offset for the block, encrypts it,
+    /// and XORs the result with the plaintext block.
+    /// </summary>
     private void ProcessBlock(Memory<byte> data, int i, BigInteger delta)
     {
         var value =

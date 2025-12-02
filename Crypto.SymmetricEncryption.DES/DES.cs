@@ -9,6 +9,11 @@ namespace Crypto.SymmetricEncryption;
 /// Implements the Data Encryption Standard (Crypto.Core.DES) symmetric encryption algorithm.
 /// This class provides functionality for encrypting and decrypting 64-bit blocks of data.
 /// </summary>
+/// <param name="key">Encryption key used by the DES algorithm.</param>
+/// <param name="paddingMode">Padding mode applied to input data.</param>
+/// <param name="mode">Block cipher mode of operation.</param>
+/// <param name="initializationVector">Optional initialization vector for the chosen mode.</param>
+/// <param name="parameters">Additional algorithm-specific parameters.</param>
 public sealed partial class DES(
     byte[] key, 
     SymmetricPaddingContext.SymmetricPaddingMode paddingMode, 
@@ -154,11 +159,22 @@ public sealed partial class DES(
             Permutation.LeastSignificantBitPosition.Left);
     }
 
+    /// <summary>
+    /// Checks if the provided key length matches the expected DES key size.
+    /// </summary>
+    /// <param name="key">Key to check.</param>
+    /// <returns>True if key length is valid; otherwise, false.</returns>
     private bool IsLegalKeySize(byte[]? key)
     {
         return key != null && key.Length == KeySize;
     }
     
+    
+    /// <summary>
+    /// Determines whether the specified key is considered weak for DES.
+    /// </summary>
+    /// <param name="key">Key to check.</param>
+    /// <returns>True if the key is weak; otherwise, false.</returns>
     private bool IsWeakKey(byte[] key)
     {
         if (!IsLegalKeySize(key))

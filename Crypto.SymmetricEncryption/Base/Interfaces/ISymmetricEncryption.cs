@@ -3,6 +3,11 @@ using Crypto.Core.Base.Interfaces;
 
 namespace Crypto.SymmetricEncryption.Base.Interfaces;
 
+/// <summary>
+/// Defines the contract for symmetric encryption algorithms.
+/// Provides properties for key management, block size, and ensures
+/// implementations support encryption and decryption operations.
+/// </summary>
 public interface ISymmetricEncryption :
     IEncryptionAlgorithm
 {

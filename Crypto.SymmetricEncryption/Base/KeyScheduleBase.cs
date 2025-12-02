@@ -5,6 +5,12 @@ using Microsoft.Extensions.Caching.Memory;
 
 namespace Crypto.SymmetricEncryption.Base;
 
+/// <summary>
+/// Base class for key schedule implementations in symmetric encryption algorithms.
+/// Provides caching of expanded keys and defines an abstract method for generating
+/// algorithm-specific key schedules.
+/// </summary>
+/// <param name="cacheSize">The maximum number of key schedules to cache in memory.</param>
 public abstract class KeyScheduleBase(int cacheSize) :
     IKeySchedule
 {
@@ -21,6 +27,10 @@ public abstract class KeyScheduleBase(int cacheSize) :
     
     #region Constructors
     
+    /// <summary>
+    /// Initializes a new instance of the <see cref="KeyScheduleBase"/> class
+    /// with a default cache size of 1024 entries.
+    /// </summary>
     protected KeyScheduleBase() :
         this(1024)
     {

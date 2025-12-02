@@ -2,6 +2,13 @@
 
 namespace Crypto.SymmetricEncryption.Modes;
 
+/// <summary>
+/// Implements the Cipher Feedback (CFB) mode of operation for symmetric encryption.
+/// Each plaintext block is XORed with the encryption of the previous ciphertext block
+/// (or the initialization vector for the first block) to produce ciphertext.
+/// Decryption reverses this process using the same mechanism, and asynchronous
+/// versions are provided for parallel processing of blocks.
+/// </summary>
 public sealed class CFBMode(
     Action<Memory<byte>> encryptionFunc,
     Action<Memory<byte>> decryptionFunc,
@@ -13,6 +20,7 @@ public sealed class CFBMode(
         blockSize,
         initializationVector)
 {
+    /// <inheritdoc/>
     public override void Encrypt(Memory<byte> data)
     {
         var lastBlock =
@@ -39,6 +47,7 @@ public sealed class CFBMode(
         }
     }
 
+    /// <inheritdoc/>
     public override void Decrypt(Memory<byte> data)
     {
         var ciphers = data.ToArray().AsMemory();
@@ -49,6 +58,7 @@ public sealed class CFBMode(
         });
     }
 
+    /// <inheritdoc/>
     public override async Task EncryptAsync(
         Memory<byte> data, 
         CancellationToken cancellationToken = default)
@@ -56,6 +66,7 @@ public sealed class CFBMode(
         await Task.Run(() => Encrypt(data), cancellationToken);
     }
 
+    /// <inheritdoc/>
     public override async Task DecryptAsync(
         Memory<byte> data, 
         CancellationToken cancellationToken = default)
@@ -76,6 +87,11 @@ public sealed class CFBMode(
             });
     }
 
+    /// <summary>
+    /// Processes a single block during decryption by encrypting the previous
+    /// ciphertext block (or the IV for the first block) and XORing the result
+    /// with the current ciphertext block to recover the plaintext.
+    /// </summary>
     private void ProcessDecryptBlock(
         Memory<byte> data, 
         Memory<byte> ciphers,

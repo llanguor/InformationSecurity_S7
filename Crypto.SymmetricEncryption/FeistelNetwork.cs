@@ -20,6 +20,9 @@ public sealed class FeistelNetwork (
 {
     #region Fields
     
+    /// <summary>
+    /// The master key used as the base material for generating all round keys.
+    /// </summary>
     private byte[] _key = key;
     
     /// <summary>
@@ -47,6 +50,10 @@ public sealed class FeistelNetwork (
     
     #region Properties
 
+    /// <summary>
+    /// Gets or sets the master key used for round key generation.
+    /// Updating the key triggers regeneration of all round keys.
+    /// </summary>
     public byte[] Key
     {
         get => _key;

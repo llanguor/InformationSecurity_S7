@@ -3,10 +3,17 @@ using Crypto.SymmetricEncryption.Base;
 
 namespace Crypto.SymmetricEncryption.Paddings;
 
+/// <summary>
+/// Implements the ISO 10126 padding scheme for block ciphers.
+/// Pads data to a multiple of the block size with random bytes followed by
+/// a single byte indicating the padding length. Provides methods
+/// to apply and remove padding securely.
+/// </summary>
 public class ISO10126Padding(
     int blockSize) 
     : SymmetricPaddingBase(blockSize)
 {
+    /// <inheritdoc/>   
     public override byte[] Apply(Span<byte> data)
     {
         var padding = BlockSize - data.Length % BlockSize;
@@ -26,6 +33,7 @@ public class ISO10126Padding(
         return padded;
     }
 
+    /// <inheritdoc/>   
     public override byte[] Remove(Span<byte> data)
     {
         if (data.Length == 0 || data.Length % BlockSize != 0)

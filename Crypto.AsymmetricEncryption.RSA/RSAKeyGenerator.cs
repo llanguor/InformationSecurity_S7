@@ -7,6 +7,9 @@ namespace Crypto.AsymmetricEncryption;
 
 public sealed partial class RSA
 {
+    /// <summary>
+    /// Generates RSA public and private keys using configurable key size, primality test, and target prime probability.
+    /// </summary>
     internal class RSAKeyGenerator :
         IKeyGenerator<RSAKey>
     {
@@ -25,6 +28,13 @@ public sealed partial class RSA
         
         #region Constructors
         
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RSAKeyGenerator"/> class.
+        /// </summary>
+        /// <param name="primalityTestType">Type of primality test to use for prime generation.</param>
+        /// <param name="keySize">Size of the RSA key.</param>
+        /// <param name="targetPrimaryProbability">Target probability for generated numbers to be prime (between 0.5 and 1).</param>
+        /// <exception cref="ArgumentException">Thrown if targetPrimaryProbability is not in the valid range.</exception>
         public RSAKeyGenerator(
             PrimalityTest primalityTestType,
             RSAKeySize keySize,
@@ -48,6 +58,7 @@ public sealed partial class RSA
         
         #region Methods
         
+        /// <inheritdoc/>
         public void GenerateKeys(out RSAKey publicKey, out RSAKey privateKey)
         {
             while (true)
@@ -76,6 +87,12 @@ public sealed partial class RSA
             }
         }
         
+        /// <summary>
+        /// Generates a prime number with a specific byte prefix and length.
+        /// </summary>
+        /// <param name="result">Output parameter for the generated prime number.</param>
+        /// <param name="prefixInBytes">The byte prefix for the generated number.</param>
+        /// <param name="prefixLength">Number of bits used for the prefix.</param>
         internal void GeneratePrime(
             out BigInteger result,
             byte prefixInBytes, 
@@ -117,6 +134,11 @@ public sealed partial class RSA
             }
         }
 
+        /// <summary>
+        /// Calculates the private exponent 'd' for RSA using the extended Euclidean algorithm.
+        /// </summary>
+        /// <param name="result">Output parameter for the private exponent.</param>
+        /// <param name="eulerN">Euler's totient of the modulus.</param>
         internal void CalculateD(
             out BigInteger result,
             ref readonly BigInteger eulerN)

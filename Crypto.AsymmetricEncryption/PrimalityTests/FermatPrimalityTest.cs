@@ -3,6 +3,10 @@ using Crypto.AsymmetricEncryption.Base;
 
 namespace Crypto.AsymmetricEncryption.PrimalityTests;
 
+/// <summary>
+/// Implements the Fermat primality test using the <see cref="PrimalityTestBase"/> infrastructure.
+/// Detects primality probabilistically and considers known Carmichael numbers to avoid false positives.
+/// </summary>
 public sealed class FermatPrimalityTest() :
     PrimalityTestBase(0.5)
 {
@@ -23,6 +27,7 @@ public sealed class FermatPrimalityTest() :
         10789013, 11522713, 11932213, 14612413, 15882613
     ];
     
+    /// <inheritdoc/>
     protected override bool ValidateCondition(BigInteger p, BigInteger a)
     {
         if (CarmichaelNumbers.Contains(p))

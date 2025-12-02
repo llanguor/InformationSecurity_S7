@@ -2,6 +2,11 @@
 
 namespace Crypto.SymmetricEncryption.Modes;
 
+/// <summary>
+/// Implements the Propagating Cipher Block Chaining (PCBC) mode of operation for symmetric encryption.
+/// Each plaintext block is XORed with the previous ciphertext block and the previous plaintext block
+/// before encryption. Decryption reverses this process, propagating changes across all subsequent blocks.
+/// </summary>
 public sealed class PCBCMode(
     Action<Memory<byte>> encryptionFunc,
     Action<Memory<byte>> decryptionFunc,
@@ -13,6 +18,7 @@ public sealed class PCBCMode(
         blockSize,
         initializationVector)
 {
+    /// <inheritdoc/>
     public override void Encrypt(Memory<byte> data)
     {
         var lastBlock =
@@ -46,6 +52,7 @@ public sealed class PCBCMode(
         }
     }
 
+    /// <inheritdoc/>
     public override void Decrypt(Memory<byte> data)
     {
         var lastBlock =
@@ -78,6 +85,7 @@ public sealed class PCBCMode(
         }
     }
 
+    /// <inheritdoc/>
     public override async Task EncryptAsync(
         Memory<byte> data, 
         CancellationToken cancellationToken = default)
@@ -85,6 +93,7 @@ public sealed class PCBCMode(
         await Task.Run(() => Encrypt(data), cancellationToken);
     }
 
+    /// <inheritdoc/>
     public override async Task DecryptAsync(
         Memory<byte> data, 
         CancellationToken cancellationToken = default)

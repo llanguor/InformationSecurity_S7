@@ -6,6 +6,7 @@ namespace Crypto.AsymmetricEncryption.PrimalityTests;
 public sealed class SolovayStrassenPrimalityTest() :
     PrimalityTestBase(0.25)
 {
+    /// <inheritdoc/>
     protected override bool ValidateCondition(BigInteger n, BigInteger a)
     {
         if(CryptoMathService.CalculateGcdEuclidean(n, a) != 1)

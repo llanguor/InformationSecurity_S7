@@ -7,6 +7,13 @@ using Crypto.AsymmetricEncryption.Contexts;
 
 namespace Crypto.AsymmetricEncryption;
 
+/// <summary>
+/// Implements RSA asymmetric encryption with configurable key size, padding mode, and primality test.
+/// </summary>
+/// <param name="primalityTestType">Type of primality test used for key generation.</param>
+/// <param name="paddingMode">RSA padding mode to apply.</param>
+/// <param name="keySize">RSA key size.</param>
+/// <param name="targetPrimaryProbability">Target probability for prime generation.</param>
 public sealed partial class RSA(
     PrimalityTest primalityTestType,
     RSAPaddingContext.RSAPaddingMode paddingMode,
@@ -32,6 +39,7 @@ public sealed partial class RSA(
     
     #region Methods for blocks 
     
+    /// <inheritdoc/>
     protected internal override Memory<byte> EncryptBlock(Memory<byte> data, RSAKey key)
     {
         if(data.Length != KeySize)
@@ -60,6 +68,7 @@ public sealed partial class RSA(
         return data;
     }
     
+    /// <inheritdoc/>
     protected internal override Memory<byte> DecryptBlock(Memory<byte> data, RSAKey key)
     {
         return EncryptBlock(data, key);

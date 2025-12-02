@@ -3,8 +3,18 @@ using Crypto.SymmetricEncryption.Base;
 
 namespace Crypto.SymmetricEncryption;
 
+/// <summary>
+/// Implements the DEAL block cipher.
+/// </summary>
 public sealed partial class DEAL
 {
+    /// <summary>
+    /// Implements a key schedule for the DEAL cipher using DES.
+    /// Generates round keys based on the specified DEAL key size (128, 192, 256 bits).
+    /// </summary>
+    /// <param name="des">DES instance used for block encryption.</param>
+    /// <param name="dealKeySize">Specifies the DEAL key size for round key generation.</param>
+    /// <param name="keyForSchedule">Initial key bytes used to derive round keys.</param>
     public sealed class DEALKeySchedule(
         DES des,
         DealKeySize dealKeySize,
@@ -12,6 +22,11 @@ public sealed partial class DEAL
         : KeyScheduleBase
     {
 
+        /// <summary>
+        /// Generates round keys for the DEAL cipher using DES and XOR operations.
+        /// </summary>
+        /// <param name="key">Memory of bytes representing the input key.</param>
+        /// <returns>Jagged array of byte arrays containing the round keys.</returns>
         protected override byte[][] GenerateSchedule(Memory<byte> key)
         {
             des.Key = keyForSchedule;
@@ -85,6 +100,12 @@ public sealed partial class DEAL
             }
         }
 
+        /// <summary>
+        /// Performs bitwise XOR between two 8-byte blocks.
+        /// </summary>
+        /// <param name="left">First 8-byte block.</param>
+        /// <param name="right">Second 8-byte block.</param>
+        /// <returns>Resulting 8-byte block after XOR.</returns>
         private static byte[] Xor(
             Memory<byte> left,
             Memory<byte> right)
@@ -96,6 +117,13 @@ public sealed partial class DEAL
             return result;
         }
 
+        /// <summary>
+        /// Performs bitwise XOR between two 8-byte blocks and applies an additional mask.
+        /// </summary>
+        /// <param name="left">First 8-byte block.</param>
+        /// <param name="right">Second 8-byte block.</param>
+        /// <param name="mask">Mask to apply during XOR.</param>
+        /// <returns>Resulting 8-byte block after XOR with mask.</returns>
         private static byte[] Xor(
             Memory<byte> left,
             Memory<byte> right,

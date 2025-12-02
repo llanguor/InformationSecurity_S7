@@ -6,6 +6,11 @@ using Crypto.SymmetricEncryption.Paddings;
 
 namespace Crypto.SymmetricEncryption.Contexts;
 
+/// <summary>
+/// Represents a context for selecting and using a symmetric padding scheme.
+/// Wraps various padding algorithms (Zeros, ANSI X9.23, PKCS#7, ISO 10126)
+/// and delegates padding and unpadding operations to the selected algorithm.
+/// </summary>
 public sealed class SymmetricPaddingContext :
     SymmetricPaddingBase
 {
@@ -20,6 +25,10 @@ public sealed class SymmetricPaddingContext :
     
     #region Properties
 
+    /// <summary>
+    /// Gets or sets the current symmetric padding mode. Changing this property
+    /// instantiates the corresponding padding algorithm for subsequent operations.
+    /// </summary>
     public SymmetricPaddingMode PaddingMode
     {
         get => _paddingMode;
@@ -74,6 +83,10 @@ public sealed class SymmetricPaddingContext :
     
     #region Constructors
     
+    /// <summary>
+    /// Initializes a new instance of the <see cref="SymmetricPaddingContext"/> class
+    /// with the specified padding mode and block size.
+    /// </summary>
     public SymmetricPaddingContext(
         SymmetricPaddingMode paddingMode,
         int blockSize) : 

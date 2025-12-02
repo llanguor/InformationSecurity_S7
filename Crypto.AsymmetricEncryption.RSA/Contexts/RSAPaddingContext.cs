@@ -5,6 +5,9 @@ using Crypto.AsymmetricEncryption.Paddings;
 
 namespace Crypto.AsymmetricEncryption.Contexts;
 
+/// <summary>
+/// Context class for RSA padding that allows switching between different RSA padding modes.
+/// </summary>
 public sealed class RSAPaddingContext:
     RSAPaddingBase
 {
@@ -21,12 +24,17 @@ public sealed class RSAPaddingContext:
     
     #region Properties
     
+    /// <inheritdoc/>
     public override int PlaintextBlockSize => 
         _paddingAlgorithm.PlaintextBlockSize;
     
+    /// <inheritdoc/>
     public override int CiphertextBlockSize =>
         _paddingAlgorithm.CiphertextBlockSize;
 
+    /// <summary>
+    /// Gets or sets the current RSA padding mode and updates the underlying padding algorithm accordingly.
+    /// </summary>
     public RSAPaddingMode PaddingMode
     {
         get => _paddingMode;
@@ -46,6 +54,9 @@ public sealed class RSAPaddingContext:
 
     #region Enumerations
 
+    /// <summary>
+    /// Specifies available RSA padding modes.
+    /// </summary>
     public enum RSAPaddingMode
     {
         PKCS1
@@ -56,6 +67,11 @@ public sealed class RSAPaddingContext:
     
     #region Constructors
     
+    /// <summary>
+    /// Initializes a new instance of the <see cref="RSAPaddingContext"/> class with the specified padding mode and key size.
+    /// </summary>
+    /// <param name="paddingMode">The RSA padding mode to use.</param>
+    /// <param name="keySize">The size of the RSA key.</param>
     public RSAPaddingContext(
         RSAPaddingMode paddingMode,
         RSA.RSAKeySize keySize) : 
@@ -70,11 +86,13 @@ public sealed class RSAPaddingContext:
     
     #region Methods
 
+    /// <inheritdoc/>
     public override byte[] Apply(Span<byte> data)
     {
         return _paddingAlgorithm.Apply(data);
     }
 
+    /// <inheritdoc/>
     public override byte[] Remove(Span<byte> data)
     {
         return _paddingAlgorithm.Remove(data);

@@ -2,6 +2,11 @@
 
 namespace Crypto.SymmetricEncryption.Base;
 
+/// <summary>
+/// Base class for symmetric cipher modes, providing common properties
+/// and delegates for encryption and decryption of memory blocks.
+/// Supports optional initialization vector and additional parameters.
+/// </summary>
 public abstract class SymmetricModeBase (
     Action<Memory<byte>> encryptionFunc,
     Action<Memory<byte>> decryptionFunc,
@@ -46,16 +51,20 @@ public abstract class SymmetricModeBase (
     
     #region Methods
     
+    /// <inheritdoc/>
     public abstract void Encrypt(
         Memory<byte> data);
     
+    /// <inheritdoc/>
     public abstract void Decrypt(
         Memory<byte> data);
     
+    /// <inheritdoc/>
     public abstract Task EncryptAsync(
         Memory<byte> data,
         CancellationToken cancellationToken = default);
     
+    /// <inheritdoc/>
     public abstract Task DecryptAsync(
         Memory<byte> data,
         CancellationToken cancellationToken = default);

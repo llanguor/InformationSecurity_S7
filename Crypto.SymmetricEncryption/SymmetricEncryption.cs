@@ -3,6 +3,12 @@ using Crypto.SymmetricEncryption.Contexts;
 
 namespace Crypto.SymmetricEncryption;
 
+/// <summary>
+/// Provides a base implementation for symmetric block cipher encryption and decryption.
+/// Supports configurable block size, key size, padding modes, and cipher modes.
+/// Offers synchronous and asynchronous methods for processing byte arrays and files,
+/// using an internal buffer for streaming operations.
+/// </summary>
 public abstract class SymmetricEncryption(
     int blockSize,
     int keySize,
@@ -16,6 +22,9 @@ public abstract class SymmetricEncryption(
     
     #region Properties
 
+    /// <summary>
+    /// Gets the internal buffer size used for streaming encryption and decryption.
+    /// </summary>
     private int BufferSize { get; }  = 8 * 1024;
     
     #endregion
@@ -23,6 +32,9 @@ public abstract class SymmetricEncryption(
     
     #region Constructors
 
+    /// <summary>
+    /// Initializes a new instance with a custom buffer size for streaming operations.
+    /// </summary>
     protected SymmetricEncryption(
         int blockSize,
         int keySize,

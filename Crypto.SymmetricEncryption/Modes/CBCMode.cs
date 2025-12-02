@@ -2,6 +2,11 @@
 
 namespace Crypto.SymmetricEncryption.Modes;
 
+/// <summary>
+/// Implements the Cipher Block Chaining (CBC) mode of operation for symmetric encryption.
+/// Applies XOR with the previous ciphertext block (or the initialization vector for the first block)
+/// before encryption, and reverses the process during decryption.
+/// </summary>
 public sealed class CBCMode (
     Action<Memory<byte>> encryptionFunc,
     Action<Memory<byte>> decryptionFunc,
@@ -13,6 +18,7 @@ public sealed class CBCMode (
         blockSize,
         initializationVector)
 {
+    /// <inheritdoc/>   
     public override void Encrypt(Memory<byte> data)
     {
         var lastBlock =
@@ -33,6 +39,7 @@ public sealed class CBCMode (
         }
     }
 
+    /// <inheritdoc/>   
     public override void Decrypt(Memory<byte> data)
     {
         var ciphers = 
@@ -44,6 +51,7 @@ public sealed class CBCMode (
         });
     }
 
+    /// <inheritdoc/>   
     public override async Task EncryptAsync(
         Memory<byte> data, 
         CancellationToken cancellationToken = default)
@@ -51,6 +59,7 @@ public sealed class CBCMode (
         await Task.Run(() => Encrypt(data), cancellationToken);
     }
 
+    /// <inheritdoc/>   
     public override async Task DecryptAsync(
         Memory<byte> data, 
         CancellationToken cancellationToken = default)
@@ -69,7 +78,12 @@ public sealed class CBCMode (
                 return ValueTask.CompletedTask;
             });
     }
-
+    
+    /// <summary>
+    /// Processes a single block during decryption by applying the F-function
+    /// to the previous ciphertext block (or IV for the first block) and XORing
+    /// the result with the current ciphertext block to recover plaintext.
+    /// </summary>
     private void ProcessDecryptBlock(Memory<byte> data, Memory<byte> ciphers, int i)
     {
         var lastBlock =

@@ -3,8 +3,10 @@ using Crypto.SymmetricEncryption.Contexts;
 
 namespace Crypto.SymmetricEncryption;
 
-//todo: add enum for key sizes
-
+/// <summary>
+/// Implementation of the DEAL (Data Encryption Algorithm with Large blocks) symmetric encryption algorithm.
+/// Uses a Feistel network with configurable key sizes and DES-based round functions.
+/// </summary>
 public sealed partial class DEAL : 
     SymmetricEncryption
 {
@@ -61,6 +63,10 @@ public sealed partial class DEAL :
     
     #region Constructors
     
+    /// <summary>
+    /// Initializes a new instance of the <see cref="DEAL"/> class with a specified key, key schedule, key size,
+    /// padding mode, cipher mode, and optional initialization vector and parameters.
+    /// </summary>
     public DEAL(
         byte[] key,
         byte[] keyForSchedule,
@@ -99,11 +105,13 @@ public sealed partial class DEAL :
     
     #region Methods
     
+    /// <inheritdoc/>
     internal override void EncryptBlock(Memory<byte> data)
     {
         _feistelNetwork.Encrypt(data);
     }
 
+    /// <inheritdoc/>
     internal override void DecryptBlock(Memory<byte> data)
     {
         _feistelNetwork.Decrypt(data);

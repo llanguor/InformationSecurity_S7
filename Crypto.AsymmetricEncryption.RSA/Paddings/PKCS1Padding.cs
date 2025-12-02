@@ -3,17 +3,22 @@ using Crypto.AsymmetricEncryption.Base;
 
 namespace Crypto.AsymmetricEncryption.Paddings;
 
+/// <summary>
+/// Implements the PKCS#1 v1.5 padding scheme for RSA encryption and decryption.
+/// </summary>
 public sealed class PKCS1Padding(
     RSA.RSAKeySize keySize) :
     RSAPaddingBase(keySize)
 {
+    /// <inheritdoc/>
     public override int PlaintextBlockSize =>
         KeySizeInBytes - 11;
 
+    /// <inheritdoc/>
     public override int CiphertextBlockSize => 
         KeySizeInBytes;
     
-
+    /// <inheritdoc/>
     public override byte[] Apply(Span<byte> data)
     {
         var msgLen = data.Length;
@@ -57,6 +62,7 @@ public sealed class PKCS1Padding(
         return block;
     }
 
+    /// <inheritdoc/>
     public override byte[] Remove(Span<byte> data)
     {
         if (data.Length != CiphertextBlockSize)

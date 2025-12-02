@@ -45,6 +45,15 @@ public sealed class TripleDES :
     
     #region Constructors
     
+    /// <summary>
+    /// Initializes a TripleDES cipher instance with the specified keys, algorithm type, padding, mode, IV, and additional parameters.
+    /// </summary>
+    /// <param name="keys">Array of 3 DES keys used for encryption/decryption.</param>
+    /// <param name="algorithmType">Specifies the TripleDES variant (EEE3 or EDE3).</param>
+    /// <param name="paddingMode">Padding mode applied to input data.</param>
+    /// <param name="mode">Block cipher mode of operation.</param>
+    /// <param name="initializationVector">Optional initialization vector for the chosen mode.</param>
+    /// <param name="parameters">Additional algorithm-specific parameters.</param>
     public TripleDES(
         byte[][] keys, 
         TripleDESType algorithmType,

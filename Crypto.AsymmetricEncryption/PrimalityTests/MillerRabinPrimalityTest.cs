@@ -3,9 +3,14 @@ using Crypto.AsymmetricEncryption.Base;
 
 namespace Crypto.AsymmetricEncryption.PrimalityTests;
 
+/// <summary>
+/// Implements the Miller-Rabin probabilistic primality test using <see cref="PrimalityTestBase"/>.
+/// Determines whether a number is likely prime based on repeated modular exponentiation checks.
+/// </summary>
 public sealed class MillerRabinPrimalityTest() :
     PrimalityTestBase(0.5)
 {
+    /// <inheritdoc/>
     protected override bool ValidateCondition(BigInteger n, BigInteger a)
     {
         var s = 0;

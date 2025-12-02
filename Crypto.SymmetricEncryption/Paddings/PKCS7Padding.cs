@@ -3,10 +3,17 @@ using Crypto.SymmetricEncryption.Base;
 
 namespace Crypto.SymmetricEncryption.Paddings;
 
+/// <summary>
+/// Implements the PKCS#7 padding scheme for block ciphers.
+/// Pads data to a multiple of the block size by appending bytes
+/// each containing the value of the padding length. Provides methods
+/// to apply and remove padding securely.
+/// </summary>
 public class PKCS7Padding(
     int blockSize) 
     : SymmetricPaddingBase(blockSize)
 {
+    /// <inheritdoc/>   
     public override byte[] Apply(Span<byte> data)
     {
         var padding = BlockSize - data.Length % BlockSize;
@@ -24,6 +31,7 @@ public class PKCS7Padding(
         return padded;
     }
 
+    /// <inheritdoc/>   
     public override byte[] Remove(Span<byte> data)
     {
         if (data.Length == 0 || data.Length % BlockSize != 0)

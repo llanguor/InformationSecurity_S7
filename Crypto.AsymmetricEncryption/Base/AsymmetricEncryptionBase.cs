@@ -3,6 +3,11 @@ using Crypto.AsymmetricEncryption.Base.Interfaces;
 
 namespace Crypto.AsymmetricEncryption.Base;
 
+/// <summary>
+/// Provides a base implementation for asymmetric encryption algorithms with key generation and padding support.
+/// Handles encryption/decryption of data blocks, files, and asynchronous operations.
+/// </summary>
+/// <typeparam name="TKey">The type representing the asymmetric key.</typeparam>
 public abstract class AsymmetricEncryptionBase<TKey> :
     IAsymmetricEncryption<TKey>
 {
@@ -21,12 +26,21 @@ public abstract class AsymmetricEncryptionBase<TKey> :
     
     #region Properties
     
+    /// <summary>
+    /// Gets the public key of the algorithm.
+    /// </summary>
     public virtual TKey PublicKey => 
         _publicKey;
 
+    /// <summary>
+    /// Gets the private key of the algorithm (accessible to derived classes and internal usage).
+    /// </summary>
     protected internal virtual TKey PrivateKey =>
         _privateKey;
     
+    /// <summary>
+    /// The size of the asymmetric key in bits.
+    /// </summary>
     protected int KeySize { get; }
 
     #endregion
@@ -34,6 +48,13 @@ public abstract class AsymmetricEncryptionBase<TKey> :
     
     #region Constructors
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="AsymmetricEncryptionBase{TKey}"/> class.
+    /// Generates the public and private keys using the provided key generator.
+    /// </summary>
+    /// <param name="keySize">The size of the key in bits.</param>
+    /// <param name="keyGenerator">The key generator used to produce keys.</param>
+    /// <param name="paddingContext">The padding context for block encryption/decryption.</param>
     protected AsymmetricEncryptionBase(
         int keySize,
         IKeyGenerator<TKey> keyGenerator,
@@ -55,10 +76,24 @@ public abstract class AsymmetricEncryptionBase<TKey> :
     
     #region Abstract Methods for blocks
 
+    /// <summary>
+    /// Encrypts a single data block with the specified key.
+    /// Must be implemented by derived classes.
+    /// </summary>
+    /// <param name="data">The block of data to encrypt.</param>
+    /// <param name="key">The key used for encryption.</param>
+    /// <returns>The encrypted data block.</returns>
     protected internal abstract Memory<byte> EncryptBlock(
         Memory<byte> data,
         TKey key);
 
+    /// <summary>
+    /// Decrypts a single data block with the specified key.
+    /// Must be implemented by derived classes.
+    /// </summary>
+    /// <param name="data">The block of data to decrypt.</param>
+    /// <param name="key">The key used for decryption.</param>
+    /// <returns>The decrypted data block.</returns>
     protected internal abstract Memory<byte> DecryptBlock(
         Memory<byte> data,
         TKey key);
@@ -68,6 +103,9 @@ public abstract class AsymmetricEncryptionBase<TKey> :
     
     #region Methods
 
+    /// <summary>
+    /// Generates a new pair of public and private keys using the configured key generator.
+    /// </summary>
     public void GenerateKeys()
     {
         _keyGenerator.GenerateKeys(
@@ -241,8 +279,6 @@ public abstract class AsymmetricEncryptionBase<TKey> :
         return DecryptInternal(data);
     }
     
-    
-
     /// <inheritdoc/>
     public void Encrypt(
         byte[] data,

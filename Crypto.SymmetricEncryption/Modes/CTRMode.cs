@@ -3,6 +3,12 @@ using Crypto.SymmetricEncryption.Base;
 
 namespace Crypto.SymmetricEncryption.Modes;
 
+/// <summary>
+/// Implements the Counter (CTR) mode of operation for symmetric encryption.
+/// Each block is XORed with the encryption of a counter value derived from
+/// the initialization vector and the block index. Encryption and decryption
+/// are identical operations.
+/// </summary
 public sealed class CTRMode(
     Action<Memory<byte>> encryptionFunc,
     Action<Memory<byte>> decryptionFunc,
@@ -14,6 +20,7 @@ public sealed class CTRMode(
         blockSize,
         initializationVector)
 {
+    /// <inheritdoc/>
     public override void Encrypt(Memory<byte> data)
     {
         Parallel.For(0, data.Length / BlockSize, i =>
@@ -22,11 +29,13 @@ public sealed class CTRMode(
         });
     }
 
+    /// <inheritdoc/>
     public override void Decrypt(Memory<byte> data)
     {
         Encrypt(data);
     }
 
+    /// <inheritdoc/>
     public override async Task EncryptAsync(
         Memory<byte> data, 
         CancellationToken cancellationToken = default)
@@ -43,6 +52,7 @@ public sealed class CTRMode(
             });
     }
 
+    /// <inheritdoc/>
     public override async Task DecryptAsync(
         Memory<byte> data, 
         CancellationToken cancellationToken = default)
@@ -50,6 +60,10 @@ public sealed class CTRMode(
         await EncryptAsync(data, cancellationToken);
     }
     
+    /// <summary>
+    /// Processes a single block by computing its counter value from the IV and block index,
+    /// encrypting the counter, and XORing the result with the plaintext block.
+    /// </summary>
     private void ProcessEncryptBlock(Memory<byte> data, int i)
     {
         var value =
