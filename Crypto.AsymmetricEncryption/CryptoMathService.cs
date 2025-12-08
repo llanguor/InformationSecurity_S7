@@ -28,14 +28,11 @@ public sealed class CryptoMathService :
             throw new ArgumentException(
                 "The Legendre symbol is defined only for numbers greater than 2", nameof(p));
         
-        if (a < 0)
-            throw new ArgumentException("Parameter 'a' must be non-negative.", nameof(a));
-        
         if (CalculateGcdEuclidean(a, p) != 1)
             return 0;
 
         var powered = 
-            ModPow(a, (p - 1) >> 2, p);
+            ModPow(a, (p - 1) >> 1, p);
 
         if (powered < 0)
             powered += p;
@@ -208,6 +205,108 @@ public sealed class CryptoMathService :
             y = -y;
         }
     }
+
+    /// <summary>
+    /// Computes the integer k-th root of n and an approximate fractional part.
+    /// Integer root is found by binary search.
+    /// Fractional part is approximated by:
+    ///     fractional = round( (n − x^k) * scale / ( (x+1)^k − x^k ) )
+    /// where x is the integer root.
+    /// </summary>
+    /// <param name="n">The non-negative BigInteger whose k-th root is computed.</param>
+    /// <param name="fractional">
+    /// Outputs the scaled fractional part of the root (0 ≤ fractional &lt; scale).
+    /// </param>
+    /// <param name="numbersAfterPoint">Sets the precision of a fractional value</param>
+    /// <param name="k">The degree of the root (k ≥ 2).</param>
+    /// <returns>The integer part of the k-th root of n.</returns>
+    public BigInteger Sqrt(BigInteger n, out BigInteger fractional, int numbersAfterPoint, int k = 2)
+    {
+        
+        if (k < 2) 
+            throw new ArgumentException("Root degree must be at least 2.", nameof(k));
+        
+        if (n < 0)
+            throw new ArithmeticException("Cannot compute root of negative numbers.");
+        
+        fractional = 0;
+        var fractionalScale = (long) Math.Pow(10, numbersAfterPoint);
+        
+        if (n == 0 || n == 1)
+            return n;
+        
+        
+        BigInteger low = 0;
+        BigInteger high = n;
+
+        while (low <= high)
+        {
+            var mid = (low + high) / 2;
+            var midPow = BigInteger.Pow(mid, k);
+
+            if (midPow == n)
+                return mid;
+            
+            if (midPow < n)
+                low = mid + 1;
+            else
+                high = mid - 1;
+        }
+
+        var integerRoot = high;
+        
+        //Fraction part
+        var xk   = BigInteger.Pow(integerRoot,     k);
+        var xk1  = BigInteger.Pow(integerRoot + 1, k);
+
+        var remainder = n - xk;
+        var step      = xk1 - xk;
+        var div = remainder * (fractionalScale * 2) / step;
+
+        //Rounding to the nearest
+        fractional = div / 2 + (div % 2 == 1 ? 1 : 0);
+
+        return integerRoot;
+    }
     
+    /// <summary>
+    /// Computes the integer k-th root of n.
+    /// This overload returns only the integer root and discards the fractional part.
+    /// Internally delegates to the full Sqrt(n, out fractional, k) implementation.
+    /// </summary>
+    /// <param name="n">The BigInteger to compute the root of. Must be non-negative.</param>
+    /// <param name="k">The degree of the root. Must be at least 2.</param>
+    /// <returns>The integer k-th root of n.</returns>
+    public BigInteger Sqrt(BigInteger n, int k = 2)
+    {
+        return Sqrt(n, out _, 0, k);
+    }
+    
+    /// <summary>
+    /// Compares two scaled fractional values for approximate equality.
+    /// </summary>
+    /// <param name="a">First fractional value (scaled).</param>
+    /// <param name="b">Second fractional value (scaled).</param>
+    /// <param name="epsilon">Allowed difference (scaled to the same precision).</param>
+    /// <returns>True if |a - b| ≤ epsilon, otherwise false.</returns>
+    public bool AreFractionalsApproximatelyEqual(
+        BigInteger a, 
+        BigInteger b, 
+        double epsilon)
+    {
+        if (epsilon < 0) 
+            throw new ArgumentException(null, nameof(epsilon));
+
+        var lenA = a.ToString().Length;
+        var lenB = b.ToString().Length;
+        var maxLen = Math.Max(lenA, lenB);
+
+        a *= BigInteger.Pow(10, maxLen - lenA);
+        b *= BigInteger.Pow(10, maxLen - lenB);
+        
+        return BigInteger.Abs(a - b) <=  
+               new BigInteger(epsilon * Math.Pow(10, maxLen));
+    }
+
     #endregion
 }

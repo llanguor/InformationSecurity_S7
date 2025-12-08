@@ -56,55 +56,24 @@ public class DESIntegrationTest
     #region Methods
     
     [Test]
-    public void EncryptTextFileTest()
-    {
-        const string input = $"{ResourcesDirectoryPath}\\input.txt";
-        const string output = $"{ResourcesDirectoryPath}\\encrypted.txt";
-        var des = _container.Resolve<SymmetricEncryption.SymmetricEncryption>();
-        des.Encrypt(input, output);
-        Assert.True(true);
-    }
-    
-    [Test]
-    public void DecryptTextFileTest()
-    { 
-        const string input = $"{ResourcesDirectoryPath}\\encrypted.txt";
-        const string output = $"{ResourcesDirectoryPath}\\decrypted.txt";
-        var des = _container.Resolve<SymmetricEncryption.SymmetricEncryption>();
-        des.Decrypt(input, output);
-        Assert.True(true);
-    }
-    
-    [Test]
     public void EncryptDecryptTextFileTest()
     {
         const string input = $"{ResourcesDirectoryPath}\\input.txt";
         const string encrypted = $"{ResourcesDirectoryPath}\\encrypted.txt";
         const string decrypted = $"{ResourcesDirectoryPath}\\decrypted.txt";
         var des = _container.Resolve<SymmetricEncryption.SymmetricEncryption>();
+        
         des.Encrypt(input, encrypted);
         des.Decrypt(encrypted, decrypted);
-        Assert.True(true);
-    }
-    
-    [Test]
-    public void EncryptImageFileTest()
-    {
-        const string input = $"{ResourcesDirectoryPath}\\input.jpg";
-        const string output = $"{ResourcesDirectoryPath}\\encrypted.jpg";
-        var des = _container.Resolve<SymmetricEncryption.SymmetricEncryption>();
-        des.Encrypt(input, output);
-        Assert.True(true);
-    }
-    
-    [Test]
-    public void DecryptImageFileTest()
-    { 
-        const string input = $"{ResourcesDirectoryPath}\\encrypted.jpg";
-        const string output = $"{ResourcesDirectoryPath}\\decrypted.jpg";
-        var des = _container.Resolve<SymmetricEncryption.SymmetricEncryption>();
-        des.Decrypt(input, output);
-        Assert.True(true);
+
+        var inputBytes = File.ReadAllBytes(input);
+        var decryptedBytes = File.ReadAllBytes(decrypted);
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(decryptedBytes, Has.Length.EqualTo(inputBytes.Length));
+            Assert.That(inputBytes.SequenceEqual(decryptedBytes), Is.True);
+        });
     }
     
     [Test]
@@ -113,10 +82,20 @@ public class DESIntegrationTest
         const string input = $"{ResourcesDirectoryPath}\\input.jpg";
         const string encrypted = $"{ResourcesDirectoryPath}\\encrypted.jpg";
         const string decrypted = $"{ResourcesDirectoryPath}\\decrypted.jpg";
+
         var des = _container.Resolve<SymmetricEncryption.SymmetricEncryption>();
+        
         des.Encrypt(input, encrypted);
-        des.Decrypt(encrypted,decrypted);
-        Assert.True(true);
+        des.Decrypt(encrypted, decrypted);
+        
+        var inputBytes = File.ReadAllBytes(input);
+        var decryptedBytes = File.ReadAllBytes(decrypted);
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(decryptedBytes, Has.Length.EqualTo(inputBytes.Length));
+            Assert.That(inputBytes.SequenceEqual(decryptedBytes), Is.True);
+        });
     }
 
     #endregion

@@ -27,7 +27,7 @@
       <ProjectReference Include="..\Crypto.Core\Crypto.Core.csproj" />
       <ProjectReference Include="..\Crypto.SymmetricEncryption.DES\Crypto.SymmetricEncryption.DES.csproj" />
       <ProjectReference Include="..\Crypto.SymmetricEncryption\Crypto.SymmetricEncryption.csproj" />
-      <ProjectReference Include="..\Crypto.Tests.Infrastructure\Crypto.Tests.Infrastructure.csproj" />
+      <ProjectReference Include="..\Crypto.Tests.Core\Crypto.Tests.Core.csproj" />
     </ItemGroup>
 
 </Project>

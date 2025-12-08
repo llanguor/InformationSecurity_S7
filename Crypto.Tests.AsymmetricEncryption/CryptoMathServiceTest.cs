@@ -140,5 +140,68 @@ public class CryptoMathServiceTest
         });
     }
 
+    [Test]
+    public void FourthRootTest()
+    {
+        var service =
+            _container.Resolve<CryptoMathService>();
+        
+        var rnd = new Random();
+        
+        for (var i = 0; i < 10000; ++i)
+        {
+            var expected = rnd.NextInt64(1, long.MaxValue);
+            var powered = BigInteger.Pow(expected, 4);
+            var result = service.Sqrt(powered, 4);
+            
+            Assert.That(
+                (long)result, 
+                Is.EqualTo(expected), 
+                $"Failed for value: {expected}");
+        }
+    }
+
+    [Test]
+    public void RootTest()
+    {
+        var math = _container.Resolve<CryptoMathService>();
+        var rnd = new Random();
+        var numbersAfterPoint = 9;
+        
+        for (var i = 0; i < 100; ++i)
+        {
+            var value = rnd.NextInt64(1, long.MaxValue);
+            var root = Math.Sqrt(value);
+            
+            var integerExpected = Math.Truncate(root);
+            var fractionalExpected = 
+                new BigInteger(Math.Floor(
+                    (root - Math.Truncate(root)) * 
+                    Math.Pow(10, numbersAfterPoint)));
+            
+            var integerResult = math.Sqrt(
+                value,
+                out var fractionalResult
+                , numbersAfterPoint);
+            
+            var isEquals = 
+                math.AreFractionalsApproximatelyEqual(
+                    fractionalExpected, 
+                    fractionalResult, 
+                    0.001);
+            
+            Assert.That(
+                (double)integerResult,
+                Is.EqualTo(integerExpected), 
+                $"Failed integer part for value: {value}");
+            
+            Assert.That(
+                isEquals, 
+                Is.EqualTo(true),
+                $"Failed fractional for value: {value}\nExpected (scaled): {fractionalExpected}\nBut was: {fractionalResult}");
+
+        }
+    }
+    
     #endregion
 }

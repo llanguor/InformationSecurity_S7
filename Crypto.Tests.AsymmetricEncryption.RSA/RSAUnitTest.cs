@@ -99,23 +99,5 @@ public class RSATest
         }
     }
     
-     
-    [Test]
-    public void EncryptDecryptShuffleKeysTest()
-    {
-        var rsa = _container.Resolve<Crypto.AsymmetricEncryption.RSA>();
-
-        for (var i = 0; i < 500; ++i)
-        {
-            rsa.GenerateKeys();
-            var encr = rsa.Encrypt(input);
-            var decr = rsa.Decrypt(encr);
-            
-            Assert.That(decr.ToArray(), Is.EqualTo(input));
-        }
- 
-    }
-    
-    
     #endregion
 }

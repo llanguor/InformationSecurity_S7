@@ -109,7 +109,7 @@ public sealed partial class DES
 		/// Transforms a 64-bit block using the Crypto.Core.DES round function (F-function).
 		/// </summary>
 		/// <param name="block">
-		///     The 64-bit data block to transform, passed as an 8-byte <see cref="Span{Byte}"/>.
+		///     The 32-bit data block to transform, passed as an 4-bytes array (half of full 64-bit block) <see cref="Span{Byte}"/>.
 		///     This block is modified <c>in-place</c>.
 		/// </param>
 		/// <param name="key">
@@ -124,8 +124,8 @@ public sealed partial class DES
 			if (key.Length != 6)
 				throw new ArgumentNullException(nameof(key), "Key must be 48-bit's size");
 
-			if (block.Length != 8)
-				throw new ArgumentNullException(nameof(key), "Block must be 64-bit's size");
+			if (block.Length != 4)
+				throw new ArgumentNullException(nameof(block), "Block must be 64-bit's size");
 			
 			Span<byte> buffer = stackalloc byte[8];
 			Permutation.Permute(

@@ -14,14 +14,17 @@ public sealed partial class RSA
         IKeyGenerator<RSAKey>
     {
         #region Fields
+        
+        private readonly CryptoMathService _cryptoMathService
+            = new();
 
         private readonly IPrimalityTest _primalityTest;
 
         private readonly double _targetPrimaryProbability;
         
         private readonly int _keySizeInBytes;
-
-        internal const int E = 65537;
+        
+        internal int ESize = 3;
 
         #endregion
         
@@ -61,29 +64,24 @@ public sealed partial class RSA
         /// <inheritdoc/>
         public void GenerateKeys(out RSAKey publicKey, out RSAKey privateKey)
         {
+            GeneratePrime(out var p, 0b10, 2);
+            GeneratePrime(out var q, 0b11, 2);
+            
+            var n = p * q;
+            var eulerN = (p - 1) * (q - 1);
+            var minD = _cryptoMathService.Sqrt(n, 4) / 3;
+            
             while (true)
             {
-                GeneratePrime(out var p, 0b10, 2);
-                GeneratePrime(out var q, 0b11, 2);
-            
-                var n = p * q;
-                var eulerN = (p - 1) * (q - 1);
+                GenerateE(out var e, ref eulerN);
+                CalculateD(out var d, ref e, ref eulerN);
 
-                if (CryptoMathService.CalculateGcdEuclidean(eulerN, E) != 1)
+                if (d > minD)
                 {
-                    continue;
+                    publicKey = new RSAKey(e, n);
+                    privateKey = new RSAKey(d, n);
+                    return;
                 }
-                
-                CalculateD(out var d, ref eulerN);
-
-                if (d <= FourthRoot(n) / 3)
-                {
-                    continue;
-                }
-                
-                publicKey = new RSAKey(E, n);
-                privateKey = new RSAKey(d, n);
-                return;
             }
         }
         
@@ -133,18 +131,49 @@ public sealed partial class RSA
                 }
             }
         }
+        
+        internal void GenerateE(
+            out BigInteger result,
+            ref readonly BigInteger n)
+        {
+            var bytes = new byte[ESize];
+            
+            while (true)
+            {
+                System.Security.Cryptography.RandomNumberGenerator.Fill(bytes);
+                
+                //Minimize the number of ones in the bit representation
+                for (var i = 0; i < ESize; i++)
+                {
+                    bytes[i] &= (byte)((bytes[i] >> 4) | ((bytes[i] & 0b00001111) << 4));
+                }
+                
+                result = new BigInteger(
+                    bytes,
+                    isUnsigned: true,
+                    isBigEndian: false);
+                
+                var isCoprime = CryptoMathService
+                    .CalculateGcdEuclidean(result, n) == 1;
+                
+                if (isCoprime)
+                    return;
+            }
+        }
 
         /// <summary>
         /// Calculates the private exponent 'd' for RSA using the extended Euclidean algorithm.
         /// </summary>
         /// <param name="result">Output parameter for the private exponent.</param>
+        /// <param name="e">The public exponent of the RSA key, used to compute the private exponent 'd'.</param>
         /// <param name="eulerN">Euler's totient of the modulus.</param>
         internal void CalculateD(
             out BigInteger result,
+            ref readonly BigInteger e,
             ref readonly BigInteger eulerN)
         {
             CryptoMathService.CalculateGcdEuclidean(
-                E, 
+                e, 
                 eulerN, 
                 out _,
                 out result,
@@ -153,40 +182,6 @@ public sealed partial class RSA
             if (result < 0)
                 result += eulerN;
         }
-        
-        /// <summary>
-        /// Computes the integer fourth root of a given BigInteger using the Newton–Raphson iteration.
-        /// The iterative formula used is:
-        /// xₖ₊₁ = (3*xₖ + n / xₖ³) / 4
-        /// </summary>
-        /// <param name="n">The BigInteger to compute the fourth root of. Must be non-negative.</param>
-        /// <returns>The largest integer x such that x⁴ ≤ n.</returns>
-        /// <exception cref="ArithmeticException">Thrown if <paramref name="n"/> is negative.</exception>
-        internal BigInteger FourthRoot(BigInteger n)
-        {
-            if (n < 0)
-                throw new ArithmeticException(
-                    "The algorithm does not assume finding the root of negative values");
-
-            if (n == 0)
-                return 0;
-
-            if (n < 16)
-                return 1;
-            
-            var x = n >> (int)(n.GetBitLength() / 4); 
-            BigInteger result;
-
-            do
-            {
-                result = x;
-                x = (3 * x + n / (x * x * x)) >> 2; // x_k+1 = (3*x + n/x^3)/4
-            } 
-            while (x < result);
-
-            return result;
-        }
-
         
         #endregion
     }

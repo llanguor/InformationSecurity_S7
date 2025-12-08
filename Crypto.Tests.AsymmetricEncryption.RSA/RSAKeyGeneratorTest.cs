@@ -17,7 +17,7 @@ public class RSAKeyGeneratorTest
     private const Crypto.AsymmetricEncryption.RSA.RSAKeySize KeySize  = 
         Crypto.AsymmetricEncryption.RSA.RSAKeySize.Bits1024;
     
-    private const double targetPrimaryProbability = 0.999;
+    private const double TargetPrimaryProbability = 0.999;
     
     [SetUp]
     public void Setup()
@@ -25,18 +25,19 @@ public class RSAKeyGeneratorTest
         Logger.GetInstance();
         _container = new Container();
         
+        _container.Register<CryptoMathService>(Reuse.Singleton);
         _container.Register<MillerRabinPrimalityTest>();
         _container.RegisterInstance(new Crypto.AsymmetricEncryption.RSA.RSAKeyGenerator(
             PrimalityTest.SolovayStrassen,
             KeySize,
-            targetPrimaryProbability));
+            TargetPrimaryProbability));
         
         
         _container.RegisterInstance(new Crypto.AsymmetricEncryption.RSA(
             PrimalityTest.MillerRabin,
             RSAPaddingContext.RSAPaddingMode.PKCS1,
             KeySize,
-            targetPrimaryProbability));
+            TargetPrimaryProbability));
             
     }
     
@@ -54,17 +55,19 @@ public class RSAKeyGeneratorTest
     [Test]
     public void GenerateKeysTest()
     {
+        var generator =
+            _container.Resolve<Crypto.AsymmetricEncryption.RSA.RSAKeyGenerator>();
+        var math = 
+            _container.Resolve<CryptoMathService>();
+        
         for (var i = 0; i < 10; ++i)
         {
-            var generator =
-                _container.Resolve<Crypto.AsymmetricEncryption.RSA.RSAKeyGenerator>();
-
             generator.GenerateKeys(
                 out var pbk,
                 out var pvk);
 
             Assert.That(pvk.Exponent,
-                Is.GreaterThan(generator.FourthRoot(pvk.Modulus) / 3));
+                Is.GreaterThan(math.Sqrt(pvk.Modulus, 4) / 3));
 
             var message = new BigInteger(123456789);
             var encrypted = BigInteger.ModPow(message, pbk.Exponent, pbk.Modulus);
@@ -83,22 +86,22 @@ public class RSAKeyGeneratorTest
         var generator = 
             _container.Resolve<Crypto.AsymmetricEncryption.RSA.RSAKeyGenerator>();
        
-        var action = new Action<BigInteger, BigInteger>(
-            (value1, expected) =>
+        var action = new Action<BigInteger, BigInteger, BigInteger>(
+            (value1, expected, e) =>
         {
             generator.CalculateD(
                 out var result, 
+                ref e,
                 ref value1);
             
             Assert.That(
                 result, 
                 Is.EqualTo(expected));
         });
-
-        const int e = Crypto.AsymmetricEncryption.RSA.RSAKeyGenerator.E;
-       action.Invoke(180, 53);
-       action.Invoke(1800, -127+1800);
-       action.Invoke(99999,  10304);
+        
+       action.Invoke(180, 53, 65537);
+       action.Invoke(1800, -127+1800, 65537);
+       action.Invoke(99999,  10304, 65537);
     }
     
     
@@ -117,26 +120,6 @@ public class RSAKeyGeneratorTest
                 primalityTest.IsPrimary(p, testProb), 
                 Is.EqualTo(PrimalityResult.Prime));
         }
-    }
-    
-    [Test]
-    public void FourthRootTest()
-    {
-        var generator = _container.Resolve<Crypto.AsymmetricEncryption.RSA.RSAKeyGenerator>();
-        var rnd = new Random();
-        
-        for (var i = 0; i < 10000; ++i)
-        {
-            var expected = rnd.NextInt64(1, long.MaxValue);
-            var powered = BigInteger.Pow(expected, 4);
-            var result = generator.FourthRoot(powered);
-            
-            Assert.That(
-                (long)result, 
-                Is.EqualTo(expected), 
-                $"Failed for value: {expected}");
-        }
-     
     }
     
     #endregion

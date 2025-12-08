@@ -17,7 +17,7 @@ public class RSAIntegrationTest
     private const Crypto.AsymmetricEncryption.RSA.RSAKeySize KeySize = 
         Crypto.AsymmetricEncryption.RSA.RSAKeySize.Bits1024;
     
-    private const double targetPrimaryProbability = 0.999;
+    private const double TargetPrimaryProbability = 0.999;
     
 
 
@@ -31,7 +31,7 @@ public class RSAIntegrationTest
             PrimalityTest.MillerRabin,
             RSAPaddingContext.RSAPaddingMode.PKCS1,
             KeySize,
-            targetPrimaryProbability));
+            TargetPrimaryProbability));
     }
     
     [TearDown]
@@ -44,10 +44,28 @@ public class RSAIntegrationTest
     
     
     #region Tests
+    
+    [Test]
+    public void EncryptDecryptTextFileTest()
+    {
+        const string input = $"{ResourcesDirectoryPath}\\input.txt";
+        const string encrypted = $"{ResourcesDirectoryPath}\\encrypted.txt";
+        const string decrypted = $"{ResourcesDirectoryPath}\\decrypted.txt";
+        
+        var rsa = _container.Resolve<Crypto.AsymmetricEncryption.RSA>();
+        rsa.Encrypt(input, encrypted);
+        rsa.Decrypt(encrypted, decrypted);
+       
+        var inputBytes = File.ReadAllBytes(input);
+        var decryptedBytes = File.ReadAllBytes(decrypted);
 
-    //todo: сделать общую папку Resources для всего проекта
-    //todo: вынести в поля это. А лучше сделать файл настроек и брать оттуда
-    //todo: сделать нормальные тесты картинок. Объединенные и с проверкой корректности
+        Assert.Multiple(() =>
+        {
+            Assert.That(decryptedBytes, Has.Length.EqualTo(inputBytes.Length));
+            Assert.That(inputBytes.SequenceEqual(decryptedBytes), Is.True);
+        });
+    }
+    
     [Test]
     public void EncryptDecryptImageFileTest()
     {
@@ -58,7 +76,15 @@ public class RSAIntegrationTest
         var rsa = _container.Resolve<Crypto.AsymmetricEncryption.RSA>();
         rsa.Encrypt(input, encrypted);
         rsa.Decrypt(encrypted, decrypted);
-        Assert.True(true);
+       
+        var inputBytes = File.ReadAllBytes(input);
+        var decryptedBytes = File.ReadAllBytes(decrypted);
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(decryptedBytes, Has.Length.EqualTo(inputBytes.Length));
+            Assert.That(inputBytes.SequenceEqual(decryptedBytes), Is.True);
+        });
     }
    
     #endregion

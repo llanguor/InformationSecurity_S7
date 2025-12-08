@@ -23,8 +23,8 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Crypto.SymmetricEncryption.DES\Crypto.SymmetricEncryption.DES.csproj" />
-      <ProjectReference Include="..\Crypto.SymmetricEncryption\Crypto.SymmetricEncryption.csproj" />
+      <ProjectReference Include="..\Crypto.Attacks.RSA.Core\Crypto.Attacks.RSA.Core.csproj" />
+      <ProjectReference Include="..\Crypto.Attacks.RSA.WienersAttack\Crypto.Attacks.RSA.WienersAttack.csproj" />
       <ProjectReference Include="..\Crypto.Tests.Core\Crypto.Tests.Core.csproj" />
     </ItemGroup>
 

@@ -1,4 +1,5 @@
-﻿using System.Security.Cryptography;
+﻿using System.Collections.Immutable;
+using System.Security.Cryptography;
 using Crypto.AsymmetricEncryption.Base.Interfaces;
 
 namespace Crypto.AsymmetricEncryption.Base;
@@ -35,11 +36,11 @@ public abstract class AsymmetricEncryptionBase<TKey> :
     /// <summary>
     /// Gets the private key of the algorithm (accessible to derived classes and internal usage).
     /// </summary>
-    protected internal virtual TKey PrivateKey =>
+    public virtual TKey PrivateKey =>
         _privateKey;
     
     /// <summary>
-    /// The size of the asymmetric key in bits.
+    /// The size of the asymmetric key in bytes.
     /// </summary>
     protected int KeySize { get; }
 
@@ -324,10 +325,23 @@ public abstract class AsymmetricEncryptionBase<TKey> :
         using var outputStream = 
             new FileStream(outputFilePath, FileMode.Create, FileAccess.Write);
         
-        while (inputStream.Read(buffer) > 0)
+        int bytesRead;
+        while ((bytesRead = inputStream.Read(buffer, 0, bytesPerBlock)) > 0)
         {
-            var padded =
-                _paddingContext.Apply(buffer);
+            byte[]? padded = null;
+
+            if (bytesRead == bytesPerBlock)
+            {
+                padded =
+                    _paddingContext.Apply(buffer);
+            }
+            else
+            {
+                padded = new byte[bytesRead];
+                Array.Copy(buffer, padded, bytesRead);
+                padded =
+                    _paddingContext.Apply(padded);
+            }
             
             var encrypted = 
                 EncryptBlock(padded, PublicKey);

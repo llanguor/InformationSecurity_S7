@@ -24,7 +24,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\Crypto.AsymmetricEncryption\Crypto.AsymmetricEncryption.csproj" />
-      <ProjectReference Include="..\Crypto.Tests.Infrastructure\Crypto.Tests.Infrastructure.csproj" />
+      <ProjectReference Include="..\Crypto.Tests.Core\Crypto.Tests.Core.csproj" />
     </ItemGroup>
 
 </Project>
