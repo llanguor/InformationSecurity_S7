@@ -85,6 +85,8 @@ public abstract class SymmetricEncryption :
         byte[] data, 
         out byte[] result)
     {
+        ArgumentNullException.ThrowIfNull(data);
+        
         if (data.Length == 0)
             result = data;
         
@@ -150,6 +152,8 @@ public abstract class SymmetricEncryption :
         byte[] data,
         out byte[] result)
     {
+        ArgumentNullException.ThrowIfNull(data);
+        
         if (data.Length == 0)
             result = data;
         
