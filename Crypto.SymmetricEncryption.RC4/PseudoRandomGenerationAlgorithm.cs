@@ -1,4 +1,4 @@
-﻿namespace Crypto.SymmetricEncryption.RC4;
+﻿namespace Crypto.SymmetricEncryption;
 
 public sealed partial class RC4
 {
@@ -10,6 +10,8 @@ public sealed partial class RC4
 
         private int _j = 0;
 
+        private const int BoxSize = 256;
+        
         #endregion
 
 
@@ -17,11 +19,17 @@ public sealed partial class RC4
 
         public byte GetNextByte(byte[] sBox)
         {
-            _i = (_i + 1) % 256;
-            _j = (_j + 1) % 256;
+            if (sBox == null)
+                throw new ArgumentException("SBox cannot be null.", nameof(sBox)); 
+            
+            if (sBox.Length != BoxSize)
+               throw new ArgumentException("SBox size must be 256 bytes.", nameof(sBox)); 
+            
+            _i = (_i + 1) % BoxSize;
+            _j = (_j + 1) % BoxSize;
             (sBox[_i], sBox[_j]) = (sBox[_j], sBox[_i]);
 
-            var resultIndex = (sBox[_i] + sBox[_j]) % 256;
+            var resultIndex = (sBox[_i] + sBox[_j]) % BoxSize;
 
             return sBox[resultIndex];
         }

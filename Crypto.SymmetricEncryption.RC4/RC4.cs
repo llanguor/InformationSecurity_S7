@@ -1,6 +1,6 @@
 ﻿using Crypto.Core.Base.Interfaces;
 
-namespace Crypto.SymmetricEncryption.RC4;
+namespace Crypto.SymmetricEncryption;
 
 public sealed partial class RC4 :
     IEncryptionAlgorithm

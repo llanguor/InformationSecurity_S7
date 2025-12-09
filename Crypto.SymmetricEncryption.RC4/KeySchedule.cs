@@ -1,4 +1,4 @@
-﻿namespace Crypto.SymmetricEncryption.RC4;
+﻿namespace Crypto.SymmetricEncryption;
 
 public sealed partial class RC4
 {
@@ -24,6 +24,13 @@ public sealed partial class RC4
 
         public byte[] Expand(byte[] key)
         {
+            if (key == null)
+                throw new ArgumentException("Key cannot be null.", nameof(key));
+            
+            if (key.Length < 2)
+                throw new ArgumentException("SBox size must be more than 1.", nameof(key)); 
+
+            
             var kBox = new byte[BoxSize];
 
             for (var i = 0; i < BoxSize; ++i)
