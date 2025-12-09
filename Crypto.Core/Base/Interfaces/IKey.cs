@@ -1,4 +1,4 @@
-﻿namespace Crypto.AsymmetricEncryption.Base.Interfaces;
+﻿namespace Crypto.Core.Base.Interfaces;
 
 /// <summary>
 /// Represents a generic cryptographic key for asymmetric encryption algorithms.
