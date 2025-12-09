@@ -7,11 +7,13 @@ public sealed partial class RC4 :
 {
     #region Fields
 
-    private readonly KeySchedule _keySchedule 
-        = new();
-    
-    private readonly PseudoRandomGenerationAlgorithm _prga 
-        = new();
+    private readonly KeySchedule _keySchedule;
+
+    private readonly PseudoRandomGenerationAlgorithm _prga;
+
+    private readonly RC4State _state = new();
+
+    private readonly byte[] _key;
     
     #endregion
     
@@ -20,6 +22,9 @@ public sealed partial class RC4 :
 
     public RC4(byte[] key)
     {
+        _key = key;
+        _prga = new PseudoRandomGenerationAlgorithm(_state);
+        _keySchedule = new KeySchedule(_state);
         _keySchedule.Expand(key);
     }
     
@@ -27,6 +32,13 @@ public sealed partial class RC4 :
     
     
     #region Methods
+    
+    public void Reset()
+    {
+        _state.I = 0;
+        _state.J = 0;
+        _keySchedule.Expand(_key);
+    }
     
     public Memory<byte> Encrypt(
         Memory<byte> data)
@@ -40,7 +52,7 @@ public sealed partial class RC4 :
         
         for (var i = 0; i < data.Length; ++i)
         {
-            span[i] ^= _prga.GetNextByte(_keySchedule.SBox);
+            span[i] ^= _prga.GetNextByte(_state.SBox);
         }
 
         return data;
@@ -67,7 +79,7 @@ public sealed partial class RC4 :
         {
             result[i] = (byte)(
                 data[i] ^ 
-                _prga.GetNextByte(_keySchedule.SBox));
+                _prga.GetNextByte(_state.SBox));
         }
     }
 
@@ -94,7 +106,7 @@ public sealed partial class RC4 :
     
         while (inputStream.Read(buffer) > 0)
         {
-            buffer[0] ^= _prga.GetNextByte(_keySchedule.SBox);
+            buffer[0] ^= _prga.GetNextByte(_state.SBox);
             
             outputStream.Write(
                 buffer, 
@@ -128,7 +140,7 @@ public sealed partial class RC4 :
                 token.ThrowIfCancellationRequested();
                 
                 data[i] ^= _prga.GetNextByte(
-                    _keySchedule.SBox);
+                    _state.SBox);
                 
                 return ValueTask.CompletedTask;
             });
@@ -160,7 +172,7 @@ public sealed partial class RC4 :
     
         while (await inputStream.ReadAsync(buffer, cancellationToken) > 0)
         {
-            buffer[0] ^= _prga.GetNextByte(_keySchedule.SBox);
+            buffer[0] ^= _prga.GetNextByte(_state.SBox);
             
              await outputStream.WriteAsync(
                  buffer.AsMemory(0, 1), 
