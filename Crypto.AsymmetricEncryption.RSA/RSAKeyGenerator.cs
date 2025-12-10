@@ -145,7 +145,7 @@ public sealed partial class RSA
                 //Minimize the number of ones in the bit representation
                 for (var i = 0; i < ESize; i++)
                 {
-                    bytes[i] &= (byte)((bytes[i] >> 4) | ((bytes[i] & 0b00001111) << 4));
+                    bytes[i] &= (byte)((bytes[i] << 2) | (bytes[i] >> 6));
                 }
                 
                 result = new BigInteger(
